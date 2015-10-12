@@ -1,0 +1,52 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n#1.打分自动化和可视化\n#2.benchmark自动化流程整合",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442458363828_1112604148",
+      "id": "20150917-105243_496424221",
+      "result": {
+        "code": "SUCCESS",
+        "type": "HTML",
+        "msg": "\u003ch1\u003e1.打分自动化和可视化\u003c/h1\u003e\n\u003ch1\u003e2.benchmark自动化流程整合\u003c/h1\u003e\n"
+      },
+      "dateCreated": "Sep 17, 2015 10:52:43 AM",
+      "dateStarted": "Sep 17, 2015 10:54:01 AM",
+      "dateFinished": "Sep 17, 2015 10:54:01 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442458395566_810004334",
+      "id": "20150917-105315_975222532",
+      "dateCreated": "Sep 17, 2015 10:53:15 AM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "id": "2B1ZJ4KV1",
+  "angularObjects": {},
+  "config": {},
+  "info": {}
+}

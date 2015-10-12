@@ -1,0 +1,701 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n#Scorer Visualization in Zeppelin Wiki:\n+ zeppelin部署和说明\n    + **需要lls6访问权限**。\n    + zeppelin目录在  `lls6`:``/home/pipeline/zeppelin-manager/zeppelin-0.5.0-incubating-SNAPSHOT``。\n    + zeppelin启动和停止  ``/home/pipeline/zeppelin-manager/zeppelin-0.5.0-incubating-SNAPSHOT/bin/zeppelin-daemon.sh``, 参数为start,stop,restart,status\n    + **`注意！`**轻易不要重启zeppelin服务，因为angularjs绑定的页面`\u003cinput\u003e`数据会丢失重置为`null`。\n    + 一个notebook中有多个paragraph，每个paragraph右上角四个按键，分别为运行，展开/收起内容，展开/收起结果和设置。\n    + 两个模块可以分别单独执行（如果只要可视化，直接选择第二部分即可）。\n+ 打分自动化可视化说明（注：标题上有`---\u003e`必须点击运行）\n    + 第一部分自动打分配置\n        + step1，初始化载入打分目录，文件放置在``/home/pipeline/autoScorerLLS``中。\n        + step2，选取需要打分的语言类型和版本号。\n        + step3，对选取的打分目录进行遍历和数据绑定。\n        + step4，显示和修改spark打分输出结果路径，存放在hdfs中，**必须修改！** 。\n        + step5，保存修改写回job－config文件。\n        + step6，生成Spark-Submit Automatic Text，其中所列项可以进行修改，确认后点击confirm按钮。\n    + 将打分命令复制到terminal执行，提交spark打分，比较耗时。\n    + 第二部分结果可视化\n        + step1，path1自动绑定了所填写的打分结果路径，点击``submit``提交路径绑定在输入框下方。\n          增加了多结果比较，点击`+`可选择另一打分结果，点击`-`去除添加。\n        + step2，选取需要统计的打分特征，如overall(默认)，pronunciation，fluency……\n        + step3，备注曲线的名称。\n        + step4，运行。\n        + step5，得到可视化曲形，如果点选了多组比较，可点击右上方的选项选择需要的曲线。\n+ 提交新的打分文件模型目录时，放在``/home/pipeline/autoScorerLLS``中，新建文件夹命名为``score-distribution-lang-version``,如``score-distribution-en_us-254``。\n+ 文件架中必须要有：dict，model，binary（暂时只支持batch，牵扯到job－config）,和job－config的json文件。如``score-distribution-en_us-303``中\n  ``cmu07_20140625.dic``, `` engzo_score_raw``, `` engzo_score_raw_batch``, `` en_us-303.json``,  ``en-us-v303-dnn``。\n+ TODO:\n    + 有新模型提交时，自动修改json配置文件。\n    + 增加支持record模式，和sentence reference模式。\n+ 已知的bugs：\n    + 用ng-model ng-show绑定的数据有时会出现闪烁。\n    + 断开zeppelin-server后，Angular绑定的数据会丢失，需要重新会angularBind重新绑定，在最后有Rebind And Unbind Checked模块，可以对绑定数据重置default。\n\n\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1441165700892_1532769949",
+      "id": "20150902-114820_1434863245",
+      "result": {
+        "code": "SUCCESS",
+        "type": "HTML",
+        "msg": "\u003ch1\u003eScorer Visualization in Zeppelin Wiki:\u003c/h1\u003e\n\u003cul\u003e\n\u003cli\u003ezeppelin部署和说明\u003cul\u003e\n\u003cli\u003e\u003cstrong\u003e需要lls6访问权限\u003c/strong\u003e。\u003c/li\u003e\n\u003cli\u003ezeppelin目录在  \u003ccode\u003ells6\u003c/code\u003e:\u003ccode\u003e/home/pipeline/zeppelin-manager/zeppelin-0.5.0-incubating-SNAPSHOT\u003c/code\u003e。\u003c/li\u003e\n\u003cli\u003ezeppelin启动和停止  \u003ccode\u003e/home/pipeline/zeppelin-manager/zeppelin-0.5.0-incubating-SNAPSHOT/bin/zeppelin-daemon.sh\u003c/code\u003e, 参数为start,stop,restart,status\u003c/li\u003e\n\u003cli\u003e\u003cstrong\u003e\u003ccode\u003e注意！\u003c/code\u003e\u003c/strong\u003e轻易不要重启zeppelin服务，因为angularjs绑定的页面\u003ccode\u003e\u0026lt;input\u0026gt;\u003c/code\u003e数据会丢失重置为\u003ccode\u003enull\u003c/code\u003e。\u003c/li\u003e\n\u003cli\u003e一个notebook中有多个paragraph，每个paragraph右上角四个按键，分别为运行，展开/收起内容，展开/收起结果和设置。\u003c/li\u003e\n\u003cli\u003e两个模块可以分别单独执行（如果只要可视化，直接选择第二部分即可）。\u003c/li\u003e\n\u003c/ul\u003e\n\u003c/li\u003e\n\u003cli\u003e打分自动化可视化说明（注：标题上有\u003ccode\u003e---\u0026gt;\u003c/code\u003e必须点击运行）\u003cul\u003e\n\u003cli\u003e第一部分自动打分配置\u003cul\u003e\n\u003cli\u003estep1，初始化载入打分目录，文件放置在\u003ccode\u003e/home/pipeline/autoScorerLLS\u003c/code\u003e中。\u003c/li\u003e\n\u003cli\u003estep2，选取需要打分的语言类型和版本号。\u003c/li\u003e\n\u003cli\u003estep3，对选取的打分目录进行遍历和数据绑定。\u003c/li\u003e\n\u003cli\u003estep4，显示和修改spark打分输出结果路径，存放在hdfs中，\u003cstrong\u003e必须修改！\u003c/strong\u003e 。\u003c/li\u003e\n\u003cli\u003estep5，保存修改写回job－config文件。\u003c/li\u003e\n\u003cli\u003estep6，生成Spark-Submit Automatic Text，其中所列项可以进行修改，确认后点击confirm按钮。\u003c/li\u003e\n\u003c/ul\u003e\n\u003c/li\u003e\n\u003cli\u003e将打分命令复制到terminal执行，提交spark打分，比较耗时。\u003c/li\u003e\n\u003cli\u003e第二部分结果可视化\u003cul\u003e\n\u003cli\u003estep1，path1自动绑定了所填写的打分结果路径，点击\u003ccode\u003esubmit\u003c/code\u003e提交路径绑定在输入框下方。\n\u003cbr  /\u003e增加了多结果比较，点击\u003ccode\u003e+\u003c/code\u003e可选择另一打分结果，点击\u003ccode\u003e-\u003c/code\u003e去除添加。\u003c/li\u003e\n\u003cli\u003estep2，选取需要统计的打分特征，如overall(默认)，pronunciation，fluency……\u003c/li\u003e\n\u003cli\u003estep3，备注曲线的名称。\u003c/li\u003e\n\u003cli\u003estep4，运行。\u003c/li\u003e\n\u003cli\u003estep5，得到可视化曲形，如果点选了多组比较，可点击右上方的选项选择需要的曲线。\u003c/li\u003e\n\u003c/ul\u003e\n\u003c/li\u003e\n\u003c/ul\u003e\n\u003c/li\u003e\n\u003cli\u003e提交新的打分文件模型目录时，放在\u003ccode\u003e/home/pipeline/autoScorerLLS\u003c/code\u003e中，新建文件夹命名为\u003ccode\u003escore-distribution-lang-version\u003c/code\u003e,如\u003ccode\u003escore-distribution-en_us-254\u003c/code\u003e。\u003c/li\u003e\n\u003cli\u003e文件架中必须要有：dict，model，binary（暂时只支持batch，牵扯到job－config）,和job－config的json文件。如\u003ccode\u003escore-distribution-en_us-303\u003c/code\u003e中\n\u003cbr  /\u003e\u003ccode\u003ecmu07_20140625.dic\u003c/code\u003e, \u003ccode\u003eengzo_score_raw\u003c/code\u003e, \u003ccode\u003eengzo_score_raw_batch\u003c/code\u003e, \u003ccode\u003een_us-303.json\u003c/code\u003e,  \u003ccode\u003een-us-v303-dnn\u003c/code\u003e。\u003c/li\u003e\n\u003cli\u003eTODO:\u003cul\u003e\n\u003cli\u003e有新模型提交时，自动修改json配置文件。\u003c/li\u003e\n\u003cli\u003e增加支持record模式，和sentence reference模式。\u003c/li\u003e\n\u003c/ul\u003e\n\u003c/li\u003e\n\u003cli\u003e已知的bugs：\u003cul\u003e\n\u003cli\u003e用ng-model ng-show绑定的数据有时会出现闪烁。\u003c/li\u003e\n\u003cli\u003e断开zeppelin-server后，Angular绑定的数据会丢失，需要重新会angularBind重新绑定，在最后有Rebind And Unbind Checked模块，可以对绑定数据重置default.\u003c/li\u003e\n\u003c/ul\u003e\n\u003c/li\u003e\n\u003c/ul\u003e\n"
+      },
+      "dateCreated": "Sep 2, 2015 11:48:20 AM",
+      "dateStarted": "Sep 10, 2015 3:05:38 PM",
+      "dateFinished": "Sep 10, 2015 3:05:38 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n##Part.1 Automatic Scorer Config##",
+      "config": {
+        "colWidth": 5.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1440999497353_-860389090",
+      "id": "20150831-133817_585476197",
+      "result": {
+        "code": "SUCCESS",
+        "type": "HTML",
+        "msg": "\u003ch2\u003ePart.1 Automatic Scorer Config\u003c/h2\u003e\n"
+      },
+      "dateCreated": "Aug 31, 2015 1:38:17 PM",
+      "dateStarted": "Sep 1, 2015 10:17:20 AM",
+      "dateFinished": "Sep 1, 2015 10:17:20 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "重启zeppelin服务后，运行此模块，将绑定数据设为default，重新绑定。",
+      "text": "val HDFSPath1 \u003d z.angularBind(\"confirmPath1\",\"default\")\nval HDFSPath2 \u003d z.angularBind(\"confirmPath2\",\"default\")\nval radio \u003d z.angularBind(\"radioModel\",\"default\")\nval rem1 \u003d z.angularBind(\"remark1\",\"default\")\nval rem2 \u003d z.angularBind(\"remark2\",\"default\")\nval sdf \u003d z.angularBind(\"add\",\"default\")\nval language \u003d z.angularBind(\"selectFile\",\"default\")",
+      "config": {
+        "colWidth": 7.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "title": true,
+        "editorHide": true,
+        "tableHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442758213649_2011305481",
+      "id": "20150920-221013_1073989400",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "HDFSPath1: Unit \u003d ()\nHDFSPath2: Unit \u003d ()\nradio: Unit \u003d ()\nrem1: Unit \u003d ()\nrem2: Unit \u003d ()\nsdf: Unit \u003d ()\nlanguage: Unit \u003d ()\n"
+      },
+      "dateCreated": "Sep 20, 2015 10:10:13 PM",
+      "dateStarted": "Sep 20, 2015 10:24:15 PM",
+      "dateFinished": "Sep 20, 2015 10:24:16 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "step.1: import initialization,click and run -----\u003e",
+      "text": "%spark\nz.load(\"com.alibaba:fastjson:1.2.6\")\nimport java.io.{File,BufferedWriter,FileWriter}\nimport scala.io.Source\nimport com.alibaba.fastjson.{JSONObject, JSON, JSONWriter}\nimport java.util.{Date, Locale} \nimport java.text.DateFormat  \nimport java.text.DateFormat._  \nval rootDir \u003d new File(\"/home/pipeline/autoScorerLLS\")\nval fileList \u003d rootDir.listFiles.map(_.toString.split(\"/\").last).sortBy(x\u003d\u003e(x.split(\"-\")(2).head))\nz.angularBind(\"lists\",fileList)\nval originalPath \u003d new File(\"/home/pipeline\")\nval listJars \u003d originalPath.listFiles.map(_.toString).filter(_.contains(\".jar\"))\nz.angularBind(\"jarList\",listJars)\nval fs \u003d FileSystem.get(new Configuration())\nval p \u003d new Path(\"hdfs://llscluster/tmp/zeppelin-auto-scorer/\")\nval resultScorerList \u003d fs.listStatus(p).map(_.getPath.toString)\nz.angularBind(\"selectResultList\",resultScorerList)",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "title": true,
+        "editorHide": true,
+        "tableHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1440580685754_-1427367684",
+      "id": "20150826-171805_1238213076",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "res17: Iterable[String] \u003d Wrappers(com.alibaba:fastjson:1.2.6)\nimport java.io.{File, BufferedWriter, FileWriter}\nimport scala.io.Source\nimport com.alibaba.fastjson.{JSONObject, JSON, JSONWriter}\nimport java.util.{Date, Locale}\nimport java.text.DateFormat\nimport java.text.DateFormat._\nrootDir: java.io.File \u003d /home/pipeline/autoScorerLLS\nfileList: Array[String] \u003d Array(score-distribution-de_de-420, score-distribution-en_us-401, score-distribution-en_us-254, score-distribution-en_us-420, score-distribution-en_us-303, score-distribution-fr_fr-420, score-distribution-ja_jp-400, score-distribution-ja_jp-254, score-distribution-ko_kr-254, score-distribution-ko_kr-401)\noriginalPath: java.io.File \u003d /home/pipeline\nlistJars: Array[String] \u003d Array(/home/pipeline/pipeline-2014-08-25.debug.2.jar, /home/pipeline/pipeline-2014-08-25.jar, /home/pipeline/pipeline-2014-07-29.jar, /home/pipeline/pipeline.2015-09-07.jar, /home/pipeline/pipeline-2014-08-01.jar, /home/pipeline/pipeline-2014-07-28.jar, /home/pipeline/pipeline.jar, /home/pipeline/pipeline.2015-09-07.debug.jar, /home/pipeline/pipeline.latest.jar, /home/pipeline/audiotest-jar-with-dependencies.jar, /home/pipeline/pipeline-2014-08-01.debug.jar, /home/pipeline/pipeline-2014-08-25.debug.jar, /home/pipeline/pipeline-2014-07-30.debug.jar)\n\u003cconsole\u003e:39: error: not found: value FileSystem\n       val fs \u003d FileSystem.get(new Configuration())\n                ^\n"
+      },
+      "dateCreated": "Aug 26, 2015 5:18:05 PM",
+      "dateStarted": "Sep 19, 2015 2:03:23 PM",
+      "dateFinished": "Sep 19, 2015 2:03:25 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Step.2: Select Language and Version",
+      "text": "%angular\n\u003c/br\u003e\n\u003clabel class\u003d\"control-label\" for\u003d\"selection-version\" \u003eSelect Language and Version\u003c/label\u003e\n\u003cdiv class\u003d\"input-group  has-feedback has-warning\"\u003e\n    \u003cspan class\u003d\"input-group-addon\" style\u003d\"font-size:17px\"\u003eSelect\u003c/span\u003e\n    \u003cselect class\u003d\"form-control\" style\u003d\"width:45%;font-size:17px\" id\u003d\"selection-version\" ng-model\u003d\"selectFile\" ng-options\u003d\"list for list in lists\"\u003e\u003c/select\u003e\n\u003c/div\u003e\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": true,
+        "title": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1440593672911_1907113795",
+      "id": "20150826-205432_261810464",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "\u003c/br\u003e\n\u003clabel class\u003d\"control-label\" for\u003d\"selection-version\" \u003eSelect Language and Version\u003c/label\u003e\n\u003cdiv class\u003d\"input-group  has-feedback has-warning\"\u003e\n    \u003cspan class\u003d\"input-group-addon\" style\u003d\"font-size:17px\"\u003eSelect\u003c/span\u003e\n    \u003cselect class\u003d\"form-control\" style\u003d\"width:45%;font-size:17px\" id\u003d\"selection-version\" ng-model\u003d\"selectFile\" ng-options\u003d\"list for list in lists\"\u003e\u003c/select\u003e\n\u003c/div\u003e\n"
+      },
+      "dateCreated": "Aug 26, 2015 8:54:32 PM",
+      "dateStarted": "Sep 15, 2015 8:07:39 PM",
+      "dateFinished": "Sep 15, 2015 8:07:40 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Step.3: binding input file, click and run -----\u003e",
+      "text": "object JSONHelper {\n    def getJSONObjectArray(json: JSONObject, key: String): Array[JSONObject] \u003d json.getJSONArray(key).toArray.map(_.asInstanceOf[JSONObject])\n}\nval language \u003d z.angular(\"selectFile\")\nval language \u003d z.angular(\"selectFile\").toString.split(\"-\")(2)\nval version \u003d z.angular(\"selectFile\").toString.split(\"-\")(3)\n\nval jobConfFile \u003d fileList.filter(_.contains(version)).filter(_.contains(language)).mkString\nval deliverJsonConfigPath \u003d \"/home/pipeline/autoScorerLLS/\"+jobConfFile+\"/\"+language+\"-\"+version+\".json\"\nval pluginDirPath \u003d \"/home/pipeline/autoScorerLLS/\"+jobConfFile\nval conf \u003d JSON.parseObject(Source.fromFile(deliverJsonConfigPath).getLines().mkString)\nval mapper \u003d conf.getJSONObject(\"storage\").getString(\"path\")\nval str1 \u003d conf.getJSONObject(\"mapper\").toString\nval str2 \u003d conf.getJSONObject(\"storage\").getString(\"type\")\nval binary \u003d conf.getJSONObject(\"mapper\").getString(\"bins\").split(\",\")(0).split(\"/\").last.split(\"\\\"\")(0)\nval dict \u003d JSONHelper.getJSONObjectArray(conf.getJSONObject(\"mapper\"),\"bins\").map(_.getJSONObject(\"kwargs\").getString(\"--dict\")).mkString.split(\"/\").last\nval model \u003d JSONHelper.getJSONObjectArray(conf.getJSONObject(\"mapper\"),\"bins\").map(_.getJSONObject(\"kwargs\").getString(\"--am\")).mkString.split(\"/\").last\n\nz.angularBind(\"jarList\",listJars)\nz.angularBind(\"storagePath\", mapper)\nz.angularBind(\"binaryScorer\",binary)\nz.angularBind(\"dictionaryScorer\",dict)\nz.angularBind(\"modelScorer\",model)\n\nz.angularBind(\"pluginPathpluginPath\",pluginDirPath)",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "tableHide": true,
+        "editorHide": true,
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1440502101152_1956269472",
+      "id": "20150825-192821_205418765",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "defined module JSONHelper\nlanguage: Object \u003d score-distribution-en_us-303\nlanguage: String \u003d en_us\nversion: String \u003d 303\njobConfFile: String \u003d score-distribution-en_us-303\ndeliverJsonConfigPath: String \u003d /home/pipeline/autoScorerLLS/score-distribution-en_us-303/en_us-303.json\npluginDirPath: String \u003d /home/pipeline/autoScorerLLS/score-distribution-en_us-303\nconf: com.alibaba.fastjson.JSONObject \u003d {\"mapper\":{\"output_val_type\":\"text\",\"bins\":[{\"bin\":\"@pipeline.plugin.score-distribution-en_us-303/engzo_score_raw_batch\",\"kwargs\":{\"--raw\":\"@@pipeline.audio.raw.bytes\",\"--outlist\":\"@@pipeline.mapper.out.val\",\"--am\":\"@pipeline.plugin.score-distribution-en_us-303/en-us-v303-dnn\",\"--dict\":\"@pipeline.plugin.score-distribution-en_us-303/cmu07_20140625.dic\",\"--trans\":\"@@pipeline.audio.normalized.spoken.text\"}}],\"output_key_type\":\"@pipeline.audio.key\",\"mode\":\"batch\"},\"storage\":{\"path\":\"hdfs://llscluster/tmp/benchmark/scorer/en_us-303\",\"type\":\"hdfs_sequence_file\"}}\nmapper: String \u003d hdfs://llscluster/tmp/benchmark/scorer/en_us-303\nstr1: String \u003d {\"output_val_type\":\"text\",\"bins\":[{\"bin\":\"@pipeline.plugin.score-distribution-en_us-303/engzo_score_raw_batch\",\"kwargs\":{\"--raw\":\"@@pipeline.audio.raw.bytes\",\"--outlist\":\"@@pipeline.mapper.out.val\",\"--am\":\"@pipeline.plugin.score-distribution-en_us-303/en-us-v303-dnn\",\"--dict\":\"@pipeline.plugin.score-distribution-en_us-303/cmu07_20140625.dic\",\"--trans\":\"@@pipeline.audio.normalized.spoken.text\"}}],\"output_key_type\":\"@pipeline.audio.key\",\"mode\":\"batch\"}\nstr2: String \u003d hdfs_sequence_file\nbinary: String \u003d engzo_score_raw_batch\ndict: String \u003d cmu07_20140625.dic\nmodel: String \u003d en-us-v303-dnn\n"
+      },
+      "dateCreated": "Aug 25, 2015 7:28:21 PM",
+      "dateStarted": "Sep 19, 2015 2:03:31 PM",
+      "dateFinished": "Sep 19, 2015 2:03:35 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "step.4: Modify the scorer result outpath (must!!!!) and show the binary, dictionary, model in the selected package",
+      "text": "%angular\n\u003c/br\u003e\n\u003cform class\u003d\"form-inline\"\u003e\n    \u003clabel\u003eResult of Output Path:\u003c/label\u003e\n    \u003clabel class\u003d\"col-md-offset-4\" style\u003d\"position: relative;left: 26px\" \u003eBinary:\u003c/label\u003e\n    \u003clabel class\u003d\"col-md-offset-1\" style\u003d\"position: relative;left: 57px\"\u003eDictionary:\u003c/label\u003e\n    \u003clabel class\u003d\"col-md-offset-1\" style\u003d\"position: relative;left: 44px\"\u003eModel:\u003c/label\u003e\n\u003c/form\u003e\n\u003cform class\u003d\"form-inline\"\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003cdiv class\u003d\"input-group has-success\"\u003e\n        \u003cspan class\u003d\"input-group-addon\" style\u003d\"font-size:17px\"\u003eoutput:\u003c/span\u003e\n        \u003cinput style\u003d\"width:500px;font-size:17px\" id\u003d\"outpath\" type\u003d\"text\"  class\u003d\"form-control \" ng-model\u003d\"storagePath\"\u003e\u003c/input\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003cdiv class\u003d\"btn btn-primary\"\u003e{{binaryScorer}}\u003c/div\u003e\n    \u003cdiv class\u003d\"btn btn-success\"\u003e{{dictionaryScorer}}\u003c/div\u003e\n    \u003cdiv class\u003d\"btn btn-warning\"\u003e{{modelScorer}}\u003c/div\u003e\n  \u003c/div\u003e\n\u003c/form\u003e\n\u003c/div\u003e",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": true,
+        "title": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1440574056468_-718016291",
+      "id": "20150826-152736_1414313258",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "\u003c/br\u003e\n\u003cform class\u003d\"form-inline\"\u003e\n    \u003clabel\u003eResult of Output Path:\u003c/label\u003e\n    \u003clabel class\u003d\"col-md-offset-4\" style\u003d\"position: relative;left: 26px\" \u003eBinary:\u003c/label\u003e\n    \u003clabel class\u003d\"col-md-offset-1\" style\u003d\"position: relative;left: 57px\"\u003eDictionary:\u003c/label\u003e\n    \u003clabel class\u003d\"col-md-offset-1\" style\u003d\"position: relative;left: 44px\"\u003eModel:\u003c/label\u003e\n\u003c/form\u003e\n\u003cform class\u003d\"form-inline\"\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003cdiv class\u003d\"input-group has-success\"\u003e\n        \u003cspan class\u003d\"input-group-addon\" style\u003d\"font-size:17px\"\u003eoutput:\u003c/span\u003e\n        \u003cinput style\u003d\"width:500px;font-size:17px\" id\u003d\"outpath\" type\u003d\"text\"  class\u003d\"form-control \" ng-model\u003d\"storagePath\"\u003e\u003c/input\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003cdiv class\u003d\"btn btn-primary\"\u003e{{binaryScorer}}\u003c/div\u003e\n    \u003cdiv class\u003d\"btn btn-success\"\u003e{{dictionaryScorer}}\u003c/div\u003e\n    \u003cdiv class\u003d\"btn btn-warning\"\u003e{{modelScorer}}\u003c/div\u003e\n  \u003c/div\u003e\n\u003c/form\u003e\n\u003c/div\u003e"
+      },
+      "dateCreated": "Aug 26, 2015 3:27:36 PM",
+      "dateStarted": "Sep 15, 2015 4:18:41 PM",
+      "dateFinished": "Sep 15, 2015 4:18:41 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "step.5: save the output into the config json file, click and run -----\u003e",
+      "text": "import org.apache.hadoop.fs.Path\nimport org.apache.hadoop.fs.FileSystem;\nimport org.apache.hadoop.conf.Configuration;\nval aa \u003d z.angular(\"storagePath\").toString\nval mapper \u003d \"{\"+\"\\\"mapper\\\":\"+ str1 +\",\" + \"\\\"storage\\\":\" + \"{\"+ \"\\\"path\\\":\"+ \"\\\"\"+aa+\"\\\",\" + \"\\\"type\\\":\" +\"\\\"\"+ str2+\"\\\"\"+\"}}\"\nval json \u003d JSON.parseObject(mapper).toString\nval fileJobConfig \u003d new File(deliverJsonConfigPath)\nfileJobConfig.createNewFile\nval writeIn \u003d new BufferedWriter(new FileWriter(fileJobConfig))\nwriteIn.write(json)\nwriteIn.flush\nwriteIn.close\nz.angularBind(\"jobconfpath\",deliverJsonConfigPath)\nval fs \u003d FileSystem.get(new Configuration())\nval p \u003d new Path(\"hdfs://llscluster/tmp/zeppelin-auto-scorer/\")\nval resultScorerList \u003d fs.listStatus(p).map(_.getPath.toString)\nz.angularBind(\"selectResultList\",resultScorerList)",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "tableHide": true,
+        "title": true,
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1440574152068_-1780602453",
+      "id": "20150826-152912_270342803",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "import org.apache.hadoop.fs.Path\nimport org.apache.hadoop.fs.FileSystem\nimport org.apache.hadoop.conf.Configuration\naa: String \u003d hdfs://llscluster/tmp/benchmark/scorer/en_us-303\nmapper: String \u003d {\"mapper\":{\"output_val_type\":\"text\",\"bins\":[{\"bin\":\"@pipeline.plugin.score-distribution-en_us-303/engzo_score_raw_batch\",\"kwargs\":{\"--raw\":\"@@pipeline.audio.raw.bytes\",\"--outlist\":\"@@pipeline.mapper.out.val\",\"--am\":\"@pipeline.plugin.score-distribution-en_us-303/en-us-v303-dnn\",\"--dict\":\"@pipeline.plugin.score-distribution-en_us-303/cmu07_20140625.dic\",\"--trans\":\"@@pipeline.audio.normalized.spoken.text\"}}],\"output_key_type\":\"@pipeline.audio.key\",\"mode\":\"batch\"},\"storage\":{\"path\":\"hdfs://llscluster/tmp/benchmark/scorer/en_us-303\",\"type\":\"hdfs_sequence_file\"}}\njson: String \u003d {\"mapper\":{\"output_val_type\":\"text\",\"bins\":[{\"bin\":\"@pipeline.plugin.score-distribution-en_us-303/engzo_score_raw_batch\",\"kwargs\":{\"--raw\":\"@@pipeline.audio.raw.bytes\",\"--outlist\":\"@@pipeline.mapper.out.val\",\"--am\":\"@pipeline.plugin.score-distribution-en_us-303/en-us-v303-dnn\",\"--dict\":\"@pipeline.plugin.score-distribution-en_us-303/cmu07_20140625.dic\",\"--trans\":\"@@pipeline.audio.normalized.spoken.text\"}}],\"output_key_type\":\"@pipeline.audio.key\",\"mode\":\"batch\"},\"storage\":{\"path\":\"hdfs://llscluster/tmp/benchmark/scorer/en_us-303\",\"type\":\"hdfs_sequence_file\"}}\nfileJobConfig: java.io.File \u003d /home/pipeline/autoScorerLLS/score-distribution-en_us-303/en_us-303.json\nres30: Boolean \u003d false\nwriteIn: java.io.BufferedWriter \u003d java.io.BufferedWriter@37141098\nfs: org.apache.hadoop.fs.FileSystem \u003d DFS[DFSClient[clientName\u003dDFSClient_NONMAPREDUCE_336021267_70, ugi\u003dpipeline (auth:SIMPLE)]]\np: org.apache.hadoop.fs.Path \u003d hdfs://llscluster/tmp/zeppelin-auto-scorer\nresultScorerList: Array[String] \u003d Array(hdfs://llscluster/tmp/zeppelin-auto-scorer/en-us-254-test1, hdfs://llscluster/tmp/zeppelin-auto-scorer/en-us-303-test1, hdfs://llscluster/tmp/zeppelin-auto-scorer/en-us-401-test1, hdfs://llscluster/tmp/zeppelin-auto-scorer/en-us-420-test1)\n"
+      },
+      "dateCreated": "Aug 26, 2015 3:29:12 PM",
+      "dateStarted": "Sep 19, 2015 2:03:58 PM",
+      "dateFinished": "Sep 19, 2015 2:04:00 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "step.6: generate the spark submit text. copy and paste in terminal (/opt/simple-spark/bin)",
+      "text": "%angular\n\u003cdiv\u003e\n    \u003ccenter\u003e\u003ch3 \u003eSpark-Submit Automatic Text\u003c/h3\u003e\u003c/center\u003e\n\u003c/div\u003e\n\u003cform class\u003d\"form-horizontal\"\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputdrivermem\" class\u003d\"col-sm-3 control-label\"\u003edriver-memory\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n      \u003cinput type\u003d\"number\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputDriver\"  ng-init\u003d\"inputDriver\u003d3\" id\u003d\"inputdrivermem\" placeholder\u003d\"input Driver\" \u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputcores\" class\u003d\"col-sm-3 control-label\"\u003etotal-cores\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n      \u003cinput type\u003d\"number\" class\u003d\"form-control \"  style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputCores\" ng-init\u003d\"inputCores\u003d50\" id\u003d\"inputcores\" placeholder\u003d\"total-executor-core\"\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputexemem\" class\u003d\"col-sm-3 control-label\"\u003eexecutor-memory\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n      \u003cinput type\u003d\"number\" class\u003d\"form-control\"  style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputExecutor\" ng-init\u003d\"inputExecutor\u003d10\" id\u003d\"inputexemem\" placeholder\u003d\"executor-memory\" \u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputclass\" class\u003d\"col-sm-3 control-label\"\u003eclass\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n      \u003cinput type\u003d\"text\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-init\u003d\"inputClass\u003d\u0027com.liulishuo.speech.pipeline.core.Job\u0027\" ng-model\u003d\"inputClass\" id\u003d\"inputclass\" placeholder\u003d\"class in the input jar\" \u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputjar\" class\u003d\"col-sm-3 control-label\"\u003einput-jar\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cselect class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputJarPath\" id\u003d\"inputjar\" ng-options\u003d\"file for file in jarList\"\u003e\u003c/select\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"hdfsRoot\" class\u003d\"col-sm-3 control-label\"\u003eplugin-hdfs-root\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cinput type\u003d\"text\"  style\u003d\"width:500px; height:37px; font-size:17px\" class\u003d\"form-control\" ng-model\u003d\"inputHdfsRootPath\" id\u003d\"hdfsRoot\" ng-init\u003d\"inputHdfsRootPath\u003d\u0027hdfs://llscluster/tmp/audio-pipeline-plugins-test\u0027\"\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"jobconf\" class\u003d\"col-sm-3 control-label\"\u003ejob-config\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cinput type\u003d\"text\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"jobconfpath\" id\u003d\"jobconf\" placeholder\u003d\"job-config path .json file\"\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"plugins\" class\u003d\"col-sm-3 control-label\"\u003eplugins\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cinput type\u003d\"text\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"pluginPathpluginPath\" id\u003d\"plugins\" placeholder\u003d\"plugin directive which includes model, dict, engzo\"\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputAudio\" class\u003d\"col-sm-3 control-label\"\u003einput-audios\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cinput type\u003d\"text\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputAudios\" ng-init\u003d\"inputAudios\u003d\u0027hdfs://llscluster/user/oy/datasets/score-distribution/audios/key-raw.seq \u0027\" id\u003d\"inputAudio\" placeholder\u003d\"input audios path\"\u003e\n    \u003c/div\u003e\n    \u003cbutton class\u003d\"btn btn-primary\" type\u003d\"button\" data-toggle\u003d\"collapse\" data-target\u003d\"#collapseExample\" aria-expanded\u003d\"false\" aria-controls\u003d\"collapseExample\"\u003e Confirm\n    \u003c/button\u003e\n  \u003c/div\u003e\n\u003c/form\u003e\n\u003cdiv class\u003d\"collapse\" id\u003d\"collapseExample\"\u003e\n    \u003ctextarea class\u003d\"form-control\" rows\u003d\"5\"\u003e\nbash /opt/simple-spark/bin/spark-submit --driver-memory {{inputDriver}}G --total-executor-cores {{inputCores}} --executor-memory {{inputExecutor}}G --class {{inputClass}} {{inputJarPath}} --plugin-hdfs-root {{inputHdfsRootPath}} --job-conf {{jobconfpath}} --plugins {{pluginPathpluginPath}} --input-audios {{inputAudios}}     \n    \u003c/textarea\u003e\n\u003c/div\u003e\n{{inputdriver}}",
+      "config": {
+        "colWidth": 10.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": true,
+        "tableHide": false,
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1439888661702_1960039286",
+      "id": "20150818-170421_447869971",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "\u003cdiv\u003e\n    \u003ccenter\u003e\u003ch3 \u003eSpark-Submit Automatic Text\u003c/h3\u003e\u003c/center\u003e\n\u003c/div\u003e\n\u003cform class\u003d\"form-horizontal\"\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputdrivermem\" class\u003d\"col-sm-3 control-label\"\u003edriver-memory\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n      \u003cinput type\u003d\"number\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputDriver\"  ng-init\u003d\"inputDriver\u003d3\" id\u003d\"inputdrivermem\" placeholder\u003d\"input Driver\" \u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputcores\" class\u003d\"col-sm-3 control-label\"\u003etotal-cores\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n      \u003cinput type\u003d\"number\" class\u003d\"form-control \"  style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputCores\" ng-init\u003d\"inputCores\u003d50\" id\u003d\"inputcores\" placeholder\u003d\"total-executor-core\"\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputexemem\" class\u003d\"col-sm-3 control-label\"\u003eexecutor-memory\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n      \u003cinput type\u003d\"number\" class\u003d\"form-control\"  style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputExecutor\" ng-init\u003d\"inputExecutor\u003d10\" id\u003d\"inputexemem\" placeholder\u003d\"executor-memory\" \u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputclass\" class\u003d\"col-sm-3 control-label\"\u003eclass\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n      \u003cinput type\u003d\"text\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-init\u003d\"inputClass\u003d\u0027com.liulishuo.speech.pipeline.core.Job\u0027\" ng-model\u003d\"inputClass\" id\u003d\"inputclass\" placeholder\u003d\"class in the input jar\" \u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputjar\" class\u003d\"col-sm-3 control-label\"\u003einput-jar\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cselect class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputJarPath\" id\u003d\"inputjar\" ng-options\u003d\"file for file in jarList\"\u003e\u003c/select\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"hdfsRoot\" class\u003d\"col-sm-3 control-label\"\u003eplugin-hdfs-root\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cinput type\u003d\"text\"  style\u003d\"width:500px; height:37px; font-size:17px\" class\u003d\"form-control\" ng-model\u003d\"inputHdfsRootPath\" id\u003d\"hdfsRoot\" ng-init\u003d\"inputHdfsRootPath\u003d\u0027hdfs://llscluster/tmp/audio-pipeline-plugins-test\u0027\"\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"jobconf\" class\u003d\"col-sm-3 control-label\"\u003ejob-config\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cinput type\u003d\"text\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"jobconfpath\" id\u003d\"jobconf\" placeholder\u003d\"job-config path .json file\"\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"plugins\" class\u003d\"col-sm-3 control-label\"\u003eplugins\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cinput type\u003d\"text\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"pluginPathpluginPath\" id\u003d\"plugins\" placeholder\u003d\"plugin directive which includes model, dict, engzo\"\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputAudio\" class\u003d\"col-sm-3 control-label\"\u003einput-audios\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cinput type\u003d\"text\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputAudios\" ng-init\u003d\"inputAudios\u003d\u0027hdfs://llscluster/user/oy/datasets/score-distribution/audios/key-raw.seq \u0027\" id\u003d\"inputAudio\" placeholder\u003d\"input audios path\"\u003e\n    \u003c/div\u003e\n    \u003cbutton class\u003d\"btn btn-primary\" type\u003d\"button\" data-toggle\u003d\"collapse\" data-target\u003d\"#collapseExample\" aria-expanded\u003d\"false\" aria-controls\u003d\"collapseExample\"\u003e Confirm\n    \u003c/button\u003e\n  \u003c/div\u003e\n\u003c/form\u003e\n\u003cdiv class\u003d\"collapse\" id\u003d\"collapseExample\"\u003e\n    \u003ctextarea class\u003d\"form-control\" rows\u003d\"5\"\u003e\nbash /opt/simple-spark/bin/spark-submit --driver-memory {{inputDriver}}G --total-executor-cores {{inputCores}} --executor-memory {{inputExecutor}}G --class {{inputClass}} {{inputJarPath}} --plugin-hdfs-root {{inputHdfsRootPath}} --job-conf {{jobconfpath}} --plugins {{pluginPathpluginPath}} --input-audios {{inputAudios}}     \n    \u003c/textarea\u003e\n\u003c/div\u003e\n{{inputdriver}}"
+      },
+      "dateCreated": "Aug 18, 2015 5:04:21 PM",
+      "dateStarted": "Sep 11, 2015 4:43:14 PM",
+      "dateFinished": "Sep 11, 2015 4:43:14 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n##Part.2 Scorer Visualization##",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1441000239981_809477500",
+      "id": "20150831-135039_1856259094",
+      "result": {
+        "code": "SUCCESS",
+        "type": "HTML",
+        "msg": "\u003ch2\u003ePart.2 Scorer Visualization\u003c/h2\u003e\n"
+      },
+      "dateCreated": "Aug 31, 2015 1:50:39 PM",
+      "dateStarted": "Sep 1, 2015 10:17:20 AM",
+      "dateFinished": "Sep 1, 2015 10:17:20 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Step1: scorer result stored path",
+      "text": "%angular\n\u003c/br\u003e\n\u003cdiv\u003e\n    \u003cform class\u003d\"form-inline\"\u003e\n        \u003cdiv class\u003d\"form-group\"\u003e\n            \u003cdiv class\u003d\"input-group has-success\"\u003e\n                \u003cspan class\u003d\"input-group-addon\" style\u003d\"font-size:17px\"\u003epath1:\u003c/span\u003e\n                \u003cinput ng-model\u003d\"storagePath\"  style\u003d\"width:600px; height:37px; font-size:17px\" type\u003d\"text\" class\u003d\"form-control input-lg\" \u003e\n            \u003c/div\u003e\n        \u003c/div\u003e\n        \u003cdiv class\u003d\"form-group\"\u003e\n           \u003cdiv class\u003d\"btn btn-success\" ng-click\u003d\"confirmPath1\u003dstoragePath\"\u003esubmit\u003c/div\u003e\n        \u003c/div\u003e\n        \u003cdiv class\u003d\"form-group\"\u003e\n            \u003cbutton class\u003d\"btn btn-info\" ng-cloak ng-show\u003d\"add \u003d\u003d false\" ng-click\u003d\"add \u003d true\" \u003e\u003ci class\u003d\"glyphicon glyphicon-plus\"\u003e\u003c/i\u003e\u003c/button\u003e\n            \u003cbutton class\u003d\"btn btn-danger\" ng-init\u003d\"add\u003dtrue\" ng-show\u003d\"add \u003d\u003d true\" ng-click\u003d\"add \u003d false\"\u003e\u003ci class\u003d\"glyphicon glyphicon-minus\"\u003e\u003c/i\u003e\u003c/button\u003e\n        \u003c/div\u003e\n    \u003c/form\u003e\n    \n    \u003cp class\u003d\"text-success\"\u003e\u003cstrong\u003eSubmit Path1:\u003c/strong\u003e {{confirmPath1}}\u003c/p\u003e\n    \n    \u003c/br\u003e\n    \u003cform class\u003d\"form-inline\" ng-show\u003d\"add\"\u003e\n        \u003cdiv class\u003d\"form-group\"\u003e\n            \u003cdiv class\u003d\"input-group has-warning\"\u003e\n                \u003cspan class\u003d\"input-group-addon\" style\u003d\"font-size:17px\"\u003epath2:\u003c/span\u003e\n                \u003cselect ng-model\u003d\"selectResultPath\" class\u003d\"form-control\"  style\u003d\"width:600px; height:37px; font-size:17px\" ng-options\u003d\"num for num in selectResultList\"\u003e\u003c/select\u003e\n            \u003c/div\u003e\n        \u003c/div\u003e\n        \u003cdiv class\u003d\"form-group\"\u003e\n           \u003cdiv class\u003d\"btn btn-success\" ng-click\u003d\"confirmPath2\u003dselectResultPath\"\u003esubmit\u003c/div\u003e\n        \u003c/div\u003e\n        \n        \u003cp class\u003d\"text-warning\"\u003e\u003cstrong\u003eSubmit Path2:\u003c/strong\u003e {{confirmPath2}}\u003c/p\u003e\n        \n    \u003c/form\u003e\n\u003c/div\u003e\n\n\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": true,
+        "title": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1440678875080_-178495016",
+      "id": "20150827-203435_863930268",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "\u003c/br\u003e\n\u003cdiv\u003e\n    \u003cform class\u003d\"form-inline\"\u003e\n        \u003cdiv class\u003d\"form-group\"\u003e\n            \u003cdiv class\u003d\"input-group has-success\"\u003e\n                \u003cspan class\u003d\"input-group-addon\" style\u003d\"font-size:17px\"\u003epath1:\u003c/span\u003e\n                \u003cinput ng-model\u003d\"storagePath\"  style\u003d\"width:600px; height:37px; font-size:17px\" type\u003d\"text\" class\u003d\"form-control input-lg\" \u003e\n            \u003c/div\u003e\n        \u003c/div\u003e\n        \u003cdiv class\u003d\"form-group\"\u003e\n           \u003cdiv class\u003d\"btn btn-success\" ng-click\u003d\"confirmPath1\u003dstoragePath\"\u003esubmit\u003c/div\u003e\n        \u003c/div\u003e\n        \u003cdiv class\u003d\"form-group\"\u003e\n            \u003cbutton class\u003d\"btn btn-info\" ng-cloak ng-show\u003d\"add \u003d\u003d false\" ng-click\u003d\"add \u003d true\" \u003e\u003ci class\u003d\"glyphicon glyphicon-plus\"\u003e\u003c/i\u003e\u003c/button\u003e\n            \u003cbutton class\u003d\"btn btn-danger\" ng-init\u003d\"add\u003dtrue\" ng-show\u003d\"add \u003d\u003d true\" ng-click\u003d\"add \u003d false\"\u003e\u003ci class\u003d\"glyphicon glyphicon-minus\"\u003e\u003c/i\u003e\u003c/button\u003e\n        \u003c/div\u003e\n    \u003c/form\u003e\n    \n    \u003cp class\u003d\"text-success\"\u003e\u003cstrong\u003eSubmit Path1:\u003c/strong\u003e {{confirmPath1}}\u003c/p\u003e\n    \n    \u003c/br\u003e\n    \u003cform class\u003d\"form-inline\" ng-show\u003d\"add\"\u003e\n        \u003cdiv class\u003d\"form-group\"\u003e\n            \u003cdiv class\u003d\"input-group has-warning\"\u003e\n                \u003cspan class\u003d\"input-group-addon\" style\u003d\"font-size:17px\"\u003epath2:\u003c/span\u003e\n                \u003cselect ng-model\u003d\"selectResultPath\" class\u003d\"form-control\"  style\u003d\"width:600px; height:37px; font-size:17px\" ng-options\u003d\"num for num in selectResultList\"\u003e\u003c/select\u003e\n            \u003c/div\u003e\n        \u003c/div\u003e\n        \u003cdiv class\u003d\"form-group\"\u003e\n           \u003cdiv class\u003d\"btn btn-success\" ng-click\u003d\"confirmPath2\u003dselectResultPath\"\u003esubmit\u003c/div\u003e\n        \u003c/div\u003e\n        \n        \u003cp class\u003d\"text-warning\"\u003e\u003cstrong\u003eSubmit Path2:\u003c/strong\u003e {{confirmPath2}}\u003c/p\u003e\n        \n    \u003c/form\u003e\n\u003c/div\u003e\n\n\n"
+      },
+      "dateCreated": "Aug 27, 2015 8:34:35 PM",
+      "dateStarted": "Sep 16, 2015 10:04:02 PM",
+      "dateFinished": "Sep 16, 2015 10:04:02 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Step2: Select the feature",
+      "text": "%angular\n\n    \u003cpre style\u003d\"width:69%\"\u003e{{radioModel || \" \"}}\u003c/pre\u003e\n\n    \u003cdiv class\u003d\"btn-group\"\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027overall\u0027\" \u003eoverall\u003c/label\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027pronunciation\u0027\" \u003epronunciation\u003c/label\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027fluency\u0027\" \u003efluency\u003c/label\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027accuracy\u0027\" \u003eaccuracy\u003c/label\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027integrity\u0027\" \u003eintegrity\u003c/label\u003e\n\u003c/div\u003e",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "title": true,
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1440991158632_1466955207",
+      "id": "20150831-111918_1572506309",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "\n    \u003cpre style\u003d\"width:69%\"\u003e{{radioModel || \" \"}}\u003c/pre\u003e\n\n    \u003cdiv class\u003d\"btn-group\"\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027overall\u0027\" \u003eoverall\u003c/label\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027pronunciation\u0027\" \u003epronunciation\u003c/label\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027fluency\u0027\" \u003efluency\u003c/label\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027accuracy\u0027\" \u003eaccuracy\u003c/label\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027integrity\u0027\" \u003eintegrity\u003c/label\u003e\n\u003c/div\u003e"
+      },
+      "dateCreated": "Aug 31, 2015 11:19:18 AM",
+      "dateStarted": "Sep 1, 2015 10:17:21 AM",
+      "dateFinished": "Sep 1, 2015 10:17:21 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Step3: type the figures\u0027 names",
+      "text": "%angular\n\u003c/br\u003e\n\u003cform class\u003d\"form-inline\"\u003e\n\u003cdiv class\u003d\"input-group has-success\"\u003e\n    \u003cspan class\u003d\"input-group-addon\"  style\u003d\"font-size:17px\"\u003eName1:\u003c/span\u003e\n    \u003cinput ng-model\u003d\"remark1\"  style\u003d\"width:200px; height:37px; font-size:17px\" type\u003d\"text\" class\u003d\"form-control input-lg\" \u003e\u003c/input\u003e\n\u003c/div\u003e\n\u003cdiv class\u003d\"input-group has-warning\" ng-show\u003d\"add\" \u003e\n    \u003cspan class\u003d\"input-group-addon\"  style\u003d\"font-size:17px\"\u003eName2:\u003c/span\u003e\n    \u003cinput ng-model\u003d\"remark2\"  style\u003d\"width:200px; height:37px; font-size:17px\" type\u003d\"text\" class\u003d\"form-control input-lg\" \u003e\u003c/input\u003e\n\u003c/div\u003e\n\u003c/form\u003e",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "title": true,
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1441000169055_535997653",
+      "id": "20150831-134929_1784874132",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "\u003c/br\u003e\n\u003cform class\u003d\"form-inline\"\u003e\n\u003cdiv class\u003d\"input-group has-success\"\u003e\n    \u003cspan class\u003d\"input-group-addon\"  style\u003d\"font-size:17px\"\u003eName1:\u003c/span\u003e\n    \u003cinput ng-model\u003d\"remark1\"  style\u003d\"width:200px; height:37px; font-size:17px\" type\u003d\"text\" class\u003d\"form-control input-lg\" \u003e\u003c/input\u003e\n\u003c/div\u003e\n\u003cdiv class\u003d\"input-group has-warning\" ng-show\u003d\"add\" \u003e\n    \u003cspan class\u003d\"input-group-addon\"  style\u003d\"font-size:17px\"\u003eName2:\u003c/span\u003e\n    \u003cinput ng-model\u003d\"remark2\"  style\u003d\"width:200px; height:37px; font-size:17px\" type\u003d\"text\" class\u003d\"form-control input-lg\" \u003e\u003c/input\u003e\n\u003c/div\u003e\n\u003c/form\u003e"
+      },
+      "dateCreated": "Aug 31, 2015 1:49:29 PM",
+      "dateStarted": "Sep 6, 2015 10:57:19 AM",
+      "dateFinished": "Sep 6, 2015 10:57:20 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "step4: parse the feature of each figure -----\u003e",
+      "text": "%spark\n//z.load(\"com.alibaba:fastjson:1.2.6\");\nval HDFSPath1 \u003d z.angular(\"confirmPath1\").toString\nval HDFSPath2 \u003d z.angular(\"confirmPath2\").toString\nval isDouble \u003d z.angular(\"add\").toString\nval feature \u003d z.angular(\"radioModel\").toString\nval rem1 \u003d z.angular(\"remark1\").toString\nval rem2 \u003d z.angular(\"remark2\").toString\nval date \u003d new Date \nval now \u003d date.toString.split(\" \").dropRight(2).drop(1).mkString(\"-\")  \n\n\nobject JSONHelper {\n  def getJSONObjectArray(json: JSONObject, key: String): Array[JSONObject] \u003d json.getJSONArray(key).toArray.map(_.asInstanceOf[JSONObject])\n  def getStringArray(json: JSONObject, key: String): Array[String] \u003d json.getJSONArray(key).toArray.map(_.toString)\n}//fastJson Helper\n\nif(isDouble\u003d\u003d\"true\"){\n    val a \u003d sc.sequenceFile[String,String](HDFSPath1).map{case(key,value)\u003d\u003e(key,JSON.parseObject(value).getDouble(feature),rem1)}\n    val b \u003d sc.sequenceFile[String,String](HDFSPath2).map{case(key,value)\u003d\u003e(key,JSON.parseObject(value).getDouble(feature),rem2)}\n    // val g \u003d sc.sequenceFile[String,String](\"hdfs://llscluster/tmp/zeppelin-auto-scorer/en-us-401-test1\").map{case(key,value)\u003d\u003e(key,JSON.parseObject(value).getDouble(feature),\"401\")}\n    val c \u003d a.union(b)\n    // .union(g)\n    val e \u003d c.toDF().registerTempTable(\"aaaa\")\n}else{\n    val f \u003d sc.sequenceFile[String,String](HDFSPath1).map{case(key,value)\u003d\u003e(key,JSON.parseObject(value).getDouble(feature),rem1)}\n    f.toDF().registerTempTable(\"aaaa\")\n}\n\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "title": true,
+        "editorHide": true,
+        "tableHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1441001599766_523755731",
+      "id": "20150831-141319_1860680427",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "HDFSPath1: String \u003d hdfs://llscluster/tmp/zeppelin-auto-scorer/en-us-303-test1\nHDFSPath2: String \u003d hdfs://llscluster/tmp/zeppelin-auto-scorer/en-us-401-test1\nisDouble: String \u003d true\nfeature: String \u003d overall\nrem1: String \u003d en_us-03en-us-303\nrem2: String \u003d en_us-303\ndate: java.util.Date \u003d Thu Sep 17 11:21:41 CST 2015\nnow: String \u003d Sep-17-11:21:41\ndefined module JSONHelper\n"
+      },
+      "dateCreated": "Aug 31, 2015 2:13:19 PM",
+      "dateStarted": "Sep 17, 2015 11:21:41 AM",
+      "dateFinished": "Sep 17, 2015 11:21:42 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "step5: print each line of scorer result -----\u003e",
+      "text": "%sql select _2, _3, count(_2) from aaaa where _2 \u003c\u003d ${choose the maxi value} AND _2 \u003e\u003d ${choose the mini value} group by _2, _3 order by _2, _3",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "lineChart",
+          "height": 582.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "_2",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "c2",
+              "index": 2.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [
+            {
+              "name": "_3",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "scatter": {
+            "xAxis": {
+              "name": "_2",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "group": {
+              "name": "_3",
+              "index": 1.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "c2",
+              "index": 2.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "title": true,
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {
+          "choose the mini value": "90",
+          "choose the maxi value": "100"
+        },
+        "forms": {
+          "choose the mini value": {
+            "name": "choose the mini value",
+            "defaultValue": "",
+            "hidden": false
+          },
+          "choose the maxi value": {
+            "name": "choose the maxi value",
+            "defaultValue": "",
+            "hidden": false
+          }
+        }
+      },
+      "jobName": "paragraph_1441002210470_1845993205",
+      "id": "20150831-142330_1094766889",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "_2\t_3\tc2\n90.0\ten_us-254\t3176\n90.0\ten_us-303\t4991\n90.1\ten_us-254\t3118\n90.1\ten_us-303\t5129\n90.2\ten_us-254\t3147\n90.2\ten_us-303\t5085\n90.3\ten_us-254\t3031\n90.3\ten_us-303\t5047\n90.4\ten_us-254\t3000\n90.4\ten_us-303\t5039\n90.5\ten_us-254\t2996\n90.5\ten_us-303\t5006\n90.6\ten_us-254\t2995\n90.6\ten_us-303\t5077\n90.7\ten_us-254\t3036\n90.7\ten_us-303\t5034\n90.8\ten_us-254\t2992\n90.8\ten_us-303\t5197\n90.9\ten_us-254\t3040\n90.9\ten_us-303\t5050\n91.0\ten_us-254\t2851\n91.0\ten_us-303\t5073\n91.1\ten_us-254\t2892\n91.1\ten_us-303\t5202\n91.2\ten_us-254\t2965\n91.2\ten_us-303\t5132\n91.3\ten_us-254\t2901\n91.3\ten_us-303\t5004\n91.4\ten_us-254\t2841\n91.4\ten_us-303\t5160\n91.5\ten_us-254\t2958\n91.5\ten_us-303\t5179\n91.6\ten_us-254\t2930\n91.6\ten_us-303\t5191\n91.7\ten_us-254\t2813\n91.7\ten_us-303\t5136\n91.8\ten_us-254\t2909\n91.8\ten_us-303\t4960\n91.9\ten_us-254\t2813\n91.9\ten_us-303\t4984\n92.0\ten_us-254\t3000\n92.0\ten_us-303\t4983\n92.1\ten_us-254\t2940\n92.1\ten_us-303\t5050\n92.2\ten_us-254\t3026\n92.2\ten_us-303\t5087\n92.3\ten_us-254\t3040\n92.3\ten_us-303\t5035\n92.4\ten_us-254\t2997\n92.4\ten_us-303\t4995\n92.5\ten_us-254\t2962\n92.5\ten_us-303\t4876\n92.6\ten_us-254\t2931\n92.6\ten_us-303\t5087\n92.7\ten_us-254\t2925\n92.7\ten_us-303\t4872\n92.8\ten_us-254\t2994\n92.8\ten_us-303\t4844\n92.9\ten_us-254\t3064\n92.9\ten_us-303\t5002\n93.0\ten_us-254\t2901\n93.0\ten_us-303\t4904\n93.1\ten_us-254\t2929\n93.1\ten_us-303\t5038\n93.2\ten_us-254\t3044\n93.2\ten_us-303\t4809\n93.3\ten_us-254\t2880\n93.3\ten_us-303\t4921\n93.4\ten_us-254\t2814\n93.4\ten_us-303\t4850\n93.5\ten_us-254\t2698\n93.5\ten_us-303\t4935\n93.6\ten_us-254\t2792\n93.6\ten_us-303\t4776\n93.7\ten_us-254\t2640\n93.7\ten_us-303\t4638\n93.8\ten_us-254\t2570\n93.8\ten_us-303\t4788\n93.9\ten_us-254\t2457\n93.9\ten_us-303\t4811\n94.0\ten_us-254\t2298\n94.0\ten_us-303\t4895\n94.1\ten_us-254\t2147\n94.1\ten_us-303\t4750\n94.2\ten_us-254\t2104\n94.2\ten_us-303\t4825\n94.3\ten_us-254\t1978\n94.3\ten_us-303\t4583\n94.4\ten_us-254\t1760\n94.4\ten_us-303\t4682\n94.5\ten_us-254\t1649\n94.5\ten_us-303\t4644\n94.6\ten_us-254\t1544\n94.6\ten_us-303\t4516\n94.7\ten_us-254\t1415\n94.7\ten_us-303\t4592\n94.8\ten_us-254\t1221\n94.8\ten_us-303\t4726\n94.9\ten_us-254\t1057\n94.9\ten_us-303\t4526\n95.0\ten_us-254\t991\n95.0\ten_us-303\t4482\n95.1\ten_us-254\t919\n95.1\ten_us-303\t4328\n95.2\ten_us-254\t775\n95.2\ten_us-303\t4285\n95.3\ten_us-254\t691\n95.3\ten_us-303\t4162\n95.4\ten_us-254\t591\n95.4\ten_us-303\t4125\n95.5\ten_us-254\t466\n95.5\ten_us-303\t4139\n95.6\ten_us-254\t451\n95.6\ten_us-303\t4146\n95.7\ten_us-254\t396\n95.7\ten_us-303\t3997\n95.8\ten_us-254\t305\n95.8\ten_us-303\t3886\n95.9\ten_us-254\t276\n95.9\ten_us-303\t3795\n96.0\ten_us-254\t235\n96.0\ten_us-303\t3726\n96.1\ten_us-254\t213\n96.1\ten_us-303\t3464\n96.2\ten_us-254\t173\n96.2\ten_us-303\t3342\n96.3\ten_us-254\t158\n96.3\ten_us-303\t3049\n96.4\ten_us-254\t140\n96.4\ten_us-303\t2797\n96.5\ten_us-254\t104\n96.5\ten_us-303\t2527\n96.6\ten_us-254\t99\n96.6\ten_us-303\t2307\n96.7\ten_us-254\t92\n96.7\ten_us-303\t2202\n96.8\ten_us-254\t83\n96.8\ten_us-303\t1881\n96.9\ten_us-254\t72\n96.9\ten_us-303\t1676\n97.0\ten_us-254\t71\n97.0\ten_us-303\t1442\n97.1\ten_us-254\t73\n97.1\ten_us-303\t1357\n97.2\ten_us-254\t50\n97.2\ten_us-303\t1098\n97.3\ten_us-254\t54\n97.3\ten_us-303\t911\n97.4\ten_us-254\t55\n97.4\ten_us-303\t799\n97.5\ten_us-254\t44\n97.5\ten_us-303\t663\n97.6\ten_us-254\t42\n97.6\ten_us-303\t565\n97.7\ten_us-254\t22\n97.7\ten_us-303\t482\n97.8\ten_us-254\t42\n97.8\ten_us-303\t421\n97.9\ten_us-254\t42\n97.9\ten_us-303\t321\n98.0\ten_us-254\t28\n98.0\ten_us-303\t277\n98.1\ten_us-254\t39\n98.1\ten_us-303\t243\n98.2\ten_us-254\t33\n98.2\ten_us-303\t191\n98.3\ten_us-254\t22\n98.3\ten_us-303\t148\n98.4\ten_us-254\t34\n98.4\ten_us-303\t94\n98.5\ten_us-254\t32\n98.5\ten_us-303\t68\n98.6\ten_us-254\t23\n98.6\ten_us-303\t53\n98.7\ten_us-254\t30\n98.7\ten_us-303\t29\n98.8\ten_us-254\t22\n98.8\ten_us-303\t21\n98.9\ten_us-254\t16\n98.9\ten_us-303\t7\n99.0\ten_us-254\t21\n99.0\ten_us-303\t4\n99.1\ten_us-254\t12\n99.1\ten_us-303\t2\n99.2\ten_us-254\t14\n99.3\ten_us-254\t17\n99.4\ten_us-254\t16\n99.5\ten_us-254\t11\n99.6\ten_us-254\t12\n99.7\ten_us-254\t8\n99.8\ten_us-254\t9\n99.9\ten_us-254\t11\n100.0\ten_us-254\t37\n"
+      },
+      "dateCreated": "Aug 31, 2015 2:23:30 PM",
+      "dateStarted": "Sep 17, 2015 10:17:55 AM",
+      "dateFinished": "Sep 17, 2015 10:21:50 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "rebind and unbind checked",
+      "text": "val HDFSPath1 \u003d z.angularBind(\"confirmPath1\",\"default\")\nval HDFSPath2 \u003d z.angularBind(\"confirmPath2\",\"default\")\nval radio \u003d z.angularBind(\"radioModel\",\"default\")\nval rem1 \u003d z.angularBind(\"remark1\",\"default\")\nval rem2 \u003d z.angularBind(\"remark2\",\"default\")\nval sdf \u003d z.angularBind(\"add\",\"default\")\nval language \u003d z.angularBind(\"selectFile\",\"default\")",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": false,
+        "tableHide": true,
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1441000197928_-1766477683",
+      "id": "20150831-134957_1376057115",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "HDFSPath1: Unit \u003d ()\nHDFSPath2: Unit \u003d ()\nradio: Unit \u003d ()\nrem1: Unit \u003d ()\nrem2: Unit \u003d ()\nsdf: Unit \u003d ()\nlanguage: Unit \u003d ()\n"
+      },
+      "dateCreated": "Aug 31, 2015 1:49:57 PM",
+      "dateStarted": "Sep 19, 2015 2:03:12 PM",
+      "dateFinished": "Sep 19, 2015 2:03:14 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select _2, _3, count(_2) from aaaa where _2 \u003c\u003d ${choose the maxi value} AND _2 \u003e\u003d ${choose the mini value} group by _2, _3 order by _2, _3",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "lineChart",
+          "height": 530.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "_2",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "c2",
+              "index": 2.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [
+            {
+              "name": "_3",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "scatter": {
+            "xAxis": {
+              "name": "_2",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "_3",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "editorHide": false,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {
+          "choose the maxi value": "100",
+          "choose the mini value": "0"
+        },
+        "forms": {
+          "choose the mini value": {
+            "name": "choose the mini value",
+            "defaultValue": "",
+            "hidden": false
+          },
+          "choose the maxi value": {
+            "name": "choose the maxi value",
+            "defaultValue": "",
+            "hidden": false
+          }
+        }
+      },
+      "jobName": "paragraph_1441007202853_-937558939",
+      "id": "20150831-154642_551899284",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "_2\t_3\tc2\n0.0\t401\t15\n0.0\ten_us-254\t148\n0.0\ten_us-303\t41\n0.1\t401\t1\n0.1\ten_us-303\t6\n0.2\t401\t3\n0.2\ten_us-303\t2\n0.3\t401\t4\n0.3\ten_us-254\t2\n0.3\ten_us-303\t3\n0.4\t401\t5\n0.4\ten_us-254\t2\n0.4\ten_us-303\t7\n0.5\t401\t1\n0.5\ten_us-303\t2\n0.6\t401\t4\n0.6\ten_us-254\t2\n0.6\ten_us-303\t4\n0.7\t401\t2\n0.7\ten_us-303\t5\n0.8\t401\t2\n0.8\ten_us-254\t4\n0.9\t401\t1\n0.9\ten_us-254\t3\n0.9\ten_us-303\t5\n1.0\t401\t4\n1.0\ten_us-303\t1\n1.1\t401\t1\n1.1\ten_us-254\t3\n1.1\ten_us-303\t2\n1.2\t401\t2\n1.2\ten_us-254\t1\n1.2\ten_us-303\t2\n1.3\t401\t3\n1.3\ten_us-303\t3\n1.4\t401\t2\n1.4\ten_us-254\t2\n1.4\ten_us-303\t4\n1.5\t401\t1\n1.5\ten_us-254\t1\n1.5\ten_us-303\t1\n1.6\t401\t1\n1.6\ten_us-303\t3\n1.7\t401\t3\n1.7\ten_us-303\t6\n1.8\t401\t1\n1.8\ten_us-254\t1\n1.8\ten_us-303\t2\n1.9\t401\t2\n1.9\ten_us-254\t1\n1.9\ten_us-303\t7\n2.0\t401\t2\n2.1\t401\t2\n2.1\ten_us-254\t1\n2.1\ten_us-303\t1\n2.2\t401\t3\n2.3\t401\t1\n2.3\ten_us-254\t1\n2.3\ten_us-303\t2\n2.4\ten_us-254\t2\n2.4\ten_us-303\t3\n2.5\t401\t3\n2.6\t401\t3\n2.6\ten_us-303\t2\n2.7\t401\t1\n2.7\ten_us-254\t1\n2.7\ten_us-303\t1\n2.8\t401\t3\n2.8\ten_us-254\t2\n2.8\ten_us-303\t1\n2.9\t401\t1\n2.9\ten_us-303\t2\n3.0\t401\t1\n3.0\ten_us-254\t4\n3.0\ten_us-303\t1\n3.1\t401\t2\n3.1\ten_us-303\t2\n3.2\t401\t3\n3.2\ten_us-254\t1\n3.2\ten_us-303\t1\n3.3\t401\t1\n3.3\ten_us-254\t2\n3.4\ten_us-254\t1\n3.4\ten_us-303\t3\n3.5\t401\t2\n3.5\ten_us-254\t2\n3.6\t401\t2\n3.6\ten_us-254\t2\n3.6\ten_us-303\t1\n3.7\t401\t3\n3.7\ten_us-254\t2\n3.7\ten_us-303\t1\n3.8\ten_us-254\t1\n3.8\ten_us-303\t3\n3.9\t401\t2\n3.9\ten_us-254\t3\n3.9\ten_us-303\t1\n4.0\t401\t2\n4.1\t401\t2\n4.1\ten_us-254\t1\n4.2\t401\t2\n4.2\ten_us-303\t2\n4.3\t401\t2\n4.3\ten_us-254\t1\n4.3\ten_us-303\t3\n4.4\t401\t1\n4.4\ten_us-303\t3\n4.5\t401\t2\n4.5\ten_us-254\t1\n4.6\t401\t3\n4.7\t401\t1\n4.7\ten_us-254\t3\n4.7\ten_us-303\t3\n4.8\ten_us-254\t1\n4.8\ten_us-303\t2\n4.9\t401\t2\n4.9\ten_us-254\t2\n4.9\ten_us-303\t2\n5.0\t401\t5\n5.0\ten_us-254\t1\n5.0\ten_us-303\t1\n5.1\t401\t2\n5.1\ten_us-254\t1\n5.1\ten_us-303\t1\n5.2\t401\t4\n5.3\ten_us-254\t6\n5.3\ten_us-303\t3\n5.4\t401\t3\n5.4\ten_us-254\t1\n5.4\ten_us-303\t1\n5.5\t401\t1\n5.5\ten_us-254\t2\n5.6\t401\t2\n5.6\ten_us-254\t1\n5.6\ten_us-303\t2\n5.7\t401\t1\n5.7\ten_us-254\t2\n5.7\ten_us-303\t2\n5.8\t401\t2\n5.8\ten_us-254\t2\n5.9\t401\t1\n5.9\ten_us-254\t1\n5.9\ten_us-303\t2\n6.0\t401\t3\n6.0\ten_us-254\t3\n6.0\ten_us-303\t2\n6.1\t401\t2\n6.1\ten_us-254\t1\n6.1\ten_us-303\t1\n6.2\t401\t3\n6.2\ten_us-254\t1\n6.2\ten_us-303\t1\n6.3\t401\t4\n6.4\t401\t2\n6.4\ten_us-254\t1\n6.4\ten_us-303\t1\n6.5\t401\t4\n6.5\ten_us-254\t2\n6.5\ten_us-303\t3\n6.6\t401\t1\n6.6\ten_us-254\t2\n6.7\t401\t4\n6.8\t401\t1\n6.8\ten_us-254\t2\n6.9\ten_us-254\t2\n6.9\ten_us-303\t1\n7.0\t401\t2\n7.0\ten_us-303\t6\n7.1\t401\t1\n7.1\ten_us-254\t2\n7.1\ten_us-303\t1\n7.2\ten_us-303\t5\n7.3\t401\t2\n7.3\ten_us-254\t1\n7.3\ten_us-303\t4\n7.4\t401\t2\n7.4\ten_us-254\t1\n7.4\ten_us-303\t3\n7.5\t401\t4\n7.5\ten_us-254\t2\n7.5\ten_us-303\t2\n7.6\t401\t2\n7.6\ten_us-254\t1\n7.6\ten_us-303\t2\n7.7\t401\t4\n7.7\ten_us-303\t3\n7.8\t401\t3\n7.8\ten_us-254\t3\n7.8\ten_us-303\t4\n7.9\t401\t2\n7.9\ten_us-254\t4\n7.9\ten_us-303\t2\n8.0\t401\t2\n8.0\ten_us-303\t3\n8.1\t401\t5\n8.1\ten_us-254\t1\n8.1\ten_us-303\t5\n8.2\t401\t4\n8.2\ten_us-254\t4\n8.2\ten_us-303\t3\n8.3\t401\t1\n8.3\ten_us-254\t2\n8.3\ten_us-303\t7\n8.4\ten_us-254\t2\n8.4\ten_us-303\t4\n8.5\t401\t1\n8.5\ten_us-254\t1\n8.5\ten_us-303\t5\n8.6\t401\t2\n8.6\ten_us-254\t3\n8.6\ten_us-303\t10\n8.7\t401\t2\n8.7\ten_us-254\t1\n8.7\ten_us-303\t7\n8.8\t401\t2\n8.8\ten_us-254\t3\n8.8\ten_us-303\t4\n8.9\ten_us-254\t6\n8.9\ten_us-303\t3\n9.0\t401\t7\n9.0\ten_us-254\t6\n9.0\ten_us-303\t10\n9.1\t401\t3\n9.1\ten_us-254\t5\n9.1\ten_us-303\t7\n9.2\t401\t3\n9.2\ten_us-254\t4\n9.2\ten_us-303\t5\n9.3\t401\t4\n9.3\ten_us-254\t4\n9.3\ten_us-303\t6\n9.4\t401\t3\n9.4\ten_us-254\t3\n9.4\ten_us-303\t7\n9.5\t401\t1\n9.5\ten_us-254\t2\n9.5\ten_us-303\t8\n9.6\t401\t4\n9.6\ten_us-254\t3\n9.6\ten_us-303\t10\n9.7\t401\t3\n9.7\ten_us-254\t4\n9.7\ten_us-303\t14\n9.8\t401\t3\n9.8\ten_us-254\t3\n9.8\ten_us-303\t5\n9.9\t401\t5\n9.9\ten_us-254\t10\n9.9\ten_us-303\t4\n10.0\t401\t6\n10.0\ten_us-254\t13\n10.0\ten_us-303\t12\n10.1\t401\t3\n10.1\ten_us-254\t7\n10.1\ten_us-303\t9\n10.2\t401\t4\n10.2\ten_us-254\t4\n10.2\ten_us-303\t7\n10.3\ten_us-254\t7\n10.3\ten_us-303\t7\n10.4\t401\t3\n10.4\ten_us-254\t9\n10.4\ten_us-303\t10\n10.5\t401\t1\n10.5\ten_us-254\t5\n10.5\ten_us-303\t12\n10.6\t401\t2\n10.6\ten_us-254\t6\n10.6\ten_us-303\t12\n10.7\t401\t5\n10.7\ten_us-254\t12\n10.7\ten_us-303\t7\n10.8\t401\t3\n10.8\ten_us-254\t8\n10.8\ten_us-303\t9\n10.9\t401\t2\n10.9\ten_us-254\t7\n10.9\ten_us-303\t6\n11.0\t401\t1\n11.0\ten_us-254\t7\n11.0\ten_us-303\t12\n11.1\t401\t2\n11.1\ten_us-254\t11\n11.1\ten_us-303\t12\n11.2\t401\t3\n11.2\ten_us-254\t12\n11.2\ten_us-303\t8\n11.3\t401\t4\n11.3\ten_us-254\t8\n11.3\ten_us-303\t12\n11.4\t401\t3\n11.4\ten_us-254\t20\n11.4\ten_us-303\t12\n11.5\t401\t4\n11.5\ten_us-254\t6\n11.5\ten_us-303\t11\n11.6\t401\t1\n11.6\ten_us-254\t11\n11.6\ten_us-303\t11\n11.7\t401\t4\n11.7\ten_us-254\t12\n11.7\ten_us-303\t8\n11.8\t401\t5\n11.8\ten_us-254\t10\n11.8\ten_us-303\t8\n11.9\t401\t4\n11.9\ten_us-254\t14\n11.9\ten_us-303\t11\n12.0\t401\t1\n12.0\ten_us-254\t8\n12.0\ten_us-303\t8\n12.1\t401\t6\n12.1\ten_us-254\t10\n12.1\ten_us-303\t12\n12.2\t401\t7\n12.2\ten_us-254\t13\n12.2\ten_us-303\t11\n12.3\t401\t4\n12.3\ten_us-254\t26\n12.3\ten_us-303\t7\n12.4\t401\t3\n12.4\ten_us-254\t12\n12.4\ten_us-303\t15\n12.5\t401\t6\n12.5\ten_us-254\t19\n12.5\ten_us-303\t8\n12.6\t401\t3\n12.6\ten_us-254\t13\n12.6\ten_us-303\t15\n12.7\t401\t3\n12.7\ten_us-254\t12\n12.7\ten_us-303\t8\n12.8\t401\t4\n12.8\ten_us-254\t15\n12.8\ten_us-303\t12\n12.9\t401\t4\n12.9\ten_us-254\t20\n12.9\ten_us-303\t13\n13.0\t401\t3\n13.0\ten_us-254\t11\n13.0\ten_us-303\t12\n13.1\t401\t2\n13.1\ten_us-254\t13\n13.1\ten_us-303\t16\n13.2\t401\t5\n13.2\ten_us-254\t13\n13.2\ten_us-303\t12\n13.3\t401\t7\n13.3\ten_us-254\t36\n13.3\ten_us-303\t18\n13.4\t401\t6\n13.4\ten_us-254\t13\n13.4\ten_us-303\t18\n13.5\t401\t9\n13.5\ten_us-254\t20\n13.5\ten_us-303\t12\n13.6\t401\t4\n13.6\ten_us-254\t17\n13.6\ten_us-303\t15\n13.7\t401\t6\n13.7\ten_us-254\t26\n13.7\ten_us-303\t14\n13.8\t401\t6\n13.8\ten_us-254\t15\n13.8\ten_us-303\t14\n13.9\t401\t6\n13.9\ten_us-254\t20\n13.9\ten_us-303\t7\n14.0\t401\t4\n14.0\ten_us-254\t24\n14.0\ten_us-303\t12\n14.1\t401\t6\n14.1\ten_us-254\t19\n14.1\ten_us-303\t12\n14.2\t401\t7\n14.2\ten_us-254\t28\n14.2\ten_us-303\t18\n14.3\t401\t9\n14.3\ten_us-254\t27\n14.3\ten_us-303\t10\n14.4\t401\t7\n14.4\ten_us-254\t28\n14.4\ten_us-303\t15\n14.5\t401\t6\n14.5\ten_us-254\t17\n14.5\ten_us-303\t18\n14.6\t401\t4\n14.6\ten_us-254\t26\n14.6\ten_us-303\t11\n14.7\t401\t7\n14.7\ten_us-254\t20\n14.7\ten_us-303\t12\n14.8\t401\t2\n14.8\ten_us-254\t22\n14.8\ten_us-303\t12\n14.9\t401\t6\n14.9\ten_us-254\t23\n14.9\ten_us-303\t20\n15.0\t401\t5\n15.0\ten_us-254\t33\n15.0\ten_us-303\t10\n15.1\t401\t3\n15.1\ten_us-254\t27\n15.1\ten_us-303\t12\n15.2\t401\t10\n15.2\ten_us-254\t27\n15.2\ten_us-303\t14\n15.3\t401\t8\n15.3\ten_us-254\t21\n15.3\ten_us-303\t11\n15.4\t401\t11\n15.4\ten_us-254\t22\n15.4\ten_us-303\t12\n15.5\t401\t7\n15.5\ten_us-254\t23\n15.5\ten_us-303\t25\n15.6\t401\t8\n15.6\ten_us-254\t26\n15.6\ten_us-303\t11\n15.7\t401\t8\n15.7\ten_us-254\t25\n15.7\ten_us-303\t16\n15.8\t401\t7\n15.8\ten_us-254\t20\n15.8\ten_us-303\t13\n15.9\t401\t7\n15.9\ten_us-254\t30\n15.9\ten_us-303\t19\n16.0\t401\t10\n16.0\ten_us-254\t24\n16.0\ten_us-303\t15\n16.1\t401\t9\n16.1\ten_us-254\t28\n16.1\ten_us-303\t19\n16.2\t401\t10\n16.2\ten_us-254\t20\n16.2\ten_us-303\t13\n16.3\t401\t4\n16.3\ten_us-254\t36\n16.3\ten_us-303\t17\n16.4\t401\t5\n16.4\ten_us-254\t17\n16.4\ten_us-303\t18\n16.5\t401\t9\n16.5\ten_us-254\t21\n16.5\ten_us-303\t17\n16.6\t401\t6\n16.6\ten_us-254\t29\n16.6\ten_us-303\t13\n16.7\t401\t4\n16.7\ten_us-254\t18\n16.7\ten_us-303\t14\n16.8\t401\t12\n16.8\ten_us-254\t27\n16.8\ten_us-303\t8\n16.9\t401\t6\n16.9\ten_us-254\t34\n16.9\ten_us-303\t19\n17.0\t401\t9\n17.0\ten_us-254\t28\n17.0\ten_us-303\t22\n17.1\t401\t10\n17.1\ten_us-254\t34\n17.1\ten_us-303\t16\n17.2\t401\t13\n17.2\ten_us-254\t28\n17.2\ten_us-303\t17\n17.3\t401\t14\n17.3\ten_us-254\t32\n17.3\ten_us-303\t16\n17.4\t401\t6\n17.4\ten_us-254\t32\n17.4\ten_us-303\t11\n17.5\t401\t14\n17.5\ten_us-254\t93\n17.5\ten_us-303\t38\n17.6\t401\t18\n17.6\ten_us-254\t25\n17.6\ten_us-303\t24\n17.7\t401\t18\n17.7\ten_us-254\t32\n17.7\ten_us-303\t22\n17.8\t401\t12\n17.8\ten_us-254\t39\n17.8\ten_us-303\t24\n17.9\t401\t10\n17.9\ten_us-254\t48\n17.9\ten_us-303\t21\n18.0\t401\t15\n18.0\ten_us-254\t40\n18.0\ten_us-303\t29\n18.1\t401\t15\n18.1\ten_us-254\t39\n18.1\ten_us-303\t26\n18.2\t401\t13\n18.2\ten_us-254\t30\n18.2\ten_us-303\t28\n18.3\t401\t11\n18.3\ten_us-254\t24\n18.3\ten_us-303\t26\n18.4\t401\t18\n18.4\ten_us-254\t34\n18.4\ten_us-303\t16\n18.5\t401\t11\n18.5\ten_us-254\t38\n18.5\ten_us-303\t16\n18.6\t401\t12\n18.6\ten_us-254\t38\n18.6\ten_us-303\t23\n18.7\t401\t6\n18.7\ten_us-254\t36\n18.7\ten_us-303\t26\n18.8\t401\t19\n18.8\ten_us-254\t41\n18.8\ten_us-303\t36\n18.9\t401\t10\n18.9\ten_us-254\t32\n18.9\ten_us-303\t21\n19.0\t401\t14\n19.0\ten_us-254\t29\n19.0\ten_us-303\t14\n19.1\t401\t11\n19.1\ten_us-254\t35\n19.1\ten_us-303\t20\n19.2\t401\t12\n19.2\ten_us-254\t48\n19.2\ten_us-303\t32\n19.3\t401\t20\n19.3\ten_us-254\t35\n19.3\ten_us-303\t28\n19.4\t401\t18\n19.4\ten_us-254\t46\n19.4\ten_us-303\t26\n19.5\t401\t13\n19.5\ten_us-254\t42\n19.5\ten_us-303\t22\n19.6\t401\t16\n19.6\ten_us-254\t38\n19.6\ten_us-303\t20\n19.7\t401\t15\n19.7\ten_us-254\t37\n19.7\ten_us-303\t30\n19.8\t401\t11\n19.8\ten_us-254\t43\n19.8\ten_us-303\t25\n19.9\t401\t13\n19.9\ten_us-254\t47\n19.9\ten_us-303\t20\n20.0\t401\t15\n20.0\ten_us-254\t46\n20.0\ten_us-303\t35\n20.1\t401\t19\n20.1\ten_us-254\t52\n20.1\ten_us-303\t24\n20.2\t401\t9\n20.2\ten_us-254\t36\n20.2\ten_us-303\t25\n20.3\t401\t18\n20.3\ten_us-254\t54\n20.3\ten_us-303\t28\n20.4\t401\t17\n20.4\ten_us-254\t47\n20.4\ten_us-303\t28\n20.5\t401\t10\n20.5\ten_us-254\t40\n20.5\ten_us-303\t40\n20.6\t401\t18\n20.6\ten_us-254\t39\n20.6\ten_us-303\t20\n20.7\t401\t8\n20.7\ten_us-254\t44\n20.7\ten_us-303\t25\n20.8\t401\t15\n20.8\ten_us-254\t43\n20.8\ten_us-303\t28\n20.9\t401\t20\n20.9\ten_us-254\t46\n20.9\ten_us-303\t27\n21.0\t401\t16\n21.0\ten_us-254\t38\n21.0\ten_us-303\t26\n21.1\t401\t23\n21.1\ten_us-254\t40\n21.1\ten_us-303\t27\n21.2\t401\t16\n21.2\ten_us-254\t51\n21.2\ten_us-303\t22\n21.3\t401\t16\n21.3\ten_us-254\t35\n21.3\ten_us-303\t20\n21.4\t401\t12\n21.4\ten_us-254\t54\n21.4\ten_us-303\t28\n21.5\t401\t16\n21.5\ten_us-254\t38\n21.5\ten_us-303\t31\n21.6\t401\t18\n21.6\ten_us-254\t61\n21.6\ten_us-303\t27\n21.7\t401\t12\n21.7\ten_us-254\t38\n21.7\ten_us-303\t20\n21.8\t401\t18\n21.8\ten_us-254\t40\n21.8\ten_us-303\t26\n21.9\t401\t17\n21.9\ten_us-254\t55\n21.9\ten_us-303\t26\n22.0\t401\t15\n22.0\ten_us-254\t52\n22.0\ten_us-303\t22\n22.1\t401\t17\n22.1\ten_us-254\t43\n22.1\ten_us-303\t26\n22.2\t401\t17\n22.2\ten_us-254\t42\n22.2\ten_us-303\t24\n22.3\t401\t19\n22.3\ten_us-254\t38\n22.3\ten_us-303\t35\n22.4\t401\t20\n22.4\ten_us-254\t58\n22.4\ten_us-303\t34\n22.5\t401\t16\n22.5\ten_us-254\t59\n22.5\ten_us-303\t28\n22.6\t401\t21\n22.6\ten_us-254\t58\n22.6\ten_us-303\t37\n22.7\t401\t16\n22.7\ten_us-254\t49\n22.7\ten_us-303\t25\n22.8\t401\t24\n22.8\ten_us-254\t46\n22.8\ten_us-303\t33\n22.9\t401\t15\n22.9\ten_us-254\t40\n22.9\ten_us-303\t31\n23.0\t401\t11\n23.0\ten_us-254\t50\n23.0\ten_us-303\t30\n23.1\t401\t14\n23.1\ten_us-254\t39\n23.1\ten_us-303\t31\n23.2\t401\t19\n23.2\ten_us-254\t53\n23.2\ten_us-303\t29\n23.3\t401\t28\n23.3\ten_us-254\t49\n23.3\ten_us-303\t27\n23.4\t401\t24\n23.4\ten_us-254\t51\n23.4\ten_us-303\t41\n23.5\t401\t26\n23.5\ten_us-254\t53\n23.5\ten_us-303\t36\n23.6\t401\t26\n23.6\ten_us-254\t43\n23.6\ten_us-303\t37\n23.7\t401\t29\n23.7\ten_us-254\t47\n23.7\ten_us-303\t34\n23.8\t401\t26\n23.8\ten_us-254\t55\n23.8\ten_us-303\t33\n23.9\t401\t18\n23.9\ten_us-254\t46\n23.9\ten_us-303\t34\n24.0\t401\t23\n24.0\ten_us-254\t61\n24.0\ten_us-303\t28\n24.1\t401\t24\n24.1\ten_us-254\t51\n24.1\ten_us-303\t36\n24.2\t401\t26\n24.2\ten_us-254\t47\n24.2\ten_us-303\t33\n24.3\t401\t26\n24.3\ten_us-254\t59\n24.3\ten_us-303\t40\n24.4\t401\t17\n24.4\ten_us-254\t63\n24.4\ten_us-303\t29\n24.5\t401\t23\n24.5\ten_us-254\t68\n24.5\ten_us-303\t30\n24.6\t401\t25\n24.6\ten_us-254\t51\n24.6\ten_us-303\t27\n24.7\t401\t26\n24.7\ten_us-254\t46\n24.7\ten_us-303\t47\n24.8\t401\t25\n24.8\ten_us-254\t50\n24.8\ten_us-303\t42\n24.9\t401\t35\n24.9\ten_us-254\t49\n24.9\ten_us-303\t35\n25.0\t401\t28\n25.0\ten_us-254\t61\n25.0\ten_us-303\t36\n25.1\t401\t29\n25.1\ten_us-254\t55\n25.1\ten_us-303\t43\n25.2\t401\t28\n25.2\ten_us-254\t60\n25.2\ten_us-303\t43\n25.3\t401\t22\n25.3\ten_us-254\t62\n25.3\ten_us-303\t32\n25.4\t401\t32\n25.4\ten_us-254\t59\n25.4\ten_us-303\t41\n25.5\t401\t16\n25.5\ten_us-254\t70\n25.5\ten_us-303\t47\n25.6\t401\t24\n25.6\ten_us-254\t65\n25.6\ten_us-303\t37\n25.7\t401\t16\n25.7\ten_us-254\t50\n25.7\ten_us-303\t36\n25.8\t401\t21\n25.8\ten_us-254\t48\n25.8\ten_us-303\t33\n25.9\t401\t28\n25.9\ten_us-254\t57\n25.9\ten_us-303\t45\n26.0\t401\t16\n26.0\ten_us-254\t58\n26.0\ten_us-303\t42\n26.1\t401\t31\n26.1\ten_us-254\t60\n26.1\ten_us-303\t39\n26.2\t401\t24\n26.2\ten_us-254\t61\n26.2\ten_us-303\t32\n26.3\t401\t28\n26.3\ten_us-254\t63\n26.3\ten_us-303\t53\n26.4\t401\t26\n26.4\ten_us-254\t48\n26.4\ten_us-303\t32\n26.5\t401\t28\n26.5\ten_us-254\t62\n26.5\ten_us-303\t38\n26.6\t401\t36\n26.6\ten_us-254\t53\n26.6\ten_us-303\t21\n26.7\t401\t21\n26.7\ten_us-254\t69\n26.7\ten_us-303\t36\n26.8\t401\t33\n26.8\ten_us-254\t73\n26.8\ten_us-303\t30\n26.9\t401\t29\n26.9\ten_us-254\t70\n26.9\ten_us-303\t50\n27.0\t401\t27\n27.0\ten_us-254\t61\n27.0\ten_us-303\t39\n27.1\t401\t30\n27.1\ten_us-254\t56\n27.1\ten_us-303\t37\n27.2\t401\t29\n27.2\ten_us-254\t66\n27.2\ten_us-303\t41\n27.3\t401\t31\n27.3\ten_us-254\t79\n27.3\ten_us-303\t43\n27.4\t401\t28\n27.4\ten_us-254\t68\n27.4\ten_us-303\t55\n27.5\t401\t28\n27.5\ten_us-254\t67\n27.5\ten_us-303\t41\n27.6\t401\t35\n27.6\ten_us-254\t68\n27.6\ten_us-303\t49\n27.7\t401\t36\n27.7\ten_us-254\t70\n27.7\ten_us-303\t45\n27.8\t401\t33\n27.8\ten_us-254\t64\n27.8\ten_us-303\t46\n27.9\t401\t26\n27.9\ten_us-254\t69\n27.9\ten_us-303\t45\n28.0\t401\t32\n28.0\ten_us-254\t65\n28.0\ten_us-303\t52\n28.1\t401\t23\n28.1\ten_us-254\t74\n28.1\ten_us-303\t49\n28.2\t401\t25\n28.2\ten_us-254\t54\n28.2\ten_us-303\t39\n28.3\t401\t29\n28.3\ten_us-254\t65\n28.3\ten_us-303\t58\n28.4\t401\t24\n28.4\ten_us-254\t59\n28.4\ten_us-303\t45\n28.5\t401\t42\n28.5\ten_us-254\t69\n28.5\ten_us-303\t46\n28.6\t401\t29\n28.6\ten_us-254\t75\n28.6\ten_us-303\t49\n28.7\t401\t38\n28.7\ten_us-254\t70\n28.7\ten_us-303\t44\n28.8\t401\t25\n28.8\ten_us-254\t71\n28.8\ten_us-303\t41\n28.9\t401\t29\n28.9\ten_us-254\t64\n28.9\ten_us-303\t46\n29.0\t401\t35\n29.0\ten_us-254\t75\n29.0\ten_us-303\t40\n29.1\t401\t30\n29.1\ten_us-254\t67\n29.1\ten_us-303\t40\n29.2\t401\t48\n29.2\ten_us-254\t55\n29.2\ten_us-303\t39\n29.3\t401\t35\n29.3\ten_us-254\t59\n29.3\ten_us-303\t45\n29.4\t401\t32\n29.4\ten_us-254\t78\n29.4\ten_us-303\t44\n29.5\t401\t43\n29.5\ten_us-254\t70\n29.5\ten_us-303\t38\n29.6\t401\t28\n29.6\ten_us-254\t71\n29.6\ten_us-303\t33\n29.7\t401\t24\n29.7\ten_us-254\t63\n29.7\ten_us-303\t43\n29.8\t401\t38\n29.8\ten_us-254\t80\n29.8\ten_us-303\t45\n29.9\t401\t35\n29.9\ten_us-254\t74\n29.9\ten_us-303\t50\n30.0\t401\t34\n30.0\ten_us-254\t69\n30.0\ten_us-303\t68\n30.1\t401\t34\n30.1\ten_us-254\t88\n30.1\ten_us-303\t64\n30.2\t401\t48\n30.2\ten_us-254\t65\n30.2\ten_us-303\t50\n30.3\t401\t27\n30.3\ten_us-254\t66\n30.3\ten_us-303\t42\n30.4\t401\t35\n30.4\ten_us-254\t64\n30.4\ten_us-303\t57\n30.5\t401\t28\n30.5\ten_us-254\t85\n30.5\ten_us-303\t44\n30.6\t401\t38\n30.6\ten_us-254\t59\n30.6\ten_us-303\t49\n30.7\t401\t34\n30.7\ten_us-254\t61\n30.7\ten_us-303\t46\n30.8\t401\t43\n30.8\ten_us-254\t62\n30.8\ten_us-303\t43\n30.9\t401\t37\n30.9\ten_us-254\t75\n30.9\ten_us-303\t45\n31.0\t401\t33\n31.0\ten_us-254\t75\n31.0\ten_us-303\t48\n31.1\t401\t31\n31.1\ten_us-254\t70\n31.1\ten_us-303\t36\n31.2\t401\t37\n31.2\ten_us-254\t84\n31.2\ten_us-303\t47\n31.3\t401\t28\n31.3\ten_us-254\t77\n31.3\ten_us-303\t37\n31.4\t401\t47\n31.4\ten_us-254\t85\n31.4\ten_us-303\t52\n31.5\t401\t43\n31.5\ten_us-254\t85\n31.5\ten_us-303\t53\n31.6\t401\t40\n31.6\ten_us-254\t74\n31.6\ten_us-303\t44\n31.7\t401\t31\n31.7\ten_us-254\t80\n31.7\ten_us-303\t48\n31.8\t401\t24\n31.8\ten_us-254\t77\n31.8\ten_us-303\t45\n31.9\t401\t28\n31.9\ten_us-254\t70\n31.9\ten_us-303\t48\n32.0\t401\t34\n32.0\ten_us-254\t73\n32.0\ten_us-303\t55\n32.1\t401\t29\n32.1\ten_us-254\t77\n32.1\ten_us-303\t50\n32.2\t401\t34\n32.2\ten_us-254\t77\n32.2\ten_us-303\t52\n32.3\t401\t35\n32.3\ten_us-254\t68\n32.3\ten_us-303\t49\n32.4\t401\t49\n32.4\ten_us-254\t80\n32.4\ten_us-303\t41\n32.5\t401\t43\n32.5\ten_us-254\t66\n32.5\ten_us-303\t52\n32.6\t401\t44\n32.6\ten_us-254\t79\n32.6\ten_us-303\t58\n32.7\t401\t44\n32.7\ten_us-254\t84\n32.7\ten_us-303\t55\n32.8\t401\t35\n32.8\ten_us-254\t64\n32.8\ten_us-303\t53\n32.9\t401\t49\n32.9\ten_us-254\t87\n32.9\ten_us-303\t36\n33.0\t401\t47\n33.0\ten_us-254\t80\n33.0\ten_us-303\t50\n33.1\t401\t34\n33.1\ten_us-254\t90\n33.1\ten_us-303\t49\n33.2\t401\t52\n33.2\ten_us-254\t75\n33.2\ten_us-303\t39\n33.3\t401\t50\n33.3\ten_us-254\t74\n33.3\ten_us-303\t51\n33.4\t401\t49\n33.4\ten_us-254\t69\n33.4\ten_us-303\t52\n33.5\t401\t37\n33.5\ten_us-254\t81\n33.5\ten_us-303\t62\n33.6\t401\t34\n33.6\ten_us-254\t82\n33.6\ten_us-303\t56\n33.7\t401\t35\n33.7\ten_us-254\t98\n33.7\ten_us-303\t52\n33.8\t401\t39\n33.8\ten_us-254\t76\n33.8\ten_us-303\t53\n33.9\t401\t40\n33.9\ten_us-254\t97\n33.9\ten_us-303\t45\n34.0\t401\t33\n34.0\ten_us-254\t87\n34.0\ten_us-303\t58\n34.1\t401\t46\n34.1\ten_us-254\t83\n34.1\ten_us-303\t46\n34.2\t401\t41\n34.2\ten_us-254\t66\n34.2\ten_us-303\t55\n34.3\t401\t42\n34.3\ten_us-254\t82\n34.3\ten_us-303\t50\n34.4\t401\t42\n34.4\ten_us-254\t84\n34.4\ten_us-303\t52\n34.5\t401\t29\n34.5\ten_us-254\t76\n34.5\ten_us-303\t52\n34.6\t401\t34\n34.6\ten_us-254\t73\n34.6\ten_us-303\t50\n34.7\t401\t51\n34.7\ten_us-254\t86\n34.7\ten_us-303\t46\n34.8\t401\t49\n34.8\ten_us-254\t91\n34.8\ten_us-303\t43\n34.9\t401\t55\n34.9\ten_us-254\t88\n34.9\ten_us-303\t53\n35.0\t401\t37\n35.0\ten_us-254\t82\n35.0\ten_us-303\t45\n35.1\t401\t32\n35.1\ten_us-254\t83\n35.1\ten_us-303\t48\n35.2\t401\t44\n35.2\ten_us-254\t94\n35.2\ten_us-303\t55\n35.3\t401\t36\n35.3\ten_us-254\t72\n35.3\ten_us-303\t43\n35.4\t401\t39\n35.4\ten_us-254\t85\n35.4\ten_us-303\t55\n35.5\t401\t45\n35.5\ten_us-254\t91\n35.5\ten_us-303\t60\n35.6\t401\t47\n35.6\ten_us-254\t104\n35.6\ten_us-303\t50\n35.7\t401\t38\n35.7\ten_us-254\t98\n35.7\ten_us-303\t46\n35.8\t401\t46\n35.8\ten_us-254\t80\n35.8\ten_us-303\t55\n35.9\t401\t41\n35.9\ten_us-254\t85\n35.9\ten_us-303\t55\n36.0\t401\t60\n36.0\ten_us-254\t93\n36.0\ten_us-303\t49\n36.1\t401\t49\n36.1\ten_us-254\t86\n36.1\ten_us-303\t48\n36.2\t401\t48\n36.2\ten_us-254\t94\n36.2\ten_us-303\t56\n36.3\t401\t59\n36.3\ten_us-254\t89\n36.3\ten_us-303\t48\n36.4\t401\t38\n36.4\ten_us-254\t97\n36.4\ten_us-303\t46\n36.5\t401\t43\n36.5\ten_us-254\t88\n36.5\ten_us-303\t53\n36.6\t401\t42\n36.6\ten_us-254\t95\n36.6\ten_us-303\t74\n36.7\t401\t45\n36.7\ten_us-254\t118\n36.7\ten_us-303\t63\n36.8\t401\t37\n36.8\ten_us-254\t97\n36.8\ten_us-303\t45\n36.9\t401\t47\n36.9\ten_us-254\t81\n36.9\ten_us-303\t59\n37.0\t401\t37\n37.0\ten_us-254\t96\n37.0\ten_us-303\t61\n37.1\t401\t37\n37.1\ten_us-254\t91\n37.1\ten_us-303\t59\n37.2\t401\t56\n37.2\ten_us-254\t100\n37.2\ten_us-303\t53\n37.3\t401\t47\n37.3\ten_us-254\t95\n37.3\ten_us-303\t53\n37.4\t401\t52\n37.4\ten_us-254\t94\n37.4\ten_us-303\t49\n37.5\t401\t54\n37.5\ten_us-254\t90\n37.5\ten_us-303\t48\n37.6\t401\t50\n37.6\ten_us-254\t94\n37.6\ten_us-303\t72\n37.7\t401\t56\n37.7\ten_us-254\t105\n37.7\ten_us-303\t62\n37.8\t401\t45\n37.8\ten_us-254\t85\n37.8\ten_us-303\t44\n37.9\t401\t49\n37.9\ten_us-254\t104\n37.9\ten_us-303\t40\n38.0\t401\t46\n38.0\ten_us-254\t92\n38.0\ten_us-303\t55\n38.1\t401\t54\n38.1\ten_us-254\t90\n38.1\ten_us-303\t62\n38.2\t401\t49\n38.2\ten_us-254\t107\n38.2\ten_us-303\t59\n38.3\t401\t49\n38.3\ten_us-254\t107\n38.3\ten_us-303\t61\n38.4\t401\t54\n38.4\ten_us-254\t103\n38.4\ten_us-303\t48\n38.5\t401\t49\n38.5\ten_us-254\t104\n38.5\ten_us-303\t54\n38.6\t401\t47\n38.6\ten_us-254\t107\n38.6\ten_us-303\t61\n38.7\t401\t56\n38.7\ten_us-254\t108\n38.7\ten_us-303\t49\n38.8\t401\t50\n38.8\ten_us-254\t84\n38.8\ten_us-303\t61\n38.9\t401\t58\n38.9\ten_us-254\t106\n38.9\ten_us-303\t61\n39.0\t401\t44\n39.0\ten_us-254\t106\n39.0\ten_us-303\t59\n39.1\t401\t51\n39.1\ten_us-254\t128\n39.1\ten_us-303\t67\n39.2\t401\t39\n39.2\ten_us-254\t122\n39.2\ten_us-303\t67\n39.3\t401\t49\n39.3\ten_us-254\t89\n39.3\ten_us-303\t50\n39.4\t401\t57\n39.4\ten_us-254\t117\n39.4\ten_us-303\t62\n39.5\t401\t58\n39.5\ten_us-254\t90\n39.5\ten_us-303\t59\n39.6\t401\t49\n39.6\ten_us-254\t118\n39.6\ten_us-303\t66\n39.7\t401\t58\n39.7\ten_us-254\t119\n39.7\ten_us-303\t58\n39.8\t401\t50\n39.8\ten_us-254\t128\n39.8\ten_us-303\t58\n39.9\t401\t45\n39.9\ten_us-254\t115\n39.9\ten_us-303\t61\n40.0\t401\t56\n40.0\ten_us-254\t114\n40.0\ten_us-303\t65\n40.1\t401\t45\n40.1\ten_us-254\t123\n40.1\ten_us-303\t89\n40.2\t401\t51\n40.2\ten_us-254\t120\n40.2\ten_us-303\t58\n40.3\t401\t43\n40.3\ten_us-254\t94\n40.3\ten_us-303\t63\n40.4\t401\t57\n40.4\ten_us-254\t105\n40.4\ten_us-303\t69\n40.5\t401\t51\n40.5\ten_us-254\t103\n40.5\ten_us-303\t65\n40.6\t401\t43\n40.6\ten_us-254\t124\n40.6\ten_us-303\t64\n40.7\t401\t63\n40.7\ten_us-254\t125\n40.7\ten_us-303\t63\n40.8\t401\t57\n40.8\ten_us-254\t125\n40.8\ten_us-303\t51\n40.9\t401\t61\n40.9\ten_us-254\t127\n40.9\ten_us-303\t73\n41.0\t401\t49\n41.0\ten_us-254\t117\n41.0\ten_us-303\t67\n41.1\t401\t67\n41.1\ten_us-254\t138\n41.1\ten_us-303\t66\n41.2\t401\t52\n41.2\ten_us-254\t117\n41.2\ten_us-303\t58\n41.3\t401\t46\n41.3\ten_us-254\t131\n41.3\ten_us-303\t55\n41.4\t401\t67\n41.4\ten_us-254\t106\n41.4\ten_us-303\t63\n41.5\t401\t53\n41.5\ten_us-254\t142\n41.5\ten_us-303\t52\n41.6\t401\t68\n41.6\ten_us-254\t134\n41.6\ten_us-303\t80\n41.7\t401\t52\n41.7\ten_us-254\t131\n41.7\ten_us-303\t62\n41.8\t401\t54\n41.8\ten_us-254\t115\n41.8\ten_us-303\t67\n41.9\t401\t55\n41.9\ten_us-254\t123\n41.9\ten_us-303\t82\n42.0\t401\t61\n42.0\ten_us-254\t119\n42.0\ten_us-303\t68\n42.1\t401\t66\n42.1\ten_us-254\t129\n42.1\ten_us-303\t74\n42.2\t401\t69\n42.2\ten_us-254\t127\n42.2\ten_us-303\t60\n42.3\t401\t70\n42.3\ten_us-254\t148\n42.3\ten_us-303\t72\n42.4\t401\t52\n42.4\ten_us-254\t124\n42.4\ten_us-303\t64\n42.5\t401\t70\n42.5\ten_us-254\t145\n42.5\ten_us-303\t67\n42.6\t401\t65\n42.6\ten_us-254\t102\n42.6\ten_us-303\t67\n42.7\t401\t64\n42.7\ten_us-254\t122\n42.7\ten_us-303\t76\n42.8\t401\t54\n42.8\ten_us-254\t122\n42.8\ten_us-303\t74\n42.9\t401\t54\n42.9\ten_us-254\t141\n42.9\ten_us-303\t68\n43.0\t401\t65\n43.0\ten_us-254\t148\n43.0\ten_us-303\t62\n43.1\t401\t51\n43.1\ten_us-254\t128\n43.1\ten_us-303\t59\n43.2\t401\t70\n43.2\ten_us-254\t148\n43.2\ten_us-303\t66\n43.3\t401\t66\n43.3\ten_us-254\t133\n43.3\ten_us-303\t71\n43.4\t401\t62\n43.4\ten_us-254\t142\n43.4\ten_us-303\t85\n43.5\t401\t70\n43.5\ten_us-254\t148\n43.5\ten_us-303\t76\n43.6\t401\t68\n43.6\ten_us-254\t133\n43.6\ten_us-303\t66\n43.7\t401\t62\n43.7\ten_us-254\t124\n43.7\ten_us-303\t73\n43.8\t401\t72\n43.8\ten_us-254\t140\n43.8\ten_us-303\t80\n43.9\t401\t65\n43.9\ten_us-254\t121\n43.9\ten_us-303\t72\n44.0\t401\t58\n44.0\ten_us-254\t133\n44.0\ten_us-303\t92\n44.1\t401\t69\n44.1\ten_us-254\t136\n44.1\ten_us-303\t92\n44.2\t401\t79\n44.2\ten_us-254\t172\n44.2\ten_us-303\t77\n44.3\t401\t65\n44.3\ten_us-254\t150\n44.3\ten_us-303\t90\n44.4\t401\t60\n44.4\ten_us-254\t151\n44.4\ten_us-303\t80\n44.5\t401\t59\n44.5\ten_us-254\t150\n44.5\ten_us-303\t83\n44.6\t401\t72\n44.6\ten_us-254\t143\n44.6\ten_us-303\t87\n44.7\t401\t58\n44.7\ten_us-254\t154\n44.7\ten_us-303\t84\n44.8\t401\t76\n44.8\ten_us-254\t133\n44.8\ten_us-303\t77\n44.9\t401\t80\n44.9\ten_us-254\t148\n44.9\ten_us-303\t89\n45.0\t401\t77\n45.0\ten_us-254\t154\n45.0\ten_us-303\t76\n45.1\t401\t73\n45.1\ten_us-254\t157\n45.1\ten_us-303\t86\n45.2\t401\t70\n45.2\ten_us-254\t153\n45.2\ten_us-303\t73\n45.3\t401\t68\n45.3\ten_us-254\t157\n45.3\ten_us-303\t77\n45.4\t401\t84\n45.4\ten_us-254\t136\n45.4\ten_us-303\t77\n45.5\t401\t68\n45.5\ten_us-254\t171\n45.5\ten_us-303\t79\n45.6\t401\t64\n45.6\ten_us-254\t158\n45.6\ten_us-303\t107\n45.7\t401\t80\n45.7\ten_us-254\t162\n45.7\ten_us-303\t95\n45.8\t401\t64\n45.8\ten_us-254\t143\n45.8\ten_us-303\t84\n45.9\t401\t66\n45.9\ten_us-254\t175\n45.9\ten_us-303\t73\n46.0\t401\t69\n46.0\ten_us-254\t166\n46.0\ten_us-303\t79\n46.1\t401\t68\n46.1\ten_us-254\t178\n46.1\ten_us-303\t88\n46.2\t401\t77\n46.2\ten_us-254\t172\n46.2\ten_us-303\t89\n46.3\t401\t70\n46.3\ten_us-254\t164\n46.3\ten_us-303\t86\n46.4\t401\t72\n46.4\ten_us-254\t169\n46.4\ten_us-303\t98\n46.5\t401\t71\n46.5\ten_us-254\t185\n46.5\ten_us-303\t101\n46.6\t401\t85\n46.6\ten_us-254\t167\n46.6\ten_us-303\t98\n46.7\t401\t83\n46.7\ten_us-254\t181\n46.7\ten_us-303\t92\n46.8\t401\t76\n46.8\ten_us-254\t168\n46.8\ten_us-303\t83\n46.9\t401\t92\n46.9\ten_us-254\t181\n46.9\ten_us-303\t88\n47.0\t401\t78\n47.0\ten_us-254\t173\n47.0\ten_us-303\t98\n47.1\t401\t64\n47.1\ten_us-254\t155\n47.1\ten_us-303\t95\n47.2\t401\t78\n47.2\ten_us-254\t159\n47.2\ten_us-303\t89\n47.3\t401\t83\n47.3\ten_us-254\t183\n47.3\ten_us-303\t81\n47.4\t401\t66\n47.4\ten_us-254\t183\n47.4\ten_us-303\t97\n47.5\t401\t100\n47.5\ten_us-254\t164\n47.5\ten_us-303\t89\n47.6\t401\t82\n47.6\ten_us-254\t185\n47.6\ten_us-303\t92\n47.7\t401\t78\n47.7\ten_us-254\t203\n47.7\ten_us-303\t75\n47.8\t401\t85\n47.8\ten_us-254\t189\n47.8\ten_us-303\t83\n47.9\t401\t81\n47.9\ten_us-254\t189\n47.9\ten_us-303\t95\n48.0\t401\t89\n48.0\ten_us-254\t195\n48.0\ten_us-303\t81\n48.1\t401\t101\n48.1\ten_us-254\t187\n48.1\ten_us-303\t101\n48.2\t401\t62\n48.2\ten_us-254\t193\n48.2\ten_us-303\t91\n48.3\t401\t70\n48.3\ten_us-254\t183\n48.3\ten_us-303\t79\n48.4\t401\t68\n48.4\ten_us-254\t198\n48.4\ten_us-303\t113\n48.5\t401\t87\n48.5\ten_us-254\t168\n48.5\ten_us-303\t103\n48.6\t401\t81\n48.6\ten_us-254\t210\n48.6\ten_us-303\t100\n48.7\t401\t108\n48.7\ten_us-254\t198\n48.7\ten_us-303\t94\n48.8\t401\t99\n48.8\ten_us-254\t188\n48.8\ten_us-303\t100\n48.9\t401\t89\n48.9\ten_us-254\t212\n48.9\ten_us-303\t126\n49.0\t401\t98\n49.0\ten_us-254\t216\n49.0\ten_us-303\t119\n49.1\t401\t85\n49.1\ten_us-254\t225\n49.1\ten_us-303\t102\n49.2\t401\t112\n49.2\ten_us-254\t220\n49.2\ten_us-303\t79\n49.3\t401\t98\n49.3\ten_us-254\t187\n49.3\ten_us-303\t100\n49.4\t401\t92\n49.4\ten_us-254\t191\n49.4\ten_us-303\t102\n49.5\t401\t89\n49.5\ten_us-254\t227\n49.5\ten_us-303\t112\n49.6\t401\t74\n49.6\ten_us-254\t226\n49.6\ten_us-303\t110\n49.7\t401\t94\n49.7\ten_us-254\t204\n49.7\ten_us-303\t116\n49.8\t401\t91\n49.8\ten_us-254\t240\n49.8\ten_us-303\t92\n49.9\t401\t86\n49.9\ten_us-254\t238\n49.9\ten_us-303\t119\n50.0\t401\t116\n50.0\ten_us-254\t245\n50.0\ten_us-303\t102\n50.1\t401\t91\n50.1\ten_us-254\t203\n50.1\ten_us-303\t110\n50.2\t401\t73\n50.2\ten_us-254\t212\n50.2\ten_us-303\t132\n50.3\t401\t112\n50.3\ten_us-254\t195\n50.3\ten_us-303\t111\n50.4\t401\t97\n50.4\ten_us-254\t241\n50.4\ten_us-303\t102\n50.5\t401\t100\n50.5\ten_us-254\t243\n50.5\ten_us-303\t119\n50.6\t401\t92\n50.6\ten_us-254\t232\n50.6\ten_us-303\t121\n50.7\t401\t129\n50.7\ten_us-254\t237\n50.7\ten_us-303\t135\n50.8\t401\t98\n50.8\ten_us-254\t226\n50.8\ten_us-303\t101\n50.9\t401\t102\n50.9\ten_us-254\t247\n50.9\ten_us-303\t108\n51.0\t401\t121\n51.0\ten_us-254\t265\n51.0\ten_us-303\t97\n51.1\t401\t85\n51.1\ten_us-254\t213\n51.1\ten_us-303\t111\n51.2\t401\t93\n51.2\ten_us-254\t255\n51.2\ten_us-303\t114\n51.3\t401\t93\n51.3\ten_us-254\t216\n51.3\ten_us-303\t126\n51.4\t401\t98\n51.4\ten_us-254\t246\n51.4\ten_us-303\t121\n51.5\t401\t104\n51.5\ten_us-254\t261\n51.5\ten_us-303\t134\n51.6\t401\t99\n51.6\ten_us-254\t262\n51.6\ten_us-303\t116\n51.7\t401\t83\n51.7\ten_us-254\t248\n51.7\ten_us-303\t126\n51.8\t401\t104\n51.8\ten_us-254\t256\n51.8\ten_us-303\t123\n51.9\t401\t112\n51.9\ten_us-254\t245\n51.9\ten_us-303\t139\n52.0\t401\t114\n52.0\ten_us-254\t230\n52.0\ten_us-303\t114\n52.1\t401\t111\n52.1\ten_us-254\t283\n52.1\ten_us-303\t123\n52.2\t401\t107\n52.2\ten_us-254\t273\n52.2\ten_us-303\t114\n52.3\t401\t106\n52.3\ten_us-254\t279\n52.3\ten_us-303\t125\n52.4\t401\t105\n52.4\ten_us-254\t259\n52.4\ten_us-303\t114\n52.5\t401\t125\n52.5\ten_us-254\t271\n52.5\ten_us-303\t115\n52.6\t401\t107\n52.6\ten_us-254\t287\n52.6\ten_us-303\t154\n52.7\t401\t120\n52.7\ten_us-254\t250\n52.7\ten_us-303\t126\n52.8\t401\t116\n52.8\ten_us-254\t261\n52.8\ten_us-303\t142\n52.9\t401\t115\n52.9\ten_us-254\t274\n52.9\ten_us-303\t158\n53.0\t401\t109\n53.0\ten_us-254\t259\n53.0\ten_us-303\t152\n53.1\t401\t99\n53.1\ten_us-254\t296\n53.1\ten_us-303\t123\n53.2\t401\t104\n53.2\ten_us-254\t276\n53.2\ten_us-303\t126\n53.3\t401\t124\n53.3\ten_us-254\t274\n53.3\ten_us-303\t122\n53.4\t401\t122\n53.4\ten_us-254\t309\n53.4\ten_us-303\t128\n53.5\t401\t113\n53.5\ten_us-254\t271\n53.5\ten_us-303\t115\n53.6\t401\t117\n53.6\ten_us-254\t297\n53.6\ten_us-303\t166\n53.7\t401\t124\n53.7\ten_us-254\t274\n53.7\ten_us-303\t141\n53.8\t401\t126\n53.8\ten_us-254\t295\n53.8\ten_us-303\t147\n53.9\t401\t125\n53.9\ten_us-254\t341\n53.9\ten_us-303\t162\n54.0\t401\t117\n54.0\ten_us-254\t335\n54.0\ten_us-303\t120\n54.1\t401\t112\n54.1\ten_us-254\t274\n54.1\ten_us-303\t129\n54.2\t401\t114\n54.2\ten_us-254\t272\n54.2\ten_us-303\t132\n54.3\t401\t107\n54.3\ten_us-254\t314\n54.3\ten_us-303\t139\n54.4\t401\t122\n54.4\ten_us-254\t320\n54.4\ten_us-303\t126\n54.5\t401\t126\n54.5\ten_us-254\t307\n54.5\ten_us-303\t154\n54.6\t401\t136\n54.6\ten_us-254\t325\n54.6\ten_us-303\t146\n54.7\t401\t128\n54.7\ten_us-254\t321\n54.7\ten_us-303\t168\n54.8\t401\t122\n54.8\ten_us-254\t319\n54.8\ten_us-303\t157\n54.9\t401\t117\n54.9\ten_us-254\t314\n54.9\ten_us-303\t123\n55.0\t401\t120\n55.0\ten_us-254\t360\n55.0\ten_us-303\t144\n55.1\t401\t137\n55.1\ten_us-254\t381\n55.1\ten_us-303\t149\n55.2\t401\t113\n55.2\ten_us-254\t345\n55.2\ten_us-303\t149\n55.3\t401\t141\n55.3\ten_us-254\t325\n55.3\ten_us-303\t162\n55.4\t401\t131\n55.4\ten_us-254\t349\n55.4\ten_us-303\t168\n55.5\t401\t134\n55.5\ten_us-254\t345\n55.5\ten_us-303\t152\n55.6\t401\t116\n55.6\ten_us-254\t374\n55.6\ten_us-303\t169\n55.7\t401\t141\n55.7\ten_us-254\t345\n55.7\ten_us-303\t166\n55.8\t401\t152\n55.8\ten_us-254\t368\n55.8\ten_us-303\t164\n55.9\t401\t144\n55.9\ten_us-254\t343\n55.9\ten_us-303\t179\n56.0\t401\t152\n56.0\ten_us-254\t356\n56.0\ten_us-303\t181\n56.1\t401\t132\n56.1\ten_us-254\t365\n56.1\ten_us-303\t170\n56.2\t401\t156\n56.2\ten_us-254\t419\n56.2\ten_us-303\t190\n56.3\t401\t159\n56.3\ten_us-254\t394\n56.3\ten_us-303\t165\n56.4\t401\t150\n56.4\ten_us-254\t362\n56.4\ten_us-303\t195\n56.5\t401\t156\n56.5\ten_us-254\t420\n56.5\ten_us-303\t188\n56.6\t401\t142\n56.6\ten_us-254\t396\n56.6\ten_us-303\t193\n56.7\t401\t162\n56.7\ten_us-254\t382\n56.7\ten_us-303\t154\n56.8\t401\t145\n56.8\ten_us-254\t409\n56.8\ten_us-303\t185\n56.9\t401\t145\n56.9\ten_us-254\t384\n56.9\ten_us-303\t182\n57.0\t401\t152\n57.0\ten_us-254\t348\n57.0\ten_us-303\t183\n57.1\t401\t135\n57.1\ten_us-254\t384\n57.1\ten_us-303\t161\n57.2\t401\t147\n57.2\ten_us-254\t394\n57.2\ten_us-303\t192\n57.3\t401\t158\n57.3\ten_us-254\t426\n57.3\ten_us-303\t196\n57.4\t401\t165\n57.4\ten_us-254\t405\n57.4\ten_us-303\t192\n57.5\t401\t174\n57.5\ten_us-254\t432\n57.5\ten_us-303\t177\n57.6\t401\t150\n57.6\ten_us-254\t416\n57.6\ten_us-303\t177\n57.7\t401\t168\n57.7\ten_us-254\t432\n57.7\ten_us-303\t175\n57.8\t401\t165\n57.8\ten_us-254\t428\n57.8\ten_us-303\t221\n57.9\t401\t172\n57.9\ten_us-254\t440\n57.9\ten_us-303\t212\n58.0\t401\t165\n58.0\ten_us-254\t404\n58.0\ten_us-303\t209\n58.1\t401\t155\n58.1\ten_us-254\t437\n58.1\ten_us-303\t189\n58.2\t401\t168\n58.2\ten_us-254\t424\n58.2\ten_us-303\t231\n58.3\t401\t177\n58.3\ten_us-254\t500\n58.3\ten_us-303\t202\n58.4\t401\t177\n58.4\ten_us-254\t408\n58.4\ten_us-303\t210\n58.5\t401\t189\n58.5\ten_us-254\t454\n58.5\ten_us-303\t204\n58.6\t401\t175\n58.6\ten_us-254\t498\n58.6\ten_us-303\t199\n58.7\t401\t180\n58.7\ten_us-254\t488\n58.7\ten_us-303\t214\n58.8\t401\t171\n58.8\ten_us-254\t473\n58.8\ten_us-303\t216\n58.9\t401\t153\n58.9\ten_us-254\t494\n58.9\ten_us-303\t222\n59.0\t401\t147\n59.0\ten_us-254\t491\n59.0\ten_us-303\t194\n59.1\t401\t171\n59.1\ten_us-254\t521\n59.1\ten_us-303\t234\n59.2\t401\t190\n59.2\ten_us-254\t482\n59.2\ten_us-303\t196\n59.3\t401\t168\n59.3\ten_us-254\t501\n59.3\ten_us-303\t218\n59.4\t401\t189\n59.4\ten_us-254\t504\n59.4\ten_us-303\t200\n59.5\t401\t174\n59.5\ten_us-254\t488\n59.5\ten_us-303\t194\n59.6\t401\t162\n59.6\ten_us-254\t510\n59.6\ten_us-303\t234\n59.7\t401\t190\n59.7\ten_us-254\t554\n59.7\ten_us-303\t213\n59.8\t401\t194\n59.8\ten_us-254\t526\n59.8\ten_us-303\t228\n59.9\t401\t204\n59.9\ten_us-254\t525\n59.9\ten_us-303\t249\n60.0\t401\t197\n60.0\ten_us-254\t505\n60.0\ten_us-303\t222\n60.1\t401\t192\n60.1\ten_us-254\t549\n60.1\ten_us-303\t262\n60.2\t401\t192\n60.2\ten_us-254\t553\n60.2\ten_us-303\t237\n60.3\t401\t190\n60.3\ten_us-254\t575\n60.3\ten_us-303\t243\n60.4\t401\t232\n60.4\ten_us-254\t551\n60.4\ten_us-303\t261\n60.5\t401\t235\n60.5\ten_us-254\t572\n60.5\ten_us-303\t241\n60.6\t401\t198\n60.6\ten_us-254\t538\n60.6\ten_us-303\t247\n60.7\t401\t210\n60.7\ten_us-254\t529\n60.7\ten_us-303\t263\n60.8\t401\t202\n60.8\ten_us-254\t593\n60.8\ten_us-303\t246\n60.9\t401\t219\n60.9\ten_us-254\t582\n60.9\ten_us-303\t280\n61.0\t401\t198\n61.0\ten_us-254\t596\n61.0\ten_us-303\t263\n61.1\t401\t218\n61.1\ten_us-254\t615\n61.1\ten_us-303\t247\n61.2\t401\t215\n61.2\ten_us-254\t609\n61.2\ten_us-303\t260\n61.3\t401\t215\n61.3\ten_us-254\t632\n61.3\ten_us-303\t282\n61.4\t401\t263\n61.4\ten_us-254\t652\n61.4\ten_us-303\t240\n61.5\t401\t242\n61.5\ten_us-254\t627\n61.5\ten_us-303\t278\n61.6\t401\t250\n61.6\ten_us-254\t636\n61.6\ten_us-303\t251\n61.7\t401\t242\n61.7\ten_us-254\t659\n61.7\ten_us-303\t282\n61.8\t401\t247\n61.8\ten_us-254\t638\n61.8\ten_us-303\t290\n61.9\t401\t269\n61.9\ten_us-254\t661\n61.9\ten_us-303\t271\n62.0\t401\t215\n62.0\ten_us-254\t680\n62.0\ten_us-303\t315\n62.1\t401\t226\n62.1\ten_us-254\t723\n62.1\ten_us-303\t303\n62.2\t401\t226\n62.2\ten_us-254\t654\n62.2\ten_us-303\t310\n62.3\t401\t241\n62.3\ten_us-254\t678\n62.3\ten_us-303\t289\n62.4\t401\t232\n62.4\ten_us-254\t673\n62.4\ten_us-303\t267\n62.5\t401\t242\n62.5\ten_us-254\t733\n62.5\ten_us-303\t328\n62.6\t401\t258\n62.6\ten_us-254\t739\n62.6\ten_us-303\t298\n62.7\t401\t263\n62.7\ten_us-254\t710\n62.7\ten_us-303\t301\n62.8\t401\t270\n62.8\ten_us-254\t736\n62.8\ten_us-303\t299\n62.9\t401\t276\n62.9\ten_us-254\t719\n62.9\ten_us-303\t315\n63.0\t401\t304\n63.0\ten_us-254\t731\n63.0\ten_us-303\t323\n63.1\t401\t307\n63.1\ten_us-254\t766\n63.1\ten_us-303\t338\n63.2\t401\t315\n63.2\ten_us-254\t736\n63.2\ten_us-303\t329\n63.3\t401\t275\n63.3\ten_us-254\t692\n63.3\ten_us-303\t318\n63.4\t401\t266\n63.4\ten_us-254\t746\n63.4\ten_us-303\t358\n63.5\t401\t281\n63.5\ten_us-254\t759\n63.5\ten_us-303\t382\n63.6\t401\t298\n63.6\ten_us-254\t791\n63.6\ten_us-303\t349\n63.7\t401\t258\n63.7\ten_us-254\t770\n63.7\ten_us-303\t327\n63.8\t401\t285\n63.8\ten_us-254\t762\n63.8\ten_us-303\t332\n63.9\t401\t307\n63.9\ten_us-254\t801\n63.9\ten_us-303\t358\n64.0\t401\t287\n64.0\ten_us-254\t819\n64.0\ten_us-303\t364\n64.1\t401\t314\n64.1\ten_us-254\t817\n64.1\ten_us-303\t361\n64.2\t401\t306\n64.2\ten_us-254\t925\n64.2\ten_us-303\t354\n64.3\t401\t337\n64.3\ten_us-254\t855\n64.3\ten_us-303\t371\n64.4\t401\t329\n64.4\ten_us-254\t879\n64.4\ten_us-303\t393\n64.5\t401\t323\n64.5\ten_us-254\t840\n64.5\ten_us-303\t379\n64.6\t401\t313\n64.6\ten_us-254\t879\n64.6\ten_us-303\t366\n64.7\t401\t318\n64.7\ten_us-254\t846\n64.7\ten_us-303\t388\n64.8\t401\t314\n64.8\ten_us-254\t932\n64.8\ten_us-303\t364\n64.9\t401\t346\n64.9\ten_us-254\t928\n64.9\ten_us-303\t387\n65.0\t401\t344\n65.0\ten_us-254\t885\n65.0\ten_us-303\t366\n65.1\t401\t355\n65.1\ten_us-254\t973\n65.1\ten_us-303\t435\n65.2\t401\t340\n65.2\ten_us-254\t901\n65.2\ten_us-303\t434\n65.3\t401\t365\n65.3\ten_us-254\t917\n65.3\ten_us-303\t390\n65.4\t401\t311\n65.4\ten_us-254\t999\n65.4\ten_us-303\t436\n65.5\t401\t387\n65.5\ten_us-254\t919\n65.5\ten_us-303\t412\n65.6\t401\t350\n65.6\ten_us-254\t956\n65.6\ten_us-303\t412\n65.7\t401\t421\n65.7\ten_us-254\t965\n65.7\ten_us-303\t440\n65.8\t401\t367\n65.8\ten_us-254\t1045\n65.8\ten_us-303\t425\n65.9\t401\t403\n65.9\ten_us-254\t995\n65.9\ten_us-303\t424\n66.0\t401\t366\n66.0\ten_us-254\t1017\n66.0\ten_us-303\t448\n66.1\t401\t361\n66.1\ten_us-254\t997\n66.1\ten_us-303\t464\n66.2\t401\t392\n66.2\ten_us-254\t1056\n66.2\ten_us-303\t479\n66.3\t401\t397\n66.3\ten_us-254\t1047\n66.3\ten_us-303\t453\n66.4\t401\t392\n66.4\ten_us-254\t1039\n66.4\ten_us-303\t475\n66.5\t401\t433\n66.5\ten_us-254\t1058\n66.5\ten_us-303\t486\n66.6\t401\t397\n66.6\ten_us-254\t1109\n66.6\ten_us-303\t479\n66.7\t401\t388\n66.7\ten_us-254\t1108\n66.7\ten_us-303\t461\n66.8\t401\t471\n66.8\ten_us-254\t1121\n66.8\ten_us-303\t460\n66.9\t401\t442\n66.9\ten_us-254\t1121\n66.9\ten_us-303\t488\n67.0\t401\t406\n67.0\ten_us-254\t1098\n67.0\ten_us-303\t453\n67.1\t401\t423\n67.1\ten_us-254\t1099\n67.1\ten_us-303\t476\n67.2\t401\t448\n67.2\ten_us-254\t1206\n67.2\ten_us-303\t507\n67.3\t401\t473\n67.3\ten_us-254\t1244\n67.3\ten_us-303\t520\n67.4\t401\t430\n67.4\ten_us-254\t1169\n67.4\ten_us-303\t451\n67.5\t401\t453\n67.5\ten_us-254\t1199\n67.5\ten_us-303\t518\n67.6\t401\t463\n67.6\ten_us-254\t1200\n67.6\ten_us-303\t522\n67.7\t401\t527\n67.7\ten_us-254\t1219\n67.7\ten_us-303\t564\n67.8\t401\t446\n67.8\ten_us-254\t1225\n67.8\ten_us-303\t541\n67.9\t401\t536\n67.9\ten_us-254\t1233\n67.9\ten_us-303\t526\n68.0\t401\t486\n68.0\ten_us-254\t1302\n68.0\ten_us-303\t578\n68.1\t401\t496\n68.1\ten_us-254\t1293\n68.1\ten_us-303\t554\n68.2\t401\t474\n68.2\ten_us-254\t1269\n68.2\ten_us-303\t551\n68.3\t401\t507\n68.3\ten_us-254\t1301\n68.3\ten_us-303\t593\n68.4\t401\t489\n68.4\ten_us-254\t1307\n68.4\ten_us-303\t567\n68.5\t401\t547\n68.5\ten_us-254\t1408\n68.5\ten_us-303\t575\n68.6\t401\t530\n68.6\ten_us-254\t1358\n68.6\ten_us-303\t604\n68.7\t401\t537\n68.7\ten_us-254\t1305\n68.7\ten_us-303\t590\n68.8\t401\t546\n68.8\ten_us-254\t1318\n68.8\ten_us-303\t645\n68.9\t401\t567\n68.9\ten_us-254\t1404\n68.9\ten_us-303\t599\n69.0\t401\t574\n69.0\ten_us-254\t1385\n69.0\ten_us-303\t599\n69.1\t401\t589\n69.1\ten_us-254\t1406\n69.1\ten_us-303\t612\n69.2\t401\t572\n69.2\ten_us-254\t1427\n69.2\ten_us-303\t653\n69.3\t401\t564\n69.3\ten_us-254\t1404\n69.3\ten_us-303\t643\n69.4\t401\t613\n69.4\ten_us-254\t1492\n69.4\ten_us-303\t710\n69.5\t401\t563\n69.5\ten_us-254\t1446\n69.5\ten_us-303\t656\n69.6\t401\t659\n69.6\ten_us-254\t1460\n69.6\ten_us-303\t721\n69.7\t401\t646\n69.7\ten_us-254\t1535\n69.7\ten_us-303\t647\n69.8\t401\t655\n69.8\ten_us-254\t1535\n69.8\ten_us-303\t735\n69.9\t401\t559\n69.9\ten_us-254\t1486\n69.9\ten_us-303\t734\n70.0\t401\t647\n70.0\ten_us-254\t1563\n70.0\ten_us-303\t689\n70.1\t401\t633\n70.1\ten_us-254\t1539\n70.1\ten_us-303\t734\n70.2\t401\t697\n70.2\ten_us-254\t1577\n70.2\ten_us-303\t676\n70.3\t401\t622\n70.3\ten_us-254\t1533\n70.3\ten_us-303\t725\n70.4\t401\t732\n70.4\ten_us-254\t1575\n70.4\ten_us-303\t668\n70.5\t401\t707\n70.5\ten_us-254\t1671\n70.5\ten_us-303\t729\n70.6\t401\t650\n70.6\ten_us-254\t1629\n70.6\ten_us-303\t785\n70.7\t401\t661\n70.7\ten_us-254\t1664\n70.7\ten_us-303\t745\n70.8\t401\t673\n70.8\ten_us-254\t1683\n70.8\ten_us-303\t820\n70.9\t401\t679\n70.9\ten_us-254\t1687\n70.9\ten_us-303\t744\n71.0\t401\t680\n71.0\ten_us-254\t1674\n71.0\ten_us-303\t871\n71.1\t401\t699\n71.1\ten_us-254\t1698\n71.1\ten_us-303\t803\n71.2\t401\t738\n71.2\ten_us-254\t1730\n71.2\ten_us-303\t835\n71.3\t401\t738\n71.3\ten_us-254\t1781\n71.3\ten_us-303\t864\n71.4\t401\t712\n71.4\ten_us-254\t1746\n71.4\ten_us-303\t813\n71.5\t401\t758\n71.5\ten_us-254\t1807\n71.5\ten_us-303\t859\n71.6\t401\t785\n71.6\ten_us-254\t1814\n71.6\ten_us-303\t862\n71.7\t401\t773\n71.7\ten_us-254\t1829\n71.7\ten_us-303\t914\n71.8\t401\t857\n71.8\ten_us-254\t1855\n71.8\ten_us-303\t838\n71.9\t401\t849\n71.9\ten_us-254\t1857\n71.9\ten_us-303\t924\n72.0\t401\t864\n72.0\ten_us-254\t1829\n72.0\ten_us-303\t889\n72.1\t401\t888\n72.1\ten_us-254\t1810\n72.1\ten_us-303\t907\n72.2\t401\t854\n72.2\ten_us-254\t1911\n72.2\ten_us-303\t976\n72.3\t401\t846\n72.3\ten_us-254\t1957\n72.3\ten_us-303\t977\n72.4\t401\t838\n72.4\ten_us-254\t1947\n72.4\ten_us-303\t931\n72.5\t401\t892\n72.5\ten_us-254\t1995\n72.5\ten_us-303\t1002\n72.6\t401\t884\n72.6\ten_us-254\t2019\n72.6\ten_us-303\t952\n72.7\t401\t937\n72.7\ten_us-254\t2065\n72.7\ten_us-303\t966\n72.8\t401\t898\n72.8\ten_us-254\t2021\n72.8\ten_us-303\t993\n72.9\t401\t927\n72.9\ten_us-254\t2059\n72.9\ten_us-303\t1057\n73.0\t401\t961\n73.0\ten_us-254\t2140\n73.0\ten_us-303\t1053\n73.1\t401\t992\n73.1\ten_us-254\t2064\n73.1\ten_us-303\t1010\n73.2\t401\t955\n73.2\ten_us-254\t2090\n73.2\ten_us-303\t1019\n73.3\t401\t928\n73.3\ten_us-254\t2084\n73.3\ten_us-303\t1047\n73.4\t401\t988\n73.4\ten_us-254\t2248\n73.4\ten_us-303\t1075\n73.5\t401\t1038\n73.5\ten_us-254\t2132\n73.5\ten_us-303\t1103\n73.6\t401\t996\n73.6\ten_us-254\t2216\n73.6\ten_us-303\t1129\n73.7\t401\t1008\n73.7\ten_us-254\t2219\n73.7\ten_us-303\t1100\n73.8\t401\t994\n73.8\ten_us-254\t2201\n73.8\ten_us-303\t1123\n73.9\t401\t1073\n73.9\ten_us-254\t2268\n73.9\ten_us-303\t1171\n74.0\t401\t1078\n74.0\ten_us-254\t2281\n74.0\ten_us-303\t1141\n74.1\t401\t1089\n74.1\ten_us-254\t2257\n74.1\ten_us-303\t1160\n74.2\t401\t1099\n74.2\ten_us-254\t2380\n74.2\ten_us-303\t1193\n74.3\t401\t1086\n74.3\ten_us-254\t2426\n74.3\ten_us-303\t1153\n74.4\t401\t1156\n74.4\ten_us-254\t2284\n74.4\ten_us-303\t1210\n74.5\t401\t1186\n74.5\ten_us-254\t2402\n74.5\ten_us-303\t1217\n74.6\t401\t1086\n74.6\ten_us-254\t2290\n74.6\ten_us-303\t1217\n74.7\t401\t1153\n74.7\ten_us-254\t2458\n74.7\ten_us-303\t1241\n74.8\t401\t1248\n74.8\ten_us-254\t2366\n74.8\ten_us-303\t1267\n74.9\t401\t1162\n74.9\ten_us-254\t2529\n74.9\ten_us-303\t1221\n75.0\t401\t1219\n75.0\ten_us-254\t2381\n75.0\ten_us-303\t1303\n75.1\t401\t1262\n75.1\ten_us-254\t2603\n75.1\ten_us-303\t1348\n75.2\t401\t1291\n75.2\ten_us-254\t2583\n75.2\ten_us-303\t1382\n75.3\t401\t1283\n75.3\ten_us-254\t2570\n75.3\ten_us-303\t1326\n75.4\t401\t1274\n75.4\ten_us-254\t2499\n75.4\ten_us-303\t1364\n75.5\t401\t1304\n75.5\ten_us-254\t2559\n75.5\ten_us-303\t1403\n75.6\t401\t1318\n75.6\ten_us-254\t2608\n75.6\ten_us-303\t1367\n75.7\t401\t1324\n75.7\ten_us-254\t2570\n75.7\ten_us-303\t1366\n75.8\t401\t1384\n75.8\ten_us-254\t2713\n75.8\ten_us-303\t1375\n75.9\t401\t1263\n75.9\ten_us-254\t2668\n75.9\ten_us-303\t1466\n76.0\t401\t1361\n76.0\ten_us-254\t2617\n76.0\ten_us-303\t1496\n76.1\t401\t1422\n76.1\ten_us-254\t2638\n76.1\ten_us-303\t1554\n76.2\t401\t1433\n76.2\ten_us-254\t2713\n76.2\ten_us-303\t1480\n76.3\t401\t1408\n76.3\ten_us-254\t2713\n76.3\ten_us-303\t1540\n76.4\t401\t1538\n76.4\ten_us-254\t2785\n76.4\ten_us-303\t1565\n76.5\t401\t1494\n76.5\ten_us-254\t2719\n76.5\ten_us-303\t1589\n76.6\t401\t1397\n76.6\ten_us-254\t2823\n76.6\ten_us-303\t1478\n76.7\t401\t1421\n76.7\ten_us-254\t2876\n76.7\ten_us-303\t1554\n76.8\t401\t1487\n76.8\ten_us-254\t2824\n76.8\ten_us-303\t1669\n76.9\t401\t1545\n76.9\ten_us-254\t2829\n76.9\ten_us-303\t1613\n77.0\t401\t1562\n77.0\ten_us-254\t2940\n77.0\ten_us-303\t1617\n77.1\t401\t1611\n77.1\ten_us-254\t2902\n77.1\ten_us-303\t1677\n77.2\t401\t1597\n77.2\ten_us-254\t2895\n77.2\ten_us-303\t1740\n77.3\t401\t1604\n77.3\ten_us-254\t2901\n77.3\ten_us-303\t1609\n77.4\t401\t1642\n77.4\ten_us-254\t3021\n77.4\ten_us-303\t1791\n77.5\t401\t1601\n77.5\ten_us-254\t2931\n77.5\ten_us-303\t1797\n77.6\t401\t1649\n77.6\ten_us-254\t3048\n77.6\ten_us-303\t1789\n77.7\t401\t1708\n77.7\ten_us-254\t2943\n77.7\ten_us-303\t1817\n77.8\t401\t1691\n77.8\ten_us-254\t2981\n77.8\ten_us-303\t1868\n77.9\t401\t1687\n77.9\ten_us-254\t3089\n77.9\ten_us-303\t1827\n78.0\t401\t1787\n78.0\ten_us-254\t3117\n78.0\ten_us-303\t1925\n78.1\t401\t1741\n78.1\ten_us-254\t3099\n78.1\ten_us-303\t1858\n78.2\t401\t1761\n78.2\ten_us-254\t3062\n78.2\ten_us-303\t2027\n78.3\t401\t1795\n78.3\ten_us-254\t3061\n78.3\ten_us-303\t1970\n78.4\t401\t1852\n78.4\ten_us-254\t3098\n78.4\ten_us-303\t1914\n78.5\t401\t1889\n78.5\ten_us-254\t3129\n78.5\ten_us-303\t1919\n78.6\t401\t1777\n78.6\ten_us-254\t3225\n78.6\ten_us-303\t1923\n78.7\t401\t1908\n78.7\ten_us-254\t3148\n78.7\ten_us-303\t2006\n78.8\t401\t1908\n78.8\ten_us-254\t3216\n78.8\ten_us-303\t2103\n78.9\t401\t1850\n78.9\ten_us-254\t3193\n78.9\ten_us-303\t2048\n79.0\t401\t1975\n79.0\ten_us-254\t3271\n79.0\ten_us-303\t2067\n79.1\t401\t1955\n79.1\ten_us-254\t3259\n79.1\ten_us-303\t2058\n79.2\t401\t2023\n79.2\ten_us-254\t3252\n79.2\ten_us-303\t2151\n79.3\t401\t2078\n79.3\ten_us-254\t3228\n79.3\ten_us-303\t2076\n79.4\t401\t2005\n79.4\ten_us-254\t3422\n79.4\ten_us-303\t2144\n79.5\t401\t2038\n79.5\ten_us-254\t3252\n79.5\ten_us-303\t2167\n79.6\t401\t2038\n79.6\ten_us-254\t3407\n79.6\ten_us-303\t2214\n79.7\t401\t2153\n79.7\ten_us-254\t3268\n79.7\ten_us-303\t2234\n79.8\t401\t2133\n79.8\ten_us-254\t3404\n79.8\ten_us-303\t2315\n79.9\t401\t2084\n79.9\ten_us-254\t3439\n79.9\ten_us-303\t2331\n80.0\t401\t2119\n80.0\ten_us-254\t3379\n80.0\ten_us-303\t2351\n80.1\t401\t2220\n80.1\ten_us-254\t3581\n80.1\ten_us-303\t2373\n80.2\t401\t2145\n80.2\ten_us-254\t3404\n80.2\ten_us-303\t2443\n80.3\t401\t2193\n80.3\ten_us-254\t3475\n80.3\ten_us-303\t2388\n80.4\t401\t2176\n80.4\ten_us-254\t3497\n80.4\ten_us-303\t2458\n80.5\t401\t2252\n80.5\ten_us-254\t3544\n80.5\ten_us-303\t2373\n80.6\t401\t2267\n80.6\ten_us-254\t3503\n80.6\ten_us-303\t2455\n80.7\t401\t2256\n80.7\ten_us-254\t3525\n80.7\ten_us-303\t2503\n80.8\t401\t2310\n80.8\ten_us-254\t3582\n80.8\ten_us-303\t2503\n80.9\t401\t2383\n80.9\ten_us-254\t3539\n80.9\ten_us-303\t2443\n81.0\t401\t2414\n81.0\ten_us-254\t3488\n81.0\ten_us-303\t2614\n81.1\t401\t2373\n81.1\ten_us-254\t3563\n81.1\ten_us-303\t2643\n81.2\t401\t2408\n81.2\ten_us-254\t3664\n81.2\ten_us-303\t2639\n81.3\t401\t2449\n81.3\ten_us-254\t3604\n81.3\ten_us-303\t2674\n81.4\t401\t2472\n81.4\ten_us-254\t3594\n81.4\ten_us-303\t2597\n81.5\t401\t2401\n81.5\ten_us-254\t3643\n81.5\ten_us-303\t2700\n81.6\t401\t2514\n81.6\ten_us-254\t3580\n81.6\ten_us-303\t2774\n81.7\t401\t2553\n81.7\ten_us-254\t3563\n81.7\ten_us-303\t2801\n81.8\t401\t2530\n81.8\ten_us-254\t3563\n81.8\ten_us-303\t2808\n81.9\t401\t2613\n81.9\ten_us-254\t3646\n81.9\ten_us-303\t2745\n82.0\t401\t2582\n82.0\ten_us-254\t3756\n82.0\ten_us-303\t2919\n82.1\t401\t2565\n82.1\ten_us-254\t3604\n82.1\ten_us-303\t2962\n82.2\t401\t2544\n82.2\ten_us-254\t3722\n82.2\ten_us-303\t2909\n82.3\t401\t2589\n82.3\ten_us-254\t3681\n82.3\ten_us-303\t2883\n82.4\t401\t2706\n82.4\ten_us-254\t3682\n82.4\ten_us-303\t2994\n82.5\t401\t2745\n82.5\ten_us-254\t3713\n82.5\ten_us-303\t2999\n82.6\t401\t2742\n82.6\ten_us-254\t3687\n82.6\ten_us-303\t3040\n82.7\t401\t2747\n82.7\ten_us-254\t3835\n82.7\ten_us-303\t3014\n82.8\t401\t2805\n82.8\ten_us-254\t3836\n82.8\ten_us-303\t3024\n82.9\t401\t2831\n82.9\ten_us-254\t3777\n82.9\ten_us-303\t3113\n83.0\t401\t2687\n83.0\ten_us-254\t3893\n83.0\ten_us-303\t3274\n83.1\t401\t2807\n83.1\ten_us-254\t3818\n83.1\ten_us-303\t3329\n83.2\t401\t2928\n83.2\ten_us-254\t3881\n83.2\ten_us-303\t3261\n83.3\t401\t2947\n83.3\ten_us-254\t3742\n83.3\ten_us-303\t3322\n83.4\t401\t2913\n83.4\ten_us-254\t3788\n83.4\ten_us-303\t3292\n83.5\t401\t2957\n83.5\ten_us-254\t3869\n83.5\ten_us-303\t3403\n83.6\t401\t2884\n83.6\ten_us-254\t3700\n83.6\ten_us-303\t3373\n83.7\t401\t3042\n83.7\ten_us-254\t3790\n83.7\ten_us-303\t3454\n83.8\t401\t3079\n83.8\ten_us-254\t3775\n83.8\ten_us-303\t3423\n83.9\t401\t3079\n83.9\ten_us-254\t3859\n83.9\ten_us-303\t3513\n84.0\t401\t3083\n84.0\ten_us-254\t3927\n84.0\ten_us-303\t3499\n84.1\t401\t3120\n84.1\ten_us-254\t3986\n84.1\ten_us-303\t3593\n84.2\t401\t3179\n84.2\ten_us-254\t3841\n84.2\ten_us-303\t3612\n84.3\t401\t3083\n84.3\ten_us-254\t3833\n84.3\ten_us-303\t3668\n84.4\t401\t3086\n84.4\ten_us-254\t3950\n84.4\ten_us-303\t3659\n84.5\t401\t3157\n84.5\ten_us-254\t3936\n84.5\ten_us-303\t3700\n84.6\t401\t3231\n84.6\ten_us-254\t3818\n84.6\ten_us-303\t3678\n84.7\t401\t3333\n84.7\ten_us-254\t3854\n84.7\ten_us-303\t3877\n84.8\t401\t3385\n84.8\ten_us-254\t3757\n84.8\ten_us-303\t3784\n84.9\t401\t3297\n84.9\ten_us-254\t3851\n84.9\ten_us-303\t3816\n85.0\t401\t3398\n85.0\ten_us-254\t3922\n85.0\ten_us-303\t3799\n85.1\t401\t3374\n85.1\ten_us-254\t3752\n85.1\ten_us-303\t3808\n85.2\t401\t3374\n85.2\ten_us-254\t3814\n85.2\ten_us-303\t3941\n85.3\t401\t3426\n85.3\ten_us-254\t3990\n85.3\ten_us-303\t3926\n85.4\t401\t3381\n85.4\ten_us-254\t3892\n85.4\ten_us-303\t3959\n85.5\t401\t3452\n85.5\ten_us-254\t4062\n85.5\ten_us-303\t4065\n85.6\t401\t3355\n85.6\ten_us-254\t3856\n85.6\ten_us-303\t4088\n85.7\t401\t3489\n85.7\ten_us-254\t3939\n85.7\ten_us-303\t4063\n85.8\t401\t3452\n85.8\ten_us-254\t3853\n85.8\ten_us-303\t4017\n85.9\t401\t3577\n85.9\ten_us-254\t3942\n85.9\ten_us-303\t4164\n86.0\t401\t3721\n86.0\ten_us-254\t3847\n86.0\ten_us-303\t4250\n86.1\t401\t3619\n86.1\ten_us-254\t3947\n86.1\ten_us-303\t4118\n86.2\t401\t3578\n86.2\ten_us-254\t3903\n86.2\ten_us-303\t4248\n86.3\t401\t3640\n86.3\ten_us-254\t3777\n86.3\ten_us-303\t4289\n86.4\t401\t3594\n86.4\ten_us-254\t3834\n86.4\ten_us-303\t4261\n86.5\t401\t3736\n86.5\ten_us-254\t3796\n86.5\ten_us-303\t4411\n86.6\t401\t3849\n86.6\ten_us-254\t3837\n86.6\ten_us-303\t4449\n86.7\t401\t3771\n86.7\ten_us-254\t3828\n86.7\ten_us-303\t4467\n86.8\t401\t3802\n86.8\ten_us-254\t3776\n86.8\ten_us-303\t4547\n86.9\t401\t3758\n86.9\ten_us-254\t3781\n86.9\ten_us-303\t4336\n87.0\t401\t3818\n87.0\ten_us-254\t3701\n87.0\ten_us-303\t4303\n87.1\t401\t3990\n87.1\ten_us-254\t3719\n87.1\ten_us-303\t4478\n87.2\t401\t3902\n87.2\ten_us-254\t3648\n87.2\ten_us-303\t4529\n87.3\t401\t3943\n87.3\ten_us-254\t3662\n87.3\ten_us-303\t4691\n87.4\t401\t4095\n87.4\ten_us-254\t3709\n87.4\ten_us-303\t4602\n87.5\t401\t3873\n87.5\ten_us-254\t3713\n87.5\ten_us-303\t4679\n87.6\t401\t3931\n87.6\ten_us-254\t3598\n87.6\ten_us-303\t4709\n87.7\t401\t4057\n87.7\ten_us-254\t3580\n87.7\ten_us-303\t4666\n87.8\t401\t4062\n87.8\ten_us-254\t3654\n87.8\ten_us-303\t4836\n87.9\t401\t4135\n87.9\ten_us-254\t3760\n87.9\ten_us-303\t4733\n88.0\t401\t4072\n88.0\ten_us-254\t3598\n88.0\ten_us-303\t4790\n88.1\t401\t4059\n88.1\ten_us-254\t3530\n88.1\ten_us-303\t4889\n88.2\t401\t4125\n88.2\ten_us-254\t3563\n88.2\ten_us-303\t4825\n88.3\t401\t4191\n88.3\ten_us-254\t3529\n88.3\ten_us-303\t4926\n88.4\t401\t4082\n88.4\ten_us-254\t3484\n88.4\ten_us-303\t4765\n88.5\t401\t4182\n88.5\ten_us-254\t3520\n88.5\ten_us-303\t4925\n88.6\t401\t4257\n88.6\ten_us-254\t3463\n88.6\ten_us-303\t4946\n88.7\t401\t4167\n88.7\ten_us-254\t3322\n88.7\ten_us-303\t4862\n88.8\t401\t4338\n88.8\ten_us-254\t3415\n88.8\ten_us-303\t4904\n88.9\t401\t4258\n88.9\ten_us-254\t3398\n88.9\ten_us-303\t4918\n89.0\t401\t4299\n89.0\ten_us-254\t3396\n89.0\ten_us-303\t4979\n89.1\t401\t4322\n89.1\ten_us-254\t3351\n89.1\ten_us-303\t4999\n89.2\t401\t4448\n89.2\ten_us-254\t3320\n89.2\ten_us-303\t5171\n89.3\t401\t4438\n89.3\ten_us-254\t3276\n89.3\ten_us-303\t5082\n89.4\t401\t4377\n89.4\ten_us-254\t3230\n89.4\ten_us-303\t5237\n89.5\t401\t4473\n89.5\ten_us-254\t3278\n89.5\ten_us-303\t5041\n89.6\t401\t4384\n89.6\ten_us-254\t3305\n89.6\ten_us-303\t5138\n89.7\t401\t4399\n89.7\ten_us-254\t3137\n89.7\ten_us-303\t5139\n89.8\t401\t4489\n89.8\ten_us-254\t3157\n89.8\ten_us-303\t5192\n89.9\t401\t4492\n89.9\ten_us-254\t3084\n89.9\ten_us-303\t5137\n90.0\t401\t4498\n90.0\ten_us-254\t3176\n90.0\ten_us-303\t4991\n90.1\t401\t4479\n90.1\ten_us-254\t3118\n90.1\ten_us-303\t5129\n90.2\t401\t4527\n90.2\ten_us-254\t3147\n90.2\ten_us-303\t5085\n90.3\t401\t4404\n90.3\ten_us-254\t3031\n90.3\ten_us-303\t5047\n90.4\t401\t4451\n90.4\ten_us-254\t3000\n90.4\ten_us-303\t5039\n90.5\t401\t4455\n90.5\ten_us-254\t2996\n90.5\ten_us-303\t5006\n90.6\t401\t4474\n90.6\ten_us-254\t2995\n90.6\ten_us-303\t5077\n90.7\t401\t4497\n90.7\ten_us-254\t3036\n90.7\ten_us-303\t5034\n90.8\t401\t4566\n90.8\ten_us-254\t2992\n90.8\ten_us-303\t5197\n90.9\t401\t4403\n90.9\ten_us-254\t3040\n90.9\ten_us-303\t5050\n91.0\t401\t4590\n91.0\ten_us-254\t2851\n91.0\ten_us-303\t5073\n91.1\t401\t4503\n91.1\ten_us-254\t2892\n91.1\ten_us-303\t5202\n91.2\t401\t4617\n91.2\ten_us-254\t2965\n91.2\ten_us-303\t5132\n91.3\t401\t4577\n91.3\ten_us-254\t2901\n91.3\ten_us-303\t5004\n91.4\t401\t4582\n91.4\ten_us-254\t2841\n91.4\ten_us-303\t5160\n91.5\t401\t4520\n91.5\ten_us-254\t2958\n91.5\ten_us-303\t5179\n91.6\t401\t4400\n91.6\ten_us-254\t2930\n91.6\ten_us-303\t5191\n91.7\t401\t4569\n91.7\ten_us-254\t2813\n91.7\ten_us-303\t5136\n91.8\t401\t4638\n91.8\ten_us-254\t2909\n91.8\ten_us-303\t4960\n91.9\t401\t4447\n91.9\ten_us-254\t2813\n91.9\ten_us-303\t4984\n92.0\t401\t4563\n92.0\ten_us-254\t3000\n92.0\ten_us-303\t4983\n92.1\t401\t4582\n92.1\ten_us-254\t2940\n92.1\ten_us-303\t5050\n92.2\t401\t4640\n92.2\ten_us-254\t3026\n92.2\ten_us-303\t5087\n92.3\t401\t4522\n92.3\ten_us-254\t3040\n92.3\ten_us-303\t5035\n92.4\t401\t4639\n92.4\ten_us-254\t2997\n92.4\ten_us-303\t4995\n92.5\t401\t4500\n92.5\ten_us-254\t2962\n92.5\ten_us-303\t4876\n92.6\t401\t4577\n92.6\ten_us-254\t2931\n92.6\ten_us-303\t5087\n92.7\t401\t4545\n92.7\ten_us-254\t2925\n92.7\ten_us-303\t4872\n92.8\t401\t4577\n92.8\ten_us-254\t2994\n92.8\ten_us-303\t4844\n92.9\t401\t4560\n92.9\ten_us-254\t3064\n92.9\ten_us-303\t5002\n93.0\t401\t4591\n93.0\ten_us-254\t2901\n93.0\ten_us-303\t4904\n93.1\t401\t4658\n93.1\ten_us-254\t2929\n93.1\ten_us-303\t5038\n93.2\t401\t4483\n93.2\ten_us-254\t3044\n93.2\ten_us-303\t4809\n93.3\t401\t4544\n93.3\ten_us-254\t2880\n93.3\ten_us-303\t4921\n93.4\t401\t4557\n93.4\ten_us-254\t2814\n93.4\ten_us-303\t4850\n93.5\t401\t4512\n93.5\ten_us-254\t2698\n93.5\ten_us-303\t4935\n93.6\t401\t4530\n93.6\ten_us-254\t2792\n93.6\ten_us-303\t4776\n93.7\t401\t4538\n93.7\ten_us-254\t2640\n93.7\ten_us-303\t4638\n93.8\t401\t4389\n93.8\ten_us-254\t2570\n93.8\ten_us-303\t4788\n93.9\t401\t4420\n93.9\ten_us-254\t2457\n93.9\ten_us-303\t4811\n94.0\t401\t4459\n94.0\ten_us-254\t2298\n94.0\ten_us-303\t4895\n94.1\t401\t4419\n94.1\ten_us-254\t2147\n94.1\ten_us-303\t4750\n94.2\t401\t4369\n94.2\ten_us-254\t2104\n94.2\ten_us-303\t4825\n94.3\t401\t4485\n94.3\ten_us-254\t1978\n94.3\ten_us-303\t4583\n94.4\t401\t4440\n94.4\ten_us-254\t1760\n94.4\ten_us-303\t4682\n94.5\t401\t4469\n94.5\ten_us-254\t1649\n94.5\ten_us-303\t4644\n94.6\t401\t4242\n94.6\ten_us-254\t1544\n94.6\ten_us-303\t4516\n94.7\t401\t4245\n94.7\ten_us-254\t1415\n94.7\ten_us-303\t4592\n94.8\t401\t4220\n94.8\ten_us-254\t1221\n94.8\ten_us-303\t4726\n94.9\t401\t4179\n94.9\ten_us-254\t1057\n94.9\ten_us-303\t4526\n95.0\t401\t4195\n95.0\ten_us-254\t991\n95.0\ten_us-303\t4482\n95.1\t401\t4133\n95.1\ten_us-254\t919\n95.1\ten_us-303\t4328\n95.2\t401\t4163\n95.2\ten_us-254\t775\n95.2\ten_us-303\t4285\n95.3\t401\t4041\n95.3\ten_us-254\t691\n95.3\ten_us-303\t4162\n95.4\t401\t4053\n95.4\ten_us-254\t591\n95.4\ten_us-303\t4125\n95.5\t401\t3926\n95.5\ten_us-254\t466\n95.5\ten_us-303\t4139\n95.6\t401\t3951\n95.6\ten_us-254\t451\n95.6\ten_us-303\t4146\n95.7\t401\t4033\n95.7\ten_us-254\t396\n95.7\ten_us-303\t3997\n95.8\t401\t3976\n95.8\ten_us-254\t305\n95.8\ten_us-303\t3886\n95.9\t401\t3937\n95.9\ten_us-254\t276\n95.9\ten_us-303\t3795\n96.0\t401\t3889\n96.0\ten_us-254\t235\n96.0\ten_us-303\t3726\n96.1\t401\t3788\n96.1\ten_us-254\t213\n96.1\ten_us-303\t3464\n96.2\t401\t3870\n96.2\ten_us-254\t173\n96.2\ten_us-303\t3342\n96.3\t401\t3835\n96.3\ten_us-254\t158\n96.3\ten_us-303\t3049\n96.4\t401\t3848\n96.4\ten_us-254\t140\n96.4\ten_us-303\t2797\n96.5\t401\t3738\n96.5\ten_us-254\t104\n96.5\ten_us-303\t2527\n96.6\t401\t3556\n96.6\ten_us-254\t99\n96.6\ten_us-303\t2307\n96.7\t401\t3620\n96.7\ten_us-254\t92\n96.7\ten_us-303\t2202\n96.8\t401\t3546\n96.8\ten_us-254\t83\n96.8\ten_us-303\t1881\n96.9\t401\t3478\n96.9\ten_us-254\t72\n96.9\ten_us-303\t1676\n97.0\t401\t3418\n97.0\ten_us-254\t71\n97.0\ten_us-303\t1442\n97.1\t401\t3422\n97.1\ten_us-254\t73\n97.1\ten_us-303\t1357\n97.2\t401\t3410\n97.2\ten_us-254\t50\n97.2\ten_us-303\t1098\n97.3\t401\t3301\n97.3\ten_us-254\t54\n97.3\ten_us-303\t911\n97.4\t401\t3333\n97.4\ten_us-254\t55\n97.4\ten_us-303\t799\n97.5\t401\t3318\n97.5\ten_us-254\t44\n97.5\ten_us-303\t663\n97.6\t401\t3201\n97.6\ten_us-254\t42\n97.6\ten_us-303\t565\n97.7\t401\t3196\n97.7\ten_us-254\t22\n97.7\ten_us-303\t482\n97.8\t401\t3122\n97.8\ten_us-254\t42\n97.8\ten_us-303\t421\n97.9\t401\t3181\n97.9\ten_us-254\t42\n97.9\ten_us-303\t321\n98.0\t401\t3048\n98.0\ten_us-254\t28\n98.0\ten_us-303\t277\n98.1\t401\t3110\n98.1\ten_us-254\t39\n98.1\ten_us-303\t243\n98.2\t401\t3145\n98.2\ten_us-254\t33\n98.2\ten_us-303\t191\n98.3\t401\t2993\n98.3\ten_us-254\t22\n98.3\ten_us-303\t148\n98.4\t401\t3027\n98.4\ten_us-254\t34\n98.4\ten_us-303\t94\n98.5\t401\t3067\n98.5\ten_us-254\t32\n98.5\ten_us-303\t68\n98.6\t401\t3073\n98.6\ten_us-254\t23\n98.6\ten_us-303\t53\n98.7\t401\t3051\n98.7\ten_us-254\t30\n98.7\ten_us-303\t29\n98.8\t401\t3003\n98.8\ten_us-254\t22\n98.8\ten_us-303\t21\n98.9\t401\t3097\n98.9\ten_us-254\t16\n98.9\ten_us-303\t7\n99.0\t401\t3047\n99.0\ten_us-254\t21\n99.0\ten_us-303\t4\n99.1\t401\t2958\n99.1\ten_us-254\t12\n99.1\ten_us-303\t2\n99.2\t401\t2978\n99.2\ten_us-254\t14\n99.3\t401\t2893\n99.3\ten_us-254\t17\n99.4\t401\t2806\n99.4\ten_us-254\t16\n99.5\t401\t2730\n99.5\ten_us-254\t11\n99.6\t401\t2619\n99.6\ten_us-254\t12\n99.7\t401\t2378\n99.7\ten_us-254\t8\n99.8\t401\t2288\n99.8\ten_us-254\t9\n99.9\t401\t1972\n99.9\ten_us-254\t11\n100.0\t401\t2916\n100.0\ten_us-254\t37\n"
+      },
+      "dateCreated": "Aug 31, 2015 3:46:42 PM",
+      "dateStarted": "Sep 17, 2015 10:02:39 AM",
+      "dateFinished": "Sep 17, 2015 10:08:38 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442412428025_-1236584953",
+      "id": "20150916-220708_247760518",
+      "dateCreated": "Sep 16, 2015 10:07:08 PM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "整合zeppelin spark打分配置及自动化可视化",
+  "id": "2AXJGNVBS",
+  "angularObjects": {},
+  "config": {
+    "looknfeel": "default"
+  },
+  "info": {}
+}

@@ -1,0 +1,157 @@
+{
+  "paragraphs": [
+    {
+      "text": "\nz.load(\"com.alibaba:fastjson:1.1.46\")\nimport com.alibaba.fastjson.{JSON, JSONObject}\nval a \u003d sc.sequenceFile[String,String](\"hdfs://llscluster/tmp/benchmark/scorer/en_us-303\").map{case(key,value)\u003d\u003e(key,JSON.parseObject(value).getDouble(\"error\"))}\nval aa\u003da.toDF().registerTempTable(\"test\")\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1441597330308_1707516866",
+      "id": "20150907-114210_406701122",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "res305: Iterable[String] \u003d Wrappers(com.alibaba:fastjson:1.1.46)\nimport com.alibaba.fastjson.{JSON, JSONObject}\na: org.apache.spark.rdd.RDD[(String, Double)] \u003d MapPartitionsRDD[234] at map at \u003cconsole\u003e:113\naa: Unit \u003d ()\n"
+      },
+      "dateCreated": "Sep 7, 2015 11:42:10 AM",
+      "dateStarted": "Sep 21, 2015 11:30:04 AM",
+      "dateFinished": "Sep 21, 2015 11:30:05 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select _2, count(_2)  from test  group by _2 order by _2",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "multiBarChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "_2",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "c1",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "_2",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          }
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1441597920090_1228363279",
+      "id": "20150907-115200_384754406",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "_2\tc1\nnull\t0\n100.0\t176\n105.0\t10\n"
+      },
+      "dateCreated": "Sep 7, 2015 11:52:00 AM",
+      "dateStarted": "Sep 21, 2015 11:30:09 AM",
+      "dateFinished": "Sep 21, 2015 11:30:14 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select _2, _1 from test where _2 \u003d 100  group by _2, _1 order by _2",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "_2",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "_1",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "_2",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "_1",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442308305195_-163519314",
+      "id": "20150915-171145_1533835224",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "_2\t_1\n100.0\t52999efcfcfff20178000c9b_524ed754fcfff22e2f00ca63_86_seg13.wav.raw\n100.0\t5196451ffcfff2009d0045f5_525b3f245244445a72001987_87_seg6.wav.raw\n100.0\t510b6ba7fcfff271000005f4_524c2213fcfff2103500f045_91_seg9.wav.raw\n100.0\t520c805cfcfff22960000547_5262a16b52444492810087bb_89_seg6.wav.raw\n100.0\t52d771ebfcfff26f7200114c_52de6eb9c00890a567001cc5_95_seg10.wav.raw\n100.0\t525f8d95fcfff2bfad0023d1_52236217524444e73a0133fb_91_seg10.wav.raw\n100.0\t527f902dfcfff23558003395_51b0340afcfff2a9190000b0_96_seg2.wav.raw\n100.0\t528c4fbefcfff2da7400666b_52a72f394fde1846d90066a2_95_seg2.wav.raw\n100.0\t515508acfcfff203ce00c92c_526353d45244445384001b01_89_seg2.wav.raw\n100.0\t51dff479fcfff254c90003aa_5379ce204fde185b0d00088e_88_seg13.wav.raw\n100.0\t51c2fad7fcfff2c99f00447d_51e013215244440eea000a38_88_seg2.wav.raw\n100.0\t52de1d89fcfff2fb92003be3_524c2213fcfff2103500f045_92_seg7.wav.raw\n100.0\t5280af9ffcfff23db800647d_52c45f7efcfff23434000749_95_seg2.wav.raw\n100.0\t52a7ee92fcfff2965f000c5b_526a83855244440cb400f52c_94_seg4.wav.raw\n100.0\t515508acfcfff203ce00c92c_51f272234fde18a0af001070_89_seg6.wav.raw\n100.0\t52301ef1fcfff24441017f4d_5242ca944fde186621004d26_91_seg2.wav.raw\n100.0\t534ce863fcfff2eddc0106e6_525ba57cfcfff2bc5a006d59_93_seg2.wav.raw\n100.0\t52ce2e41fcfff25903000d0c_524c2213fcfff2103500f045_95_seg5.wav.raw\n100.0\t51b2cacafcfff265e10040f0_524c2213fcfff2103500f045_91_seg5.wav.raw\n100.0\t52903c4dfcfff2ae54000527_52be31b3c00890ced0000d8e_90_seg5.wav.raw\n100.0\t52f0c917fcfff21040004f91_524c2213fcfff2103500f045_95_seg1.wav.raw\n100.0\t51fbb2d1fcfff2697600017c_5271c43bc00890ac1f0027eb_88_seg11.wav.raw\n100.0\t530766aefcfff22e8c009b31_535a0b79db5e9e9cb700ddf4_90_seg6.wav.raw\n100.0\t51b2cacafcfff265e10040f0_524c2213fcfff2103500f045_91_seg3.wav.raw\n100.0\t52ce2e41fcfff25903000d0c_524c2213fcfff2103500f045_95_seg3.wav.raw\n100.0\t51dff479fcfff254c90003aa_52835c36fcfff2906f001efc_87_seg13.wav.raw\n100.0\t52876c58fcfff29da3004cee_52661ddffcfff23efc001416_89_seg9.wav.raw\n100.0\t52de1d89fcfff2fb92003be3_524c2213fcfff2103500f045_92_seg5.wav.raw\n100.0\t525693f1fcfff27320009dd0_526a1e73fcfff2619a006bed_91_seg10.wav.raw\n100.0\t5200b1c8fcfff290cd00170d_52b07922c0089098cd0001f3_90_seg5.wav.raw\n100.0\tENUSWDLL140626T_5916_engzo_50_android.raw\n100.0\t523810fcfcfff2ae56001d3d_5242a4f8fcfff27e7400378a_96_seg3.wav.raw\n100.0\t530b09c8fcfff22e8c03e6f5_531195685244440ebc003ce6_95_seg5.wav.raw\n100.0\t51dd4b28fcfff2107300345d_525abe0ec00890e210018ab2_90_seg8.wav.raw\n100.0\t53075555fcfff2dc7f007962_532478e9c0089088e2017c24_95_seg1.wav.raw\n100.0\t52f0c917fcfff21040004f91_524c2213fcfff2103500f045_95_seg2.wav.raw\n100.0\t52d5fc01fcfff2a44e000511_523037654fde18372601850f_93_seg5.wav.raw\n100.0\t5201ee52fcfff2589c0026e1_5211ca9bc0089007b000749a_92_seg10.wav.raw\n100.0\t5196451ffcfff2009d0045f5_52b309e44fde189ca40049da_87_seg10.wav.raw\n100.0\t532677bbfcfff22dfb004068_5253b3bec008900a2000547f_91_seg6.wav.raw\n100.0\t510a77f7fcfff271000005b7_510a77f7fcfff271000005bf_5181bfc8fcfff2f9e50a7349_high_0.62.raw\n100.0\t523810fcfcfff2ae56001d3d_52403d655244446177001788_96_seg3.wav.raw\n100.0\t5171fe24fcfff27d4600386c_5329963afcfff22787005141_89_seg4.wav.raw\n100.0\t51f47c34fcfff2efca001135_5215937a4fde1867da0552ec_85_seg14.wav.raw\n100.0\t51aa08c8fcfff2e281015ac3_52744d90524444b12b001378_90_seg7.wav.raw\n100.0\t527e39dafcfff25d5b00a1a9_52450b1b52444424c60039af_95_seg3.wav.raw\n100.0\t52ce2e41fcfff25903000d0c_524c2213fcfff2103500f045_95_seg1.wav.raw\n100.0\t51b2cacafcfff265e10040f0_524c2213fcfff2103500f045_91_seg1.wav.raw\n100.0\t532677bbfcfff22dfb004068_53479cee4fde183239002f8f_91_seg2.wav.raw\n100.0\t52b2fce6fcfff203d800168b_53310a4afcfff2179704fe27_93_seg9.wav.raw\n100.0\t51a22d58fcfff2c77200ac13_51a22d58fcfff2c77200ac14_51a4d39d4fde1802ad017158_high_0.62.raw\n100.0\t51b83b1bfcfff259da0042af_524c2213fcfff2103500f045_93_seg2.wav.raw\n100.0\t52877b00fcfff29e88007234_5292f1684fde1812710001e5_89_seg4.wav.raw\n100.0\t5191a284fcfff22294000c5a_5336ab10fcfff2e0b20494c0_92_seg2.wav.raw\n100.0\t50d4052afcfff2ec2e000095_5329963afcfff22787005141_88_seg16.wav.raw\n100.0\t5172604dfcfff2c498008c64_524c2213fcfff2103500f045_95_seg4.wav.raw\n100.0\t5204e721fcfff20eec001872_521c3c00c008906f3e000ee3_94_seg4.wav.raw\n100.0\t5135d73afcfff22e1b025ad6_5329963afcfff22787005141_91_seg7.wav.raw\n100.0\t50fe293dfcfff2f5cc000011_528f85d3524444a6d2000395_90_seg4.wav.raw\n100.0\t510b6ba7fcfff271000005f4_524c2213fcfff2103500f045_91_seg8.wav.raw\n100.0\t52a010eefcfff25b48004205_53114a69c00890ade6013c71_91_seg4.wav.raw\n100.0\t52169fa6fcfff21e5003eb7d_5274a13a4fde180534003be7_87_seg4.wav.raw\n100.0\t52c26a78fcfff2f677000161_524c2213fcfff2103500f045_91_seg6.wav.raw\n100.0\t520305d4fcfff20d860041c6_5210be88524444fa90022ac4_95_seg5.wav.raw\n100.0\t5171fe24fcfff27d4600386c_5329963afcfff22787005141_89_seg2.wav.raw\n100.0\t52c12e4afcfff2aa440032a8_533edc8bfcfff2701b01878d_94_seg4.wav.raw\n100.0\t51fbb2d1fcfff2697600017c_5271c43bc00890ac1f0027eb_88_seg8.wav.raw\n100.0\t50d4052afcfff2ec2e000095_5329963afcfff22787005141_88_seg11.wav.raw\n100.0\t52999efcfcfff20178000c9b_524ed754fcfff22e2f00ca63_86_seg3.wav.raw\n100.0\t525f8d95fcfff2bfad0023d1_5286d0a6fcfff2ee0c0024ec_93_seg9.wav.raw\n100.0\t52f8ac80fcfff2869e000fe3_528d616f5244444a43014139_97_seg2.wav.raw\n100.0\tengzo_305_voxpop_5363.raw\n100.0\t51344691fcfff2634b0cd289_51590741fcfff2ab6a00bc78_91_seg6.wav.raw\n100.0\t520c805cfcfff22960000547_5221dfecc008909494001cb7_89_seg4.wav.raw\n100.0\t5135d73afcfff22e1b025ad6_5329963afcfff22787005141_91_seg15.wav.raw\n100.0\t51502879fcfff2e8e40605fd_519d7e8b524444c48000ff55_88_seg6.wav.raw\n100.0\t52b2fce6fcfff203d800168b_53310a4afcfff2179704fe27_93_seg7.wav.raw\n100.0\t51344691fcfff2634b0cd289_51590741fcfff2ab6a00bc78_91_seg3.wav.raw\n100.0\t52257139fcfff278a4000cda_522dccb0fcfff2bbcd005375_95_seg5.wav.raw\n100.0\t52d5fc01fcfff2a44e000511_520510e34fde186848002da1_95_seg2.wav.raw\n100.0\t52cfbac5fcfff20931000278_52e33e36c008901f2b0007c9_91_seg7.wav.raw\n100.0\t5172604dfcfff2c498008c64_524c2213fcfff2103500f045_95_seg2.wav.raw\n100.0\t52de1d89fcfff2fb92003be3_524c2213fcfff2103500f045_92_seg1.wav.raw\n100.0\t5171fe24fcfff27d4600386c_5329963afcfff22787005141_89_seg17.wav.raw\n100.0\t52ce2e41fcfff25903000d0c_524c2213fcfff2103500f045_95_seg2.wav.raw\n100.0\t533ddad4fcfff28e5a005529_519d7e8b524444c48000ff55_88_seg10.wav.raw\n100.0\t51b2cacafcfff265e10040f0_524c2213fcfff2103500f045_91_seg2.wav.raw\n100.0\t50d4052afcfff2ec2e000095_525c8caa52444475e80016bf_88_seg17.wav.raw\n100.0\t50e6e478fcfff270e2000001_5358aeb74fde185b3800f26a_88_seg1.wav.raw\n100.0\t51aabb8bfcfff239f1007690_52596968fcfff22c20013ecf_92_seg4.wav.raw\n100.0\t50e02beffcfff228e2000006_519d7e8b524444c48000ff55_88_seg4.wav.raw\n100.0\t534f402cfcfff2f7d2015ce3_520edd90524444e0be0103bb_91_seg5.wav.raw\n100.0\t528477c7fcfff25f650051a7_528aec7ac00890c42a00eae4_95_seg6.wav.raw\n100.0\t52aab7cdfcfff287b9003b02_538774a5524444522b015b6f_89_seg1.wav.raw\n100.0\t51f47c34fcfff2efca001135_5215937a4fde1867da0552ec_85_seg13.wav.raw\n100.0\t52d771ebfcfff26f7200114c_52de6eb9c00890a567001cc5_95_seg3.wav.raw\n100.0\t52b2fce6fcfff203d800168b_53310a4afcfff2179704fe27_93_seg5.wav.raw\n100.0\t52f0a670fcfff20de5002224_524c2213fcfff2103500f045_91_seg5.wav.raw\n100.0\t51344691fcfff2634b0cd289_51590741fcfff2ab6a00bc78_91_seg10.wav.raw\n100.0\t520c805cfcfff22960000547_527ed8fe524444d97b001352_89_seg5.wav.raw\n100.0\t5204a723fcfff26eae0003a1_52531013524444060c00029c_86_seg14.wav.raw\n100.0\t515508acfcfff203ce00c92c_526353d45244445384001b01_89_seg5.wav.raw\n100.0\t522e92d7fcfff21fe100b888_524d7926fcfff2730500f357_93_seg4.wav.raw\n100.0\t517c80d8fcfff28dfb00b45b_525abe0ec00890e210018ab2_92_seg9.wav.raw\n100.0\t522eb61ffcfff2922e00c525_52cdf767c00890c4e50006e4_89_seg11.wav.raw\n100.0\t528477c7fcfff25f650051a7_528aec7ac00890c42a00eae4_95_seg4.wav.raw\n100.0\t5172604dfcfff2c498008c64_524c2213fcfff2103500f045_95_seg3.wav.raw\n100.0\t52d396a2fcfff2c0c90011f7_529c6f2dc00890e074001a95_93_seg3.wav.raw\n100.0\t50e6e478fcfff270e2000001_5358aeb74fde185b3800f26a_88_seg11.wav.raw\n100.0\t51fbb2d1fcfff2697600017c_5271c43bc00890ac1f0027eb_88_seg7.wav.raw\n100.0\t5171fe24fcfff27d4600386c_517d5f57fcfff21169005e05_90_seg10.wav.raw\n100.0\t5135d73afcfff22e1b025ad6_5223376252444448220102bd_90_seg1.wav.raw\n100.0\t50e02beffcfff228e2000006_52f90b87fcfff2fb2a007789_90_seg4.wav.raw\n100.0\t510b6ba7fcfff271000005f4_524c2213fcfff2103500f045_91_seg7.wav.raw\n100.0\t51dd4b37fcfff2018700124a_51a051b9fcfff2bc0f00e3e3_89_seg4.wav.raw\n100.0\t52877b00fcfff29e88007234_5292f1684fde1812710001e5_89_seg9.wav.raw\n100.0\t532fb493fcfff2ea3b002f65_533f264dfcfff2e2ad018648_95_seg3.wav.raw\n100.0\t524d1967fcfff226f000762f_52956c075244444419003781_93_seg6.wav.raw\n100.0\t51b2cacafcfff265e10040f0_524c2213fcfff2103500f045_91_seg6.wav.raw\n100.0\t510a44bffcfff2b1ca00057a_510a44bffcfff2b1ca000584_51701af7fcfff25dc7015725_high_0.62.raw\n100.0\t52b2fce6fcfff203d800168b_53310a4afcfff2179704fe27_93_seg3.wav.raw\n100.0\t534ce863fcfff2eddc0106e6_524c2213fcfff2103500f045_94_seg1.wav.raw\n100.0\t51dff479fcfff254c90003aa_522059fc524444457e008c8c_85_seg12.wav.raw\n100.0\t52d396a2fcfff2c0c90011f7_53074e9bc00890b3de00625e_93_seg3.wav.raw\n100.0\t525de715fcfff25c28001e28_526f0c705244449f8100210b_91_seg7.wav.raw\n100.0\t522e92d7fcfff21fe100b888_524d7926fcfff2730500f357_93_seg2.wav.raw\n100.0\t52bc31c1fcfff29276000094_524c2213fcfff2103500f045_92_seg11.wav.raw\n100.0\t525bdec5fcfff2d78c003925_524c2213fcfff2103500f045_95_seg4.wav.raw\n100.0\t52ca7ce4fcfff24802001086_534bce93c00890bd2c002b00_92_seg2.wav.raw\n100.0\t530b04f4fcfff29fa5026304_52823c975244448f3200c2f8_88_seg5.wav.raw\n100.0\t52999efcfcfff20178000c9b_524ed754fcfff22e2f00ca63_86_seg2.wav.raw\n100.0\t50d4052afcfff2ec2e000095_525c8caa52444475e80016bf_88_seg5.wav.raw\n100.0\t5171fe24fcfff27d4600386c_5329963afcfff22787005141_89_seg13.wav.raw\n100.0\t52d771ebfcfff26f7200114c_52de6eb9c00890a567001cc5_95_seg7.wav.raw\n100.0\t528477c7fcfff25f650051a7_528aec7ac00890c42a00eae4_95_seg2.wav.raw\n100.0\t51344691fcfff2634b0cd289_52b084a95244446aed0006df_90_seg9.wav.raw\n100.0\t5218a9d6fcfff22ff50019a7_523720d04fde18e96b005577_92_seg8.wav.raw\n100.0\t510b6ba7fcfff271000005f4_524c2213fcfff2103500f045_91_seg2.wav.raw\n100.0\t52f8ac80fcfff2869e000fe3_528d616f5244444a43014139_97_seg1.wav.raw\n100.0\t530b09c8fcfff22e8c03e6f5_524c2213fcfff2103500f045_96_seg4.wav.raw\n100.0\t510b6ba7fcfff271000005f4_524c2213fcfff2103500f045_91_seg5.wav.raw\n100.0\t52a32221fcfff2dd4e001f19_52bbf90cfcfff2d6b1000a60_92_seg3.wav.raw\n100.0\t5172604dfcfff2c498008c64_524c2213fcfff2103500f045_95_seg1.wav.raw\n100.0\t52ca94f5fcfff28936001a72_5129c6cb13f35c3382005c06_88_seg2.wav.raw\n100.0\t51b2cacafcfff265e10040f0_524c2213fcfff2103500f045_91_seg4.wav.raw\n100.0\t5218a9d6fcfff22ff50019a7_522d43cc524444b97a022d80_91_seg9.wav.raw\n100.0\t52fdf83dfcfff2f9a6012d9b_5327475efcfff26ef30288dd_89_seg6.wav.raw\n100.0\t5244ee62fcfff2d38f002da6_51443e17fcfff2566f01b242_94_seg3.wav.raw\n100.0\t5347c596fcfff2ccea001051_52c1761c5244440b4000090d_90_seg6.wav.raw\n100.0\t51c90445fcfff246090008e9_52982f65524444c8e4001f95_87_seg9.wav.raw\n100.0\t51b0907afcfff29727001b9c_5292c151fcfff2bb87004c4a_95_seg3.wav.raw\n100.0\t524d1967fcfff226f000762f_52956c075244444419003781_93_seg4.wav.raw\n100.0\t522affdefcfff2645d01361a_5210438ac008906cbc007a73_94_seg3.wav.raw\n100.0\t510b6ba7fcfff271000005f4_51790e22fcfff2eaf2024e92_90_seg2.wav.raw\n100.0\t5200b1c8fcfff290cd00170d_520cb9a14fde18838f001a3d_92_seg6.wav.raw\n100.0\t52553426fcfff2bc9800818e_527b99c6fcfff2857b004c1b_93_seg3.wav.raw\n100.0\t535b4ff9fcfff259c4005bef_524c2213fcfff2103500f045_88_seg5.wav.raw\n100.0\t514bf361fcfff26bf1024541_5289edccfcfff213a20006fc_89_seg3.wav.raw\n100.0\t52d771ebfcfff26f7200114c_52de6eb9c00890a567001cc5_95_seg5.wav.raw\n100.0\t5358fe0cfcfff236920026b7_520510e34fde186848002da1_93_seg2.wav.raw\n100.0\t52b14a79fcfff21ea700157f_52add45a4fde18867d000005_91_seg11.wav.raw\n100.0\tENUSWDLL140626T_5916_engzo_162_android.raw\n100.0\t531aebf3fcfff27dd3051004_524c2213fcfff2103500f045_95_seg2.wav.raw\n100.0\t532677bbfcfff22dfb004068_5364516afcfff2a4bc014911_91_seg2.wav.raw\n100.0\t52f0c917fcfff21040004f91_524c2213fcfff2103500f045_95_seg3.wav.raw\n100.0\t52de1d89fcfff2fb92003be3_524c2213fcfff2103500f045_92_seg6.wav.raw\n100.0\t51b2cacafcfff265e10040f0_512ce8b6fcfff2b35500264f_93_seg6.wav.raw\n100.0\t50d4052afcfff2ec2e000095_5329963afcfff22787005141_88_seg5.wav.raw\n100.0\t51c2fad7fcfff2c99f00447d_512b7f521a764315c2011223_89_seg5.wav.raw\n100.0\t514bf361fcfff26bf1024541_5289edccfcfff213a20006fc_89_seg9.wav.raw\n100.0\t52d771ebfcfff26f7200114c_52de6eb9c00890a567001cc5_95_seg12.wav.raw\n100.0\t525de715fcfff25c28001e28_52c1761c5244440b4000090d_92_seg10.wav.raw\n100.0\t525de715fcfff25c28001e28_526f0c705244449f8100210b_91_seg10.wav.raw\n100.0\t51fb4758fcfff28ab000139b_526cae08c0089090d7005b0f_95_seg5.wav.raw\n100.0\t51f50a72fcfff2de62001b5e_524c2213fcfff2103500f045_95_seg4.wav.raw\n100.0\t510b6ba7fcfff271000005f4_524c2213fcfff2103500f045_91_seg3.wav.raw\n"
+      },
+      "dateCreated": "Sep 15, 2015 5:11:45 PM",
+      "dateStarted": "Sep 21, 2015 11:31:13 AM",
+      "dateFinished": "Sep 21, 2015 11:31:16 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442806240309_-1352670086",
+      "id": "20150921-113040_1507387457",
+      "dateCreated": "Sep 21, 2015 11:30:40 AM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Scorer error check",
+  "id": "2AXC5QAUK",
+  "angularObjects": {},
+  "config": {
+    "looknfeel": "default"
+  },
+  "info": {}
+}

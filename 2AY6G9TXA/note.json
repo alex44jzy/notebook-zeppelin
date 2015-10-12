@@ -1,0 +1,93 @@
+{
+  "paragraphs": [
+    {
+      "title": "直接执行，结果的json地址已经写好了",
+      "text": "z.load(\"com.alibaba:fastjson:1.2.6\")\nimport java.io.{File,BufferedWriter,FileWriter}\nimport scala.io.Source\nimport com.alibaba.fastjson.{JSONObject, JSON, JSONWriter}\nval inputJsonFile \u003d JSON.parseObject(Source.fromFile(\"/home/pipeline/dataset/result-benchmark.json\").getLines().mkString)\n// val lang \u003d z.select(\"1.language:\", Seq((\"en_us\", \"en_us\"), (\"ja_jp\", \"ja_jp\"), (\"ko_kr\",\"ko_kr\"), (\"fr_fr\",\"fr_fr\"),(\"de_de\",\"de_de\"))).toString\n// val bm \u003d z.select(\"2.benchmark: \", Seq((\"benchmark1\", \"benchmark1\"),(\"benchmark2\",\"benchmark2\"),(\"phone-benchmark\",\"phone-benchmark\"))).toString\n// val task \u003d z.select(\"3.task type: \", Seq((\"chinglish\", \"chinglish\"), (\"comparison\", \"comparison\"), (\"correlation\",\"correlation\"), (\"stability\",\"stability\"))).toString\nval selectFeature \u003d inputJsonFile\nz.angularBind(\"selectResult\",selectFeature)",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": true,
+        "title": true,
+        "tableHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1441005386445_-1591620558",
+      "id": "20150831-151626_573227913",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "res298: Iterable[String] \u003d Wrappers(com.alibaba:fastjson:1.2.6)\nimport java.io.{File, BufferedWriter, FileWriter}\nimport scala.io.Source\nimport com.alibaba.fastjson.{JSONObject, JSON, JSONWriter}\ninputJsonFile: com.alibaba.fastjson.JSONObject \u003d {\"en_us\":{\"baseline_file\":{\"en_us-401\":{\"benchmark2\":{\"stability\":{\"noise-stability\":{\"Pairs\":199,\"Average_Diff\":\"4.80\"}},\"comparison\":{\"voiced-voiceless-right\":{\"Average_BAD_score\":\"86.08\",\"Accuracy\":\"87.56\",\"Average_GOOD_score\":\"94.26\"},\"long-short-vowel-right\":{\"Average_BAD_score\":\"77.58\",\"Accuracy\":\"79.49\",\"Average_GOOD_score\":\"87.54\"},\"voiced-voiceless-left\":{\"Average_BAD_score\":\"89.56\",\"Accuracy\":\"79.56\",\"Average_GOOD_score\":\"95.08\"},\"tail-vowel\":{\"Average_BAD_score\":\"82.24\",\"Accuracy\":\"78.63\",\"Average_GOOD_score\":\"91.09\"},\"long-short-vowel-left\":{\"Average_BAD_score\":\"76.83\",\"Accuracy\":\"82.05\",\"Average_GOOD_score\":\"93.36\"},\"dental-alveolar-left\":{\"Average_BAD_score\":\"87.35\",\"Accuracy\":\"73.81\",\"Average_GOOD_score\":\"93.19\"},\"dental-al...selectFeature: com.alibaba.fastjson.JSONObject \u003d {\"en_us\":{\"baseline_file\":{\"en_us-401\":{\"benchmark2\":{\"stability\":{\"noise-stability\":{\"Pairs\":199,\"Average_Diff\":\"4.80\"}},\"comparison\":{\"voiced-voiceless-right\":{\"Average_BAD_score\":\"86.08\",\"Accuracy\":\"87.56\",\"Average_GOOD_score\":\"94.26\"},\"long-short-vowel-right\":{\"Average_BAD_score\":\"77.58\",\"Accuracy\":\"79.49\",\"Average_GOOD_score\":\"87.54\"},\"voiced-voiceless-left\":{\"Average_BAD_score\":\"89.56\",\"Accuracy\":\"79.56\",\"Average_GOOD_score\":\"95.08\"},\"tail-vowel\":{\"Average_BAD_score\":\"82.24\",\"Accuracy\":\"78.63\",\"Average_GOOD_score\":\"91.09\"},\"long-short-vowel-left\":{\"Average_BAD_score\":\"76.83\",\"Accuracy\":\"82.05\",\"Average_GOOD_score\":\"93.36\"},\"dental-alveolar-left\":{\"Average_BAD_score\":\"87.35\",\"Accuracy\":\"73.81\",\"Average_GOOD_score\":\"93.19\"},\"dental-al..."
+      },
+      "dateCreated": "Aug 31, 2015 3:16:26 PM",
+      "dateStarted": "Sep 21, 2015 10:18:07 AM",
+      "dateFinished": "Sep 21, 2015 10:18:09 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%angular\n\u003cdiv ng-repeat\u003d\"(language, langValue) in selectResult\"\u003e\n    \u003cdiv class\u003d\"list\" ng-repeat\u003d\"(overallVersion, overallVersionValue) in langValue.target_file\"\u003e\n        \u003cdiv  ng-repeat\u003d\"(benchmarkName, benchmarkValue) in overallVersionValue\"\u003e\n            \u003cdiv  ng-repeat\u003d\"(taskType, taskTypeName) in benchmarkValue\"\u003e\n                \u003cdiv class\u003d\"item\" ng-repeat\u003d\"(taskName, taskNameValue) in taskTypeName\"\u003e\n                    {{targetOrBaseline}}\n                    \u003cdiv ng-bind\u003d\"taskName\" style\u003d\"font-size:20px\" \u003e\u003c/div\u003e\n                    \u003cdiv class\u003d\"btn btn-success btn-xs\"\u003e{{overallVersion}}\u003c/div\u003e\n                    \u003cdiv class\u003d\"btn btn-warning btn-xs\"\u003etarget\u003c/div\u003e\n                    \u003cdiv class\u003d\"btn btn-primary btn-xs\"\u003e{{benchmarkName}}\u003c/div\u003e\n                    \u003cdiv ng-if\u003d\"taskType\u003d\u003d\u0027comparison\u0027\" class\u003d\"btn btn-danger btn-xs\"\u003e{{taskType}}\u003c/div\u003e\n                    \u003cdiv ng-if\u003d\"taskType\u003d\u003d\u0027stability\u0027\" class \u003d \"btn btn-warning btn-xs\"\u003e{{taskType}}\u003c/div\u003e\n                    \u003cdiv ng-if\u003d\"taskType\u003d\u003d\u0027correlation\u0027\" class \u003d \"btn btn-info btn-xs\"\u003e{{taskType}}\u003c/div\u003e\n                    \u003cdiv ng-if\u003d\"taskType\u003d\u003d\u0027chinglish\u0027\" class \u003d \"btn btn-default btn-xs\"\u003e{{taskType}}\u003c/div\u003e\n                    \u003cdiv ng-repeat\u003d\"(name, value) in taskNameValue\"\u003e\n                        {{name}}:{{value}}\n                    \u003c/div\u003e\n\n                \u003c/div\u003e\n            \u003c/div\u003e\n        \u003c/div\u003e\n    \u003c/div\u003e\n\n    \u003cdiv class\u003d\"list\" ng-repeat\u003d\"(overallVersion, overallVersionValue) in langValue.baseline_file\"\u003e\n        \u003cdiv ng-repeat\u003d\"(benchmarkName, benchmarkValue) in overallVersionValue\"\u003e\n            \u003cdiv  ng-repeat\u003d\"(taskType, taskTypeName) in benchmarkValue\"\u003e\n                \u003cdiv class\u003d\"item\" ng-repeat\u003d\"(taskName, taskNameValue) in taskTypeName\"\u003e\n                    \u003cdiv ng-bind\u003d\"taskName\" style\u003d\"font-size:20px\" \u003e\u003c/div\u003e\n                    \u003cdiv class\u003d\"btn btn-success btn-xs\"\u003e{{overallVersion}}\u003c/div\u003e\n                    \u003cdiv class\u003d\"btn btn-danger btn-xs\"\u003ebaseline\u003c/div\u003e\n                    \u003cdiv class\u003d\"btn btn-primary btn-xs\"\u003e{{benchmarkName}}\u003c/div\u003e\n                    \u003cdiv ng-if\u003d\"taskType\u003d\u003d\u0027comparison\u0027\" class\u003d\"btn btn-danger btn-xs\"\u003e{{taskType}}\u003c/div\u003e\n                    \u003cdiv ng-if\u003d\"taskType\u003d\u003d\u0027stability\u0027\" class \u003d \"btn btn-warning btn-xs\"\u003e{{taskType}}\u003c/div\u003e\n                    \u003cdiv ng-if\u003d\"taskType\u003d\u003d\u0027correlation\u0027\" class \u003d \"btn btn-info btn-xs\"\u003e{{taskType}}\u003c/div\u003e\n                    \u003cdiv ng-if\u003d\"taskType\u003d\u003d\u0027chinglish\u0027\" class \u003d \"btn btn-default btn-xs\"\u003e{{taskType}}\u003c/div\u003e\n                    \u003cdiv ng-repeat\u003d\"(name, value) in taskNameValue\"\u003e\n                        {{name}}:{{value}}\n                    \u003c/div\u003e\n                    \n                \u003c/div\u003e\n            \u003c/div\u003e\n        \u003c/div\u003e\n    \u003c/div\u003e            \n\u003c/div\u003e\n\u003cstyle\u003e\n    .list {\n        padding: 20px 0;\n        border-bottom: 1px dotted black;\n        overflow: hidden;\n    }\n    .item {\n        float: left;\n        width: 32%;\n        height: 150px;\n        padding: 10px;\n        border: 1px solid #f2f2f2;\n        border-radius: 6px;\n        margin-bottom: 8px;\n        margin-right: 1%;\n        box-shadow: 0 0 4px #f2f2f2;\n    }\n    .baseline{\n        float:left\n    }\n\u003c/style\u003e",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": true
+      },
+      "settings": {
+        "params": {
+          "yuyan": "ja_jp",
+          "formName": "option2"
+        },
+        "forms": {}
+      },
+      "jobName": "paragraph_1442381598669_1748864826",
+      "id": "20150916-133318_138463441",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "\u003cdiv ng-repeat\u003d\"(language, langValue) in selectResult\"\u003e\n    \u003cdiv class\u003d\"list\" ng-repeat\u003d\"(overallVersion, overallVersionValue) in langValue.target_file\"\u003e\n        \u003cdiv  ng-repeat\u003d\"(benchmarkName, benchmarkValue) in overallVersionValue\"\u003e\n            \u003cdiv  ng-repeat\u003d\"(taskType, taskTypeName) in benchmarkValue\"\u003e\n                \u003cdiv class\u003d\"item\" ng-repeat\u003d\"(taskName, taskNameValue) in taskTypeName\"\u003e\n                    {{targetOrBaseline}}\n                    \u003cdiv ng-bind\u003d\"taskName\" style\u003d\"font-size:20px\" \u003e\u003c/div\u003e\n                    \u003cdiv class\u003d\"btn btn-success btn-xs\"\u003e{{overallVersion}}\u003c/div\u003e\n                    \u003cdiv class\u003d\"btn btn-warning btn-xs\"\u003etarget\u003c/div\u003e\n                    \u003cdiv class\u003d\"btn btn-primary btn-xs\"\u003e{{benchmarkName}}\u003c/div\u003e\n                    \u003cdiv ng-if\u003d\"taskType\u003d\u003d\u0027comparison\u0027\" class\u003d\"btn btn-danger btn-xs\"\u003e{{taskType}}\u003c/div\u003e\n                    \u003cdiv ng-if\u003d\"taskType\u003d\u003d\u0027stability\u0027\" class \u003d \"btn btn-warning btn-xs\"\u003e{{taskType}}\u003c/div\u003e\n                    \u003cdiv ng-if\u003d\"taskType\u003d\u003d\u0027correlation\u0027\" class \u003d \"btn btn-info btn-xs\"\u003e{{taskType}}\u003c/div\u003e\n                    \u003cdiv ng-if\u003d\"taskType\u003d\u003d\u0027chinglish\u0027\" class \u003d \"btn btn-default btn-xs\"\u003e{{taskType}}\u003c/div\u003e\n                    \u003cdiv ng-repeat\u003d\"(name, value) in taskNameValue\"\u003e\n                        {{name}}:{{value}}\n                    \u003c/div\u003e\n\n                \u003c/div\u003e\n            \u003c/div\u003e\n        \u003c/div\u003e\n    \u003c/div\u003e\n\n    \u003cdiv class\u003d\"list\" ng-repeat\u003d\"(overallVersion, overallVersionValue) in langValue.baseline_file\"\u003e\n        \u003cdiv ng-repeat\u003d\"(benchmarkName, benchmarkValue) in overallVersionValue\"\u003e\n            \u003cdiv  ng-repeat\u003d\"(taskType, taskTypeName) in benchmarkValue\"\u003e\n                \u003cdiv class\u003d\"item\" ng-repeat\u003d\"(taskName, taskNameValue) in taskTypeName\"\u003e\n                    \u003cdiv ng-bind\u003d\"taskName\" style\u003d\"font-size:20px\" \u003e\u003c/div\u003e\n                    \u003cdiv class\u003d\"btn btn-success btn-xs\"\u003e{{overallVersion}}\u003c/div\u003e\n                    \u003cdiv class\u003d\"btn btn-danger btn-xs\"\u003ebaseline\u003c/div\u003e\n                    \u003cdiv class\u003d\"btn btn-primary btn-xs\"\u003e{{benchmarkName}}\u003c/div\u003e\n                    \u003cdiv ng-if\u003d\"taskType\u003d\u003d\u0027comparison\u0027\" class\u003d\"btn btn-danger btn-xs\"\u003e{{taskType}}\u003c/div\u003e\n                    \u003cdiv ng-if\u003d\"taskType\u003d\u003d\u0027stability\u0027\" class \u003d \"btn btn-warning btn-xs\"\u003e{{taskType}}\u003c/div\u003e\n                    \u003cdiv ng-if\u003d\"taskType\u003d\u003d\u0027correlation\u0027\" class \u003d \"btn btn-info btn-xs\"\u003e{{taskType}}\u003c/div\u003e\n                    \u003cdiv ng-if\u003d\"taskType\u003d\u003d\u0027chinglish\u0027\" class \u003d \"btn btn-default btn-xs\"\u003e{{taskType}}\u003c/div\u003e\n                    \u003cdiv ng-repeat\u003d\"(name, value) in taskNameValue\"\u003e\n                        {{name}}:{{value}}\n                    \u003c/div\u003e\n                    \n                \u003c/div\u003e\n            \u003c/div\u003e\n        \u003c/div\u003e\n    \u003c/div\u003e            \n\u003c/div\u003e\n\u003cstyle\u003e\n    .list {\n        padding: 20px 0;\n        border-bottom: 1px dotted black;\n        overflow: hidden;\n    }\n    .item {\n        float: left;\n        width: 32%;\n        height: 150px;\n        padding: 10px;\n        border: 1px solid #f2f2f2;\n        border-radius: 6px;\n        margin-bottom: 8px;\n        margin-right: 1%;\n        box-shadow: 0 0 4px #f2f2f2;\n    }\n    .baseline{\n        float:left\n    }\n\u003c/style\u003e"
+      },
+      "dateCreated": "Sep 16, 2015 1:33:18 PM",
+      "dateStarted": "Sep 20, 2015 11:41:56 PM",
+      "dateFinished": "Sep 20, 2015 11:41:56 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442405157168_-62902641",
+      "id": "20150916-200557_344701855",
+      "dateCreated": "Sep 16, 2015 8:05:57 PM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "All! Benchmark results display",
+  "id": "2AY6G9TXA",
+  "angularObjects": {},
+  "config": {
+    "looknfeel": "default"
+  },
+  "info": {}
+}

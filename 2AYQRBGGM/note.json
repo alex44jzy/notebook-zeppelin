@@ -1,0 +1,411 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n第一步，用spark将各个语音的raw文件和spoken text碎文件写成sequence file，以scp文件中的key作为基准，匹配各个语音音频和文本，通过protobuf写成sequencefile。\nspark submit任务提交为：\n``bash spark-submit --driver-memory 40G --total-executor-cores 200 --executor-memory 40G --class com.liulishuo.speech.pipeline.core.mkSeq /home/pipeline/jzytest/audiotest-jar-with-dependencies.jar --input-raw /home/pipeline/benchmark --lang fr_fr --input-spoken-text /home/pipeline/dataset --output-path hdfs://llscluster/tmp/benchmark/audio-seq/fr_fr.seq/``\n**参数说明**\n``--input-raw``为输入的benchmark所有音频，``--input-spoken-text``为输入的所有dataset文件，``--lang``为需要写sequencefile的语言类型（en_us, ja_jp, ko_kr, de_de, fr_fr），``--output-path``为输出的sequence file文件地址，统一地址为``hdfs://llscluster/tmp/benchmark/audio-seq/XX_XX.seq/``\n这里已经写好了现有5中语言的sequence file。\n第二步，将对应语言用pipeline进行打分，打分结果保存在``hdfs://llscluster/tmp/benchmark/scorer/``,格式为``hdfs://llscluster/tmp/benchmark/scorer/en_us-303``。\n第三步，将打分结果，抽取overall的结果，通过spark抽取，并直接写入到lls6服务器目录中，地址为``/home/pipeline/overall-scorer/各个语言.txt``。\n第四步，运行benchmark自动化的配置文件global_conf_write.py，得到一个整的json配置文件，得到所有任务，json文件为dataset-conf.json。\n第五步，运行autobmlib.py，输入参数为``overall-scorer目录``和```dataset-conf.json``文件，对json解析后，将所有benchmark结果保存在``result-benchmark.json``中。\n第六步，转到zeppelin的All! Benchmark results display notebook中，运行得到所有benchmark结果！！！！！！！！\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442415617864_-1042501895",
+      "id": "20150916-230017_1751611509",
+      "result": {
+        "code": "SUCCESS",
+        "type": "HTML",
+        "msg": "\u003cp\u003e第一步，用spark将各个语音的raw文件和spoken text碎文件写成sequence file，以scp文件中的key作为基准，匹配各个语音音频和文本，通过protobuf写成sequencefile。\n\u003cbr  /\u003espark submit任务提交为：\n\u003cbr  /\u003e\u003ccode\u003ebash spark-submit --driver-memory 40G --total-executor-cores 200 --executor-memory 40G --class com.liulishuo.speech.pipeline.core.mkSeq /home/pipeline/jzytest/audiotest-jar-with-dependencies.jar --input-raw /home/pipeline/benchmark --lang fr_fr --input-spoken-text /home/pipeline/dataset --output-path hdfs://llscluster/tmp/benchmark/audio-seq/fr_fr.seq/\u003c/code\u003e\n\u003cbr  /\u003e\u003cstrong\u003e参数说明\u003c/strong\u003e\n\u003cbr  /\u003e\u003ccode\u003e--input-raw\u003c/code\u003e为输入的benchmark所有音频，\u003ccode\u003e--input-spoken-text\u003c/code\u003e为输入的所有dataset文件，\u003ccode\u003e--lang\u003c/code\u003e为需要写sequencefile的语言类型（en_us, ja_jp, ko_kr, de_de, fr_fr），\u003ccode\u003e--output-path\u003c/code\u003e为输出的sequence file文件地址，统一地址为\u003ccode\u003ehdfs://llscluster/tmp/benchmark/audio-seq/XX_XX.seq/\u003c/code\u003e\n\u003cbr  /\u003e这里已经写好了现有5中语言的sequence file。\n\u003cbr  /\u003e第二步，将对应语言用pipeline进行打分，打分结果保存在\u003ccode\u003ehdfs://llscluster/tmp/benchmark/scorer/\u003c/code\u003e,格式为\u003ccode\u003ehdfs://llscluster/tmp/benchmark/scorer/en_us-303\u003c/code\u003e。\n\u003cbr  /\u003e第三步，将打分结果，抽取overall的结果，通过spark抽取，并直接写入到lls6服务器目录中，地址为\u003ccode\u003e/home/pipeline/overall-scorer/各个语言.txt\u003c/code\u003e。\n\u003cbr  /\u003e第四步，运行benchmark自动化的配置文件global_conf_write.py，得到一个整的json配置文件，得到所有任务，json文件为dataset-conf.json。\n\u003cbr  /\u003e第五步，运行autobmlib.py，输入参数为\u003ccode\u003eoverall-scorer目录\u003c/code\u003e和\u003ccode\u003e`dataset-conf.json\u003c/code\u003e文件，对json解析后，将所有benchmark结果保存在\u003ccode\u003eresult-benchmark.json\u003c/code\u003e中。\n\u003cbr  /\u003e第六步，转到zeppelin的All! Benchmark results display notebook中，运行得到所有benchmark结果！！！！！！！！\u003c/p\u003e\n"
+      },
+      "dateCreated": "Sep 16, 2015 11:00:17 PM",
+      "dateStarted": "Sep 17, 2015 10:28:15 AM",
+      "dateFinished": "Sep 17, 2015 10:28:15 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "初始化，输入打分语种和模型版本",
+      "text": "%spark\nz.load(\"com.alibaba:fastjson:1.2.6\")\nimport java.io.{File,BufferedWriter,FileWriter}\nimport scala.io.Source\nimport com.alibaba.fastjson.{JSONObject, JSON, JSONWriter}\nimport org.apache.hadoop.fs\nimport org.apache.hadoop.fs.Path\nimport org.apache.hadoop.fs.FileSystem;\nimport org.apache.hadoop.conf.Configuration;\nval rootDir \u003d new File(\"/home/pipeline/autoScorerLLS\")\nval fileList \u003d rootDir.listFiles.map(_.toString.split(\"/\").last).sortBy(x\u003d\u003e(x.split(\"-\")(2).head))\nz.angularBind(\"lists\",fileList)\nval originalPath \u003d new File(\"/home/pipeline\")\nval listJars \u003d originalPath.listFiles.map(_.toString).filter(_.contains(\".jar\"))\nz.angularBind(\"jarList\",listJars)\nval fs \u003d FileSystem.get(new Configuration())\nval p \u003d new Path(\"hdfs://llscluster/tmp/benchmark/audio-seq\")\nval audioOriginalFile \u003d fs.listStatus(p).map(_.getPath.toString)\nz.angularBind(\"selectAudioFile\",audioOriginalFile)",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "title": true,
+        "editorHide": true,
+        "tableHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442370382888_-2056963583",
+      "id": "20150916-102622_1213105108",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "res37: Iterable[String] \u003d Wrappers(com.alibaba:fastjson:1.2.6)\nimport java.io.{File, BufferedWriter, FileWriter}\nimport scala.io.Source\nimport com.alibaba.fastjson.{JSONObject, JSON, JSONWriter}\nimport org.apache.hadoop.fs\nimport org.apache.hadoop.fs.Path\nimport org.apache.hadoop.fs.FileSystem\nimport org.apache.hadoop.conf.Configuration\nrootDir: java.io.File \u003d /home/pipeline/autoScorerLLS\nfileList: Array[String] \u003d Array(score-distribution-de_de-420, score-distribution-en_us-401, score-distribution-en_us-254, score-distribution-en_us-420, score-distribution-en_us-303, score-distribution-fr_fr-420, score-distribution-ja_jp-400, score-distribution-ja_jp-254, score-distribution-ko_kr-254, score-distribution-ko_kr-401)\noriginalPath: java.io.File \u003d /home/pipeline\nlistJars: Array[String] \u003d Array(/home/pipeline/pipeline-2014-08-25.debug.2.jar, /home/pipeline/pipeline-2014-08-25.jar, /home/pipeline/pipeline-2014-07-29.jar, /home/pipeline/pipeline.2015-09-07.jar, /home/pipeline/pipeline-2014-08-01.jar, /home/pipeline/pipeline-2014-07-28.jar, /home/pipeline/pipeline.jar, /home/pipeline/pipeline.2015-09-07.debug.jar, /home/pipeline/pipeline.latest.jar, /home/pipeline/audiotest-jar-with-dependencies.jar, /home/pipeline/pipeline-2014-08-01.debug.jar, /home/pipeline/pipeline-2014-08-25.debug.jar, /home/pipeline/pipeline-2014-07-30.debug.jar)\nfs: org.apache.hadoop.fs.FileSystem \u003d DFS[DFSClient[clientName\u003dDFSClient_NONMAPREDUCE_336021267_70, ugi\u003dpipeline (auth:SIMPLE)]]\np: org.apache.hadoop.fs.Path \u003d hdfs://llscluster/tmp/benchmark/audio-seq\naudioOriginalFile: Array[String] \u003d Array(hdfs://llscluster/tmp/benchmark/audio-seq/de_de.seq, hdfs://llscluster/tmp/benchmark/audio-seq/en_us.seq, hdfs://llscluster/tmp/benchmark/audio-seq/fr_fr.seq, hdfs://llscluster/tmp/benchmark/audio-seq/ja_jp.seq, hdfs://llscluster/tmp/benchmark/audio-seq/ko_kr.seq)\n"
+      },
+      "dateCreated": "Sep 16, 2015 10:26:22 AM",
+      "dateStarted": "Sep 20, 2015 3:04:32 PM",
+      "dateFinished": "Sep 20, 2015 3:04:34 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "选择语种和模型",
+      "text": "%angular\n\u003c/br\u003e\n\u003clabel class\u003d\"control-label\" for\u003d\"selection-version\" \u003eSelect Language and Version\u003c/label\u003e\n\u003cdiv class\u003d\"input-group  has-feedback has-warning\"\u003e\n    \u003cspan class\u003d\"input-group-addon\" style\u003d\"font-size:17px\"\u003eSelect\u003c/span\u003e\n    \u003cselect class\u003d\"form-control\" style\u003d\"width:45%;font-size:17px\" id\u003d\"selection-version\" ng-model\u003d\"selectFile\" ng-options\u003d\"list for list in lists\"\u003e\u003c/select\u003e\n\u003c/div\u003e\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "title": true,
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442370433565_398396629",
+      "id": "20150916-102713_2130154253",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "\u003c/br\u003e\n\u003clabel class\u003d\"control-label\" for\u003d\"selection-version\" \u003eSelect Language and Version\u003c/label\u003e\n\u003cdiv class\u003d\"input-group  has-feedback has-warning\"\u003e\n    \u003cspan class\u003d\"input-group-addon\" style\u003d\"font-size:17px\"\u003eSelect\u003c/span\u003e\n    \u003cselect class\u003d\"form-control\" style\u003d\"width:45%;font-size:17px\" id\u003d\"selection-version\" ng-model\u003d\"selectFile\" ng-options\u003d\"list for list in lists\"\u003e\u003c/select\u003e\n\u003c/div\u003e\n"
+      },
+      "dateCreated": "Sep 16, 2015 10:27:13 AM",
+      "dateStarted": "Sep 16, 2015 10:27:15 AM",
+      "dateFinished": "Sep 16, 2015 10:27:15 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "数据绑定",
+      "text": "object JSONHelper {\n    def getJSONObjectArray(json: JSONObject, key: String): Array[JSONObject] \u003d json.getJSONArray(key).toArray.map(_.asInstanceOf[JSONObject])\n}\nval language \u003d z.angular(\"selectFile\")\nval language \u003d z.angular(\"selectFile\").toString.split(\"-\")(2)\nval version \u003d z.angular(\"selectFile\").toString.split(\"-\")(3)\n\nval jobConfFile \u003d fileList.filter(_.contains(version)).filter(_.contains(language)).mkString\nval deliverJsonConfigPath \u003d \"/home/pipeline/autoScorerLLS/\"+jobConfFile+\"/\"+language+\"-\"+version+\".json\"\nval pluginDirPath \u003d \"/home/pipeline/autoScorerLLS/\"+jobConfFile\nval conf \u003d JSON.parseObject(Source.fromFile(deliverJsonConfigPath).getLines().mkString)\nval mapper \u003d conf.getJSONObject(\"storage\").getString(\"path\")\nval str1 \u003d conf.getJSONObject(\"mapper\").toString\nval str2 \u003d conf.getJSONObject(\"storage\").getString(\"type\")\nval binary \u003d conf.getJSONObject(\"mapper\").getString(\"bins\").split(\",\")(0).split(\"/\").last.split(\"\\\"\")(0)\nval dict \u003d JSONHelper.getJSONObjectArray(conf.getJSONObject(\"mapper\"),\"bins\").map(_.getJSONObject(\"kwargs\").getString(\"--dict\")).mkString.split(\"/\").last\nval model \u003d JSONHelper.getJSONObjectArray(conf.getJSONObject(\"mapper\"),\"bins\").map(_.getJSONObject(\"kwargs\").getString(\"--am\")).mkString.split(\"/\").last\n\nz.angularBind(\"jarList\",listJars)\nz.angularBind(\"storagePath\", mapper)\nz.angularBind(\"binaryScorer\",binary)\nz.angularBind(\"dictionaryScorer\",dict)\nz.angularBind(\"modelScorer\",model)\n\nz.angularBind(\"pluginPathpluginPath\",pluginDirPath)",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "title": true,
+        "editorHide": false,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442370529903_-709341427",
+      "id": "20150916-102849_2019651350",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "defined module JSONHelper\nlanguage: Object \u003d score-distribution-en_us-254\nlanguage: String \u003d en_us\nversion: String \u003d 254\njobConfFile: String \u003d score-distribution-en_us-254\ndeliverJsonConfigPath: String \u003d /home/pipeline/autoScorerLLS/score-distribution-en_us-254/en_us-254.json\npluginDirPath: String \u003d /home/pipeline/autoScorerLLS/score-distribution-en_us-254\nconf: com.alibaba.fastjson.JSONObject \u003d {\"mapper\":{\"output_val_type\":\"text\",\"bins\":[{\"bin\":\"@pipeline.plugin.score-distribution-en_us-254/engzo_score_raw_batch\",\"kwargs\":{\"--raw\":\"@@pipeline.audio.raw.bytes\",\"--outlist\":\"@@pipeline.mapper.out.val\",\"--am\":\"@pipeline.plugin.score-distribution-en_us-254/en-us-v254-semi\",\"--dict\":\"@pipeline.plugin.score-distribution-en_us-254/cmu07_20140625.dic\",\"--trans\":\"@@pipeline.audio.normalized.spoken.text\"}}],\"output_key_type\":\"@pipeline.audio.key\",\"mode\":\"batch\"},\"storage\":{\"path\":\"hdfs://llscluster/tmp/benchmark/scorer/en_us-254-test\",\"type\":\"hdfs_sequence_file\"}}\nmapper: String \u003d hdfs://llscluster/tmp/benchmark/scorer/en_us-254-test\nstr1: String \u003d {\"output_val_type\":\"text\",\"bins\":[{\"bin\":\"@pipeline.plugin.score-distribution-en_us-254/engzo_score_raw_batch\",\"kwargs\":{\"--raw\":\"@@pipeline.audio.raw.bytes\",\"--outlist\":\"@@pipeline.mapper.out.val\",\"--am\":\"@pipeline.plugin.score-distribution-en_us-254/en-us-v254-semi\",\"--dict\":\"@pipeline.plugin.score-distribution-en_us-254/cmu07_20140625.dic\",\"--trans\":\"@@pipeline.audio.normalized.spoken.text\"}}],\"output_key_type\":\"@pipeline.audio.key\",\"mode\":\"batch\"}\nstr2: String \u003d hdfs_sequence_file\nbinary: String \u003d engzo_score_raw_batch\ndict: String \u003d cmu07_20140625.dic\nmodel: String \u003d en-us-v254-semi\n"
+      },
+      "dateCreated": "Sep 16, 2015 10:28:49 AM",
+      "dateStarted": "Sep 21, 2015 12:21:12 AM",
+      "dateFinished": "Sep 21, 2015 12:21:16 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "显示打分存储路径，二进制打分文件，字典和模型",
+      "text": "%angular\n\u003c/br\u003e\n\u003cform class\u003d\"form-inline\"\u003e\n    \u003clabel\u003eResult of Output Path:\u003c/label\u003e\n    \u003clabel class\u003d\"col-md-offset-4\" style\u003d\"position: relative;left: 26px\" \u003eBinary:\u003c/label\u003e\n    \u003clabel class\u003d\"col-md-offset-1\" style\u003d\"position: relative;left: 57px\"\u003eDictionary:\u003c/label\u003e\n    \u003clabel class\u003d\"col-md-offset-1\" style\u003d\"position: relative;left: 44px\"\u003eModel:\u003c/label\u003e\n\u003c/form\u003e\n\u003cform class\u003d\"form-inline\"\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003cdiv class\u003d\"input-group has-success\"\u003e\n        \u003cspan class\u003d\"input-group-addon\" style\u003d\"font-size:17px\"\u003eoutput:\u003c/span\u003e\n        \u003cinput style\u003d\"width:500px;font-size:17px\" id\u003d\"outpath\" type\u003d\"text\"  class\u003d\"form-control \" ng-model\u003d\"storagePath\"\u003e\u003c/input\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003cdiv class\u003d\"btn btn-primary\"\u003e{{binaryScorer}}\u003c/div\u003e\n    \u003cdiv class\u003d\"btn btn-success\"\u003e{{dictionaryScorer}}\u003c/div\u003e\n    \u003cdiv class\u003d\"btn btn-warning\"\u003e{{modelScorer}}\u003c/div\u003e\n  \u003c/div\u003e\n\u003c/form\u003e\n\u003c/div\u003e\n\u003cp class\u003d\"text-success\"\u003e\u003cstrong\u003e参考路径：  hdfs://llscluster/tmp/benchmark/scorer/en_us-303\u003c/strong\u003e\u003c/p\u003e\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "title": true,
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442370580396_666748858",
+      "id": "20150916-102940_261755494",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "\u003c/br\u003e\n\u003cform class\u003d\"form-inline\"\u003e\n    \u003clabel\u003eResult of Output Path:\u003c/label\u003e\n    \u003clabel class\u003d\"col-md-offset-4\" style\u003d\"position: relative;left: 26px\" \u003eBinary:\u003c/label\u003e\n    \u003clabel class\u003d\"col-md-offset-1\" style\u003d\"position: relative;left: 57px\"\u003eDictionary:\u003c/label\u003e\n    \u003clabel class\u003d\"col-md-offset-1\" style\u003d\"position: relative;left: 44px\"\u003eModel:\u003c/label\u003e\n\u003c/form\u003e\n\u003cform class\u003d\"form-inline\"\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003cdiv class\u003d\"input-group has-success\"\u003e\n        \u003cspan class\u003d\"input-group-addon\" style\u003d\"font-size:17px\"\u003eoutput:\u003c/span\u003e\n        \u003cinput style\u003d\"width:500px;font-size:17px\" id\u003d\"outpath\" type\u003d\"text\"  class\u003d\"form-control \" ng-model\u003d\"storagePath\"\u003e\u003c/input\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003cdiv class\u003d\"btn btn-primary\"\u003e{{binaryScorer}}\u003c/div\u003e\n    \u003cdiv class\u003d\"btn btn-success\"\u003e{{dictionaryScorer}}\u003c/div\u003e\n    \u003cdiv class\u003d\"btn btn-warning\"\u003e{{modelScorer}}\u003c/div\u003e\n  \u003c/div\u003e\n\u003c/form\u003e\n\u003c/div\u003e\n\u003cp class\u003d\"text-success\"\u003e\u003cstrong\u003e参考路径：  hdfs://llscluster/tmp/benchmark/scorer/en_us-303\u003c/strong\u003e\u003c/p\u003e\n"
+      },
+      "dateCreated": "Sep 16, 2015 10:29:40 AM",
+      "dateStarted": "Sep 16, 2015 11:08:46 AM",
+      "dateFinished": "Sep 16, 2015 11:08:46 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "写入打分配置文件",
+      "text": "val aa \u003d z.angular(\"storagePath\").toString\nval mapper \u003d \"{\"+\"\\\"mapper\\\":\"+ str1 +\",\" + \"\\\"storage\\\":\" + \"{\"+ \"\\\"path\\\":\"+ \"\\\"\"+aa+\"\\\",\" + \"\\\"type\\\":\" +\"\\\"\"+ str2+\"\\\"\"+\"}}\"\nval json \u003d JSON.parseObject(mapper).toString\nval fileJobConfig \u003d new File(deliverJsonConfigPath)\nfileJobConfig.createNewFile\nval writeIn \u003d new BufferedWriter(new FileWriter(fileJobConfig))\nwriteIn.write(json)\nwriteIn.flush\nwriteIn.close\nz.angularBind(\"jobconfpath\",deliverJsonConfigPath)",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "title": true,
+        "editorHide": false,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442370931855_-1500168230",
+      "id": "20150916-103531_1146848726",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "aa: String \u003d hdfs://llscluster/tmp/benchmark/scorer/en_us-254\nmapper: String \u003d {\"mapper\":{\"output_val_type\":\"text\",\"bins\":[{\"bin\":\"@pipeline.plugin.score-distribution-en_us-254/engzo_score_raw_batch\",\"kwargs\":{\"--raw\":\"@@pipeline.audio.raw.bytes\",\"--outlist\":\"@@pipeline.mapper.out.val\",\"--am\":\"@pipeline.plugin.score-distribution-en_us-254/en-us-v254-semi\",\"--dict\":\"@pipeline.plugin.score-distribution-en_us-254/cmu07_20140625.dic\",\"--trans\":\"@@pipeline.audio.normalized.spoken.text\"}}],\"output_key_type\":\"@pipeline.audio.key\",\"mode\":\"batch\"},\"storage\":{\"path\":\"hdfs://llscluster/tmp/benchmark/scorer/en_us-254\",\"type\":\"hdfs_sequence_file\"}}\njson: String \u003d {\"mapper\":{\"output_val_type\":\"text\",\"bins\":[{\"bin\":\"@pipeline.plugin.score-distribution-en_us-254/engzo_score_raw_batch\",\"kwargs\":{\"--raw\":\"@@pipeline.audio.raw.bytes\",\"--outlist\":\"@@pipeline.mapper.out.val\",\"--am\":\"@pipeline.plugin.score-distribution-en_us-254/en-us-v254-semi\",\"--dict\":\"@pipeline.plugin.score-distribution-en_us-254/cmu07_20140625.dic\",\"--trans\":\"@@pipeline.audio.normalized.spoken.text\"}}],\"output_key_type\":\"@pipeline.audio.key\",\"mode\":\"batch\"},\"storage\":{\"path\":\"hdfs://llscluster/tmp/benchmark/scorer/en_us-254\",\"type\":\"hdfs_sequence_file\"}}\nfileJobConfig: java.io.File \u003d /home/pipeline/autoScorerLLS/score-distribution-en_us-254/en_us-254.json\nres284: Boolean \u003d false\nwriteIn: java.io.BufferedWriter \u003d java.io.BufferedWriter@49e619fc\n"
+      },
+      "dateCreated": "Sep 16, 2015 10:35:31 AM",
+      "dateStarted": "Sep 21, 2015 12:21:51 AM",
+      "dateFinished": "Sep 21, 2015 12:21:53 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "打分",
+      "text": "%angular\n\u003cdiv\u003e\n    \u003ccenter\u003e\u003ch3 \u003eSpark-Submit Automatic Text\u003c/h3\u003e\u003c/center\u003e\n\u003c/div\u003e\n\u003cform class\u003d\"form-horizontal\"\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputdrivermem\" class\u003d\"col-sm-3 control-label\"\u003edriver-memory\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n      \u003cinput type\u003d\"number\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputDriver\"  ng-init\u003d\"inputDriver\u003d10\" id\u003d\"inputdrivermem\" placeholder\u003d\"input Driver\" \u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputcores\" class\u003d\"col-sm-3 control-label\"\u003etotal-cores\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n      \u003cinput type\u003d\"number\" class\u003d\"form-control \"  style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputCores\" ng-init\u003d\"inputCores\u003d120\" id\u003d\"inputcores\" placeholder\u003d\"total-executor-core\"\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputexemem\" class\u003d\"col-sm-3 control-label\"\u003eexecutor-memory\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n      \u003cinput type\u003d\"number\" class\u003d\"form-control\"  style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputExecutor\" ng-init\u003d\"inputExecutor\u003d20\" id\u003d\"inputexemem\" placeholder\u003d\"executor-memory\" \u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputclass\" class\u003d\"col-sm-3 control-label\"\u003eclass\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n      \u003cinput type\u003d\"text\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-init\u003d\"inputClass\u003d\u0027com.liulishuo.speech.pipeline.core.Job\u0027\" ng-model\u003d\"inputClass\" id\u003d\"inputclass\" placeholder\u003d\"class in the input jar\" \u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputjar\" class\u003d\"col-sm-3 control-label\"\u003einput-jar\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cselect class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputJarPath\" id\u003d\"inputjar\" ng-options\u003d\"file for file in jarList\"\u003e\u003c/select\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"hdfsRoot\" class\u003d\"col-sm-3 control-label\"\u003eplugin-hdfs-root\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cinput type\u003d\"text\"  style\u003d\"width:500px; height:37px; font-size:17px\" class\u003d\"form-control\" ng-model\u003d\"inputHdfsRootPath\" id\u003d\"hdfsRoot\" ng-init\u003d\"inputHdfsRootPath\u003d\u0027hdfs://llscluster/tmp/audio-pipeline-plugins-test\u0027\"\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"jobconf\" class\u003d\"col-sm-3 control-label\"\u003ejob-config\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cinput type\u003d\"text\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"jobconfpath\" id\u003d\"jobconf\" placeholder\u003d\"job-config path .json file\"\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"plugins\" class\u003d\"col-sm-3 control-label\"\u003eplugins\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cinput type\u003d\"text\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"pluginPathpluginPath\" id\u003d\"plugins\" placeholder\u003d\"plugin directive which includes model, dict, engzo\"\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputAudio\" class\u003d\"col-sm-3 control-label\"\u003einput-audios\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cselect class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputAudios\" id\u003d\"inputAudio\" ng-options\u003d\"audio for audio in selectAudioFile\"  placeholder\u003d\"input audios path\"\u003e\u003c/select\u003e\n    \u003c/div\u003e\n    \u003cbutton class\u003d\"btn btn-primary\" type\u003d\"button\" data-toggle\u003d\"collapse\" data-target\u003d\"#collapseExample\" aria-expanded\u003d\"false\" aria-controls\u003d\"collapseExample\"\u003e Confirm\n    \u003c/button\u003e\n  \u003c/div\u003e\n\u003c/form\u003e\n\u003cdiv class\u003d\"collapse\" id\u003d\"collapseExample\"\u003e\n    \u003ctextarea class\u003d\"form-control\" rows\u003d\"5\"\u003e\nbash /opt/simple-spark/bin/spark-submit --driver-memory {{inputDriver}}G --total-executor-cores {{inputCores}} --executor-memory {{inputExecutor}}G --class {{inputClass}} {{inputJarPath}} --plugin-hdfs-root {{inputHdfsRootPath}} --job-conf {{jobconfpath}} --plugins {{pluginPathpluginPath}} --input-audios {{inputAudios}}     \n    \u003c/textarea\u003e\n\u003c/div\u003e\n{{inputdriver}}",
+      "config": {
+        "colWidth": 10.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "title": true,
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442287577195_-2146596184",
+      "id": "20150915-112617_198648021",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "\u003cdiv\u003e\n    \u003ccenter\u003e\u003ch3 \u003eSpark-Submit Automatic Text\u003c/h3\u003e\u003c/center\u003e\n\u003c/div\u003e\n\u003cform class\u003d\"form-horizontal\"\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputdrivermem\" class\u003d\"col-sm-3 control-label\"\u003edriver-memory\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n      \u003cinput type\u003d\"number\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputDriver\"  ng-init\u003d\"inputDriver\u003d10\" id\u003d\"inputdrivermem\" placeholder\u003d\"input Driver\" \u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputcores\" class\u003d\"col-sm-3 control-label\"\u003etotal-cores\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n      \u003cinput type\u003d\"number\" class\u003d\"form-control \"  style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputCores\" ng-init\u003d\"inputCores\u003d120\" id\u003d\"inputcores\" placeholder\u003d\"total-executor-core\"\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputexemem\" class\u003d\"col-sm-3 control-label\"\u003eexecutor-memory\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n      \u003cinput type\u003d\"number\" class\u003d\"form-control\"  style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputExecutor\" ng-init\u003d\"inputExecutor\u003d20\" id\u003d\"inputexemem\" placeholder\u003d\"executor-memory\" \u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputclass\" class\u003d\"col-sm-3 control-label\"\u003eclass\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n      \u003cinput type\u003d\"text\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-init\u003d\"inputClass\u003d\u0027com.liulishuo.speech.pipeline.core.Job\u0027\" ng-model\u003d\"inputClass\" id\u003d\"inputclass\" placeholder\u003d\"class in the input jar\" \u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputjar\" class\u003d\"col-sm-3 control-label\"\u003einput-jar\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cselect class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputJarPath\" id\u003d\"inputjar\" ng-options\u003d\"file for file in jarList\"\u003e\u003c/select\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"hdfsRoot\" class\u003d\"col-sm-3 control-label\"\u003eplugin-hdfs-root\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cinput type\u003d\"text\"  style\u003d\"width:500px; height:37px; font-size:17px\" class\u003d\"form-control\" ng-model\u003d\"inputHdfsRootPath\" id\u003d\"hdfsRoot\" ng-init\u003d\"inputHdfsRootPath\u003d\u0027hdfs://llscluster/tmp/audio-pipeline-plugins-test\u0027\"\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"jobconf\" class\u003d\"col-sm-3 control-label\"\u003ejob-config\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cinput type\u003d\"text\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"jobconfpath\" id\u003d\"jobconf\" placeholder\u003d\"job-config path .json file\"\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"plugins\" class\u003d\"col-sm-3 control-label\"\u003eplugins\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cinput type\u003d\"text\" class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"pluginPathpluginPath\" id\u003d\"plugins\" placeholder\u003d\"plugin directive which includes model, dict, engzo\"\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class\u003d\"form-group\"\u003e\n    \u003clabel for\u003d\"inputAudio\" class\u003d\"col-sm-3 control-label\"\u003einput-audios\u003c/label\u003e\n    \u003cdiv class\u003d\"col-sm-7\"\u003e\n        \u003cselect class\u003d\"form-control\" style\u003d\"width:500px; height:37px; font-size:17px\" ng-model\u003d\"inputAudios\" id\u003d\"inputAudio\" ng-options\u003d\"audio for audio in selectAudioFile\"  placeholder\u003d\"input audios path\"\u003e\u003c/select\u003e\n    \u003c/div\u003e\n    \u003cbutton class\u003d\"btn btn-primary\" type\u003d\"button\" data-toggle\u003d\"collapse\" data-target\u003d\"#collapseExample\" aria-expanded\u003d\"false\" aria-controls\u003d\"collapseExample\"\u003e Confirm\n    \u003c/button\u003e\n  \u003c/div\u003e\n\u003c/form\u003e\n\u003cdiv class\u003d\"collapse\" id\u003d\"collapseExample\"\u003e\n    \u003ctextarea class\u003d\"form-control\" rows\u003d\"5\"\u003e\nbash /opt/simple-spark/bin/spark-submit --driver-memory {{inputDriver}}G --total-executor-cores {{inputCores}} --executor-memory {{inputExecutor}}G --class {{inputClass}} {{inputJarPath}} --plugin-hdfs-root {{inputHdfsRootPath}} --job-conf {{jobconfpath}} --plugins {{pluginPathpluginPath}} --input-audios {{inputAudios}}     \n    \u003c/textarea\u003e\n\u003c/div\u003e\n{{inputdriver}}"
+      },
+      "dateCreated": "Sep 15, 2015 11:26:17 AM",
+      "dateStarted": "Sep 16, 2015 10:21:01 AM",
+      "dateFinished": "Sep 16, 2015 10:21:01 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "加载各个语言版本模型的scorer结果",
+      "text": "%spark\nz.load(\"com.alibaba:fastjson:1.2.6\")\nimport java.io.{File,BufferedWriter,FileWriter}\nimport scala.io.Source\nimport com.alibaba.fastjson.{JSONObject, JSON, JSONWriter}\nimport org.apache.hadoop.fs\nimport org.apache.hadoop.fs.Path\nimport org.apache.hadoop.fs.FileSystem;\nimport org.apache.hadoop.conf.Configuration;\nval fs \u003d FileSystem.get(new Configuration())\nval p \u003d new Path(\"hdfs://llscluster/tmp/benchmark/scorer\")\nval resultScorerList \u003d fs.listStatus(p).map(_.getPath.toString)\nz.angularBind(\"selectScorerVersion\", resultScorerList)",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "title": true,
+        "editorHide": false,
+        "tableHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442213905845_-293686152",
+      "id": "20150914-145825_524821287",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "res290: Iterable[String] \u003d Wrappers(com.alibaba:fastjson:1.2.6)\nimport java.io.{File, BufferedWriter, FileWriter}\nimport scala.io.Source\nimport com.alibaba.fastjson.{JSONObject, JSON, JSONWriter}\nimport org.apache.hadoop.fs\nimport org.apache.hadoop.fs.Path\nimport org.apache.hadoop.fs.FileSystem\nimport org.apache.hadoop.conf.Configuration\nfs: org.apache.hadoop.fs.FileSystem \u003d DFS[DFSClient[clientName\u003dDFSClient_NONMAPREDUCE_336021267_70, ugi\u003dpipeline (auth:SIMPLE)]]\np: org.apache.hadoop.fs.Path \u003d hdfs://llscluster/tmp/benchmark/scorer\nresultScorerList: Array[String] \u003d Array(hdfs://llscluster/tmp/benchmark/scorer/de_de-420, hdfs://llscluster/tmp/benchmark/scorer/en_us-254, hdfs://llscluster/tmp/benchmark/scorer/en_us-303, hdfs://llscluster/tmp/benchmark/scorer/en_us-401, hdfs://llscluster/tmp/benchmark/scorer/fr_fr-420, hdfs://llscluster/tmp/benchmark/scorer/ja_jp-400, hdfs://llscluster/tmp/benchmark/scorer/ko_kr-254)\n"
+      },
+      "dateCreated": "Sep 14, 2015 2:58:25 PM",
+      "dateStarted": "Sep 21, 2015 12:27:04 AM",
+      "dateFinished": "Sep 21, 2015 12:27:06 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "选择语言版本模型打分结果",
+      "text": "%angular\n    \u003cdiv class\u003d\"form-group\"\u003e\n        \u003cdiv class\u003d\"input-group has-warning\"\u003e\n            \u003cspan class\u003d\"input-group-addon\" style\u003d\"font-size:17px\"\u003epath:\u003c/span\u003e\n            \u003cselect ng-model\u003d\"selectResultPath\" class\u003d\"form-control\"  style\u003d\"width:600px; height:37px; font-size:17px\" ng-options\u003d\"num for num in selectScorerVersion\"\u003e\u003c/select\u003e\n        \u003c/div\u003e\n    \u003c/div\u003e\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": true,
+        "title": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442286716650_-2069011829",
+      "id": "20150915-111156_2039939546",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "    \u003cdiv class\u003d\"form-group\"\u003e\n        \u003cdiv class\u003d\"input-group has-warning\"\u003e\n            \u003cspan class\u003d\"input-group-addon\" style\u003d\"font-size:17px\"\u003epath:\u003c/span\u003e\n            \u003cselect ng-model\u003d\"selectResultPath\" class\u003d\"form-control\"  style\u003d\"width:600px; height:37px; font-size:17px\" ng-options\u003d\"num for num in selectScorerVersion\"\u003e\u003c/select\u003e\n        \u003c/div\u003e\n    \u003c/div\u003e\n"
+      },
+      "dateCreated": "Sep 15, 2015 11:11:56 AM",
+      "dateStarted": "Sep 16, 2015 11:07:44 AM",
+      "dateFinished": "Sep 16, 2015 11:07:44 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "写入服务器6中，overall-scorer目录中---------------------------\u003e",
+      "text": "z.load(\"com.alibaba:fastjson:1.2.6\")\nimport com.alibaba.fastjson.{JSONObject, JSON, JSONWriter}\nval selectHDFSPath \u003d z.angular(\"selectResultPath\").toString\nval languageVersion \u003d selectHDFSPath.split(\"/\").last\ndef printToFile(f: java.io.File)(op: java.io.PrintWriter \u003d\u003e Unit) {\n  val p \u003d new java.io.PrintWriter(f)\n  try { op(p) } finally { p.close() }\n}\n\nval result \u003d sc.sequenceFile[String,String](selectHDFSPath).map{\n    case(key,value)\u003d\u003e(key,JSON.parseObject(value).getDouble(\"overall\"))\n}\nval wantToSave \u003d result.collect.map(p\u003d\u003ep._1+\" \"+p._2)\nprintToFile(new File(\"/home/pipeline/overall-scorer/\"+ languageVersion +\".txt\")) { p \u003d\u003e\n  wantToSave.foreach(p.println)\n}\nval targetPath \u003d \"/home/pipeline/overall-scorer/\"+ languageVersion +\".txt\"\nz.angularBind(\"targetResultTxt\",targetPath)",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": false,
+        "tableHide": false,
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1441882010549_1630166236",
+      "id": "20150910-184650_1028522490",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "res293: Iterable[String] \u003d Wrappers(com.alibaba:fastjson:1.2.6)\nimport com.alibaba.fastjson.{JSONObject, JSON, JSONWriter}\nselectHDFSPath: String \u003d hdfs://llscluster/tmp/benchmark/scorer/en_us-254\nlanguageVersion: String \u003d en_us-254\nprintToFile: (f: java.io.File)(op: java.io.PrintWriter \u003d\u003e Unit)Unit\nresult: org.apache.spark.rdd.RDD[(String, Double)] \u003d MapPartitionsRDD[231] at map at \u003cconsole\u003e:112\nwantToSave: Array[String] \u003d Array(engzo_77_voxpop_5343.raw 47.2, 52f0c917fcfff21040004f91_524c2213fcfff2103500f045_95_seg2.wav.raw 92.6, 52626b2bfcfff2ace100179d_5269feb4fcfff2cc69004d9d_91_seg3.wav.raw 83.7, 52b82294fcfff28325000c7f_52aabb89c00890d94a0010c6_96_seg1.wav.raw 90.2, JH-200018_510_ios.raw 24.7, W-100016_543_ios.raw 21.9, IY-300002_513_ios.raw 80.4, V-400015_540_android.raw 0.0, 5201ee52fcfff2589c0026e1_534b23c2fcfff2c3fc022a36_90_seg1.wav.raw 92.8, 52a70910fcfff28687001027_52ae7fb4c008907af10000a5_88_seg2.wav.raw 87.1, W-300013_543_ios.raw 0.0, engzo_179_voxpop_5363.raw 87.2, R-200008_541_ios.raw 0.0, G-500018_510_ios.raw 47.9, L-200016_513_ios.raw 68.2, AY-200036_515_android.raw 15.0, S-500010_515_android.raw 95.9, OY-100004_543_ios.raw 71.2, ENUSSTLL140628T_5942_engzo_316...targetPath: String \u003d /home/pipeline/overall-scorer/en_us-254.txt\n"
+      },
+      "dateCreated": "Sep 10, 2015 6:46:50 PM",
+      "dateStarted": "Sep 21, 2015 12:27:10 AM",
+      "dateFinished": "Sep 21, 2015 12:27:15 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%angular\n \u003cdiv class\u003d\"btn btn-primary\" ng-bind\u003d\"targetResultTxt\"\u003e\u003c/div\u003e",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442325094070_814965161",
+      "id": "20150915-215134_63650522",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": " \u003cdiv class\u003d\"btn btn-primary\" ng-bind\u003d\"targetResultTxt\"\u003e\u003c/div\u003e"
+      },
+      "dateCreated": "Sep 15, 2015 9:51:34 PM",
+      "dateStarted": "Sep 16, 2015 10:59:31 AM",
+      "dateFinished": "Sep 16, 2015 10:59:31 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442372238972_586391285",
+      "id": "20150916-105718_1234775854",
+      "dateCreated": "Sep 16, 2015 10:57:18 AM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Extraction overall data from scorer result",
+  "id": "2AYQRBGGM",
+  "angularObjects": {},
+  "config": {
+    "looknfeel": "default"
+  },
+  "info": {}
+}

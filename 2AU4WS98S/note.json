@@ -1,0 +1,850 @@
+{
+  "paragraphs": [
+    {
+      "text": "def recursiveListFiles(f: File): Array[File] \u003d {\n    if (!f.isDirectory) return Array(f)\n    else {\n      val these \u003d f.listFiles\n      these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)\n    }\n}\ndef readFileToLines(fileName: String): Option[Array[String]] \u003d {\n    val file \u003d new File(fileName)\n    val lines \u003d FileUtils.readLines(file).toList.toArray    \n    Some(lines)\n}\n//(p\u003d\u003e_.split(\"/\").last.split(\"_\").last.split(\u0027.\u0027)(0))\nval inputRootDir \u003d new File(\"/home/pipeline/jzytest/filetest\")\nval refineLangDir \u003d inputRootDir.listFiles.map(_.toString).map(new File(_))\nval scpFileList \u003d refineLangDir.flatMap(recursiveListFiles(_)).map(_.toString).filter(_.contains(\".scp\"))\nscpFileList.filter(p\u003d\u003ep.contains(\"bm2\") \u0026\u0026 (p.contains(\"left\")||p.contains(\"right\"))).flatMap{\n    path \u003d\u003e{ \n    val refinePath \u003d path.split(\"/\").last.split(\"_\").last.split(\u0027.\u0027)(0)\n    readFileToLines(path).get.map(_.split(\",\")).map{\n        line\u003d\u003e(refinePath+\"-\"+ line.map(_.trim.split(\" \")(0).trim).mkString,line.map(_.split(\" \").drop(1).mkString(\" \")).mkString)\n    }}\n    \n}",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1441679085369_1856966377",
+      "id": "20150908-102445_469045228",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "recursiveListFiles: (f: java.io.File)Array[java.io.File]\nreadFileToLines: (fileName: String)Option[Array[String]]\ninputRootDir: java.io.File \u003d /home/pipeline/jzytest/filetest\nrefineLangDir: Array[java.io.File] \u003d Array(/home/pipeline/jzytest/filetest/Phoneme, /home/pipeline/jzytest/filetest/bm_addmissrep_ENUSSTLL140628T, /home/pipeline/jzytest/filetest/en_us_bm2)\nscpFileList: Array[String] \u003d Array(/home/pipeline/jzytest/filetest/Phoneme/raw_ref_AH.scp, /home/pipeline/jzytest/filetest/Phoneme/raw_ref_ER.scp, /home/pipeline/jzytest/filetest/bm_addmissrep_ENUSSTLL140628T/raw_ref_clean.scp, /home/pipeline/jzytest/filetest/en_us_bm2/BM_EN_WORD_VV2/raw_ref_left.scp, /home/pipeline/jzytest/filetest/en_us_bm2/BM_EN_WORD_VV2/raw_ref_right.scp)\nres236: Array[(String, String)] \u003d Array((left-200132_94_ios_BM_EN_WORD_VV2.raw,chain), (left-200176_97_ios_BM_EN_WORD_VV2.raw,folly), (left-200099_94_ios_BM_EN_WORD_VV2.raw,ankle), (left-200213_98_ios_BM_EN_WORD_VV2.raw,sip), (left-200070_96_android_BM_EN_WORD_VV2.raw,tusk), (left-200121_96_android_BM_EN_WORD_VV2.raw,chew), (left-200015_96_android_BM_EN_WORD_VV2.raw,push), (left-200097_94_ios_BM_EN_WORD_VV2.raw,nickel), (left-200105_98_ios_BM_EN_WORD_VV2.raw,cut), (left-200020_101_ios_BM_EN_WORD_VV2.raw,paul), (left-200086_96_android_BM_EN_WORD_VV2.raw,coo), (left-200056_94_ios_BM_EN_WORD_VV2.raw,touring), (left-200045_97_ios_BM_EN_WORD_VV2.raw,till), (left-200101_99_android_BM_EN_WORD_VV2.raw,cob), (left-200019_97_ios_BM_EN_WORD_VV2.raw,paul), (left-200071_96_android_BM_EN_WORD_VV2.raw..."
+      },
+      "dateCreated": "Sep 8, 2015 10:24:45 AM",
+      "dateStarted": "Sep 10, 2015 2:26:27 PM",
+      "dateFinished": "Sep 10, 2015 2:26:35 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import java.io.File\nimport org.apache.commons.io.FileUtils\nimport org.apache.spark.{SparkContext, SparkConf}\nimport org.apache.spark.SparkContext._\nimport collection.JavaConversions._\ndef readFileToLines(fileName: String): Option[Array[String]] \u003d {\n    val file \u003d new File(fileName)\n    val lines \u003d FileUtils.readLines(file).toList.toArray    \n    Some(lines)\n  }\ndef recursiveListFiles(f: File): Array[File] \u003d {\n    if (!f.isDirectory) return Array(f)\n    else {\n      val these \u003d f.listFiles\n      these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)\n    }\n}\ndef judgeFileIsExist(key:String, raw:Array[String]): Option[String]\u003d{\nval patternRegex \u003d \"([A-Z]+)\".r\nif (patternRegex.findFirstIn(key.split(\"-\")(0)).isDefined) {\n  val filterKey \u003d key.split(\"-\").drop(1).mkString\n  Some(raw.filter(_.contains(filterKey)).mkString)\n} else {\n  Some(raw.filter(_.contains(key)).mkString)\n}\n}\n\nval inputRootDir \u003d new File(\"/home/pipeline/jzytest/filetest\")\nval refineLangDir \u003d inputRootDir.listFiles.map(_.toString).map(new File(_))\nval scpFileList \u003d refineLangDir.flatMap(recursiveListFiles(_)).map(_.toString).filter(f\u003d\u003ef.contains(\".scp\")).filter(!_.contains(\".swp\"))\n\n\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1437639898774_-70445969",
+      "id": "20150723-162458_339740700",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "import java.io.File\nimport org.apache.commons.io.FileUtils\nimport org.apache.spark.{SparkContext, SparkConf}\nimport org.apache.spark.SparkContext._\nimport collection.JavaConversions._\nreadFileToLines: (fileName: String)Option[Array[String]]\nrecursiveListFiles: (f: java.io.File)Array[java.io.File]\njudgeFileIsExist: (key: String, raw: Array[String])Option[String]\ninputRootDir: java.io.File \u003d /home/pipeline/jzytest/filetest\nrefineLangDir: Array[java.io.File] \u003d Array(/home/pipeline/jzytest/filetest/Phoneme, /home/pipeline/jzytest/filetest/bm_addmissrep_ENUSSTLL140628T, /home/pipeline/jzytest/filetest/en_us_bm2)\nscpFileList: Array[String] \u003d Array(/home/pipeline/jzytest/filetest/Phoneme/raw_ref_AH.scp, /home/pipeline/jzytest/filetest/Phoneme/raw_ref_ER.scp, /home/pipeline/jzytest/filetest/bm_addmissrep_ENUSSTLL140628T/raw_ref_clean.scp, /home/pipeline/jzytest/filetest/en_us_bm2/BM_EN_WORD_VV2/raw_ref_left.scp, /home/pipeline/jzytest/filetest/en_us_bm2/BM_EN_WORD_VV2/raw_ref_right.scp)\n"
+      },
+      "dateCreated": "Jul 23, 2015 4:24:58 PM",
+      "dateStarted": "Sep 10, 2015 12:05:00 PM",
+      "dateFinished": "Sep 10, 2015 12:05:13 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "z.load(\"com.alibaba:fastjson:1.2.6\")\nimport org.apache.hadoop.io.BytesWritable\nimport org.apache.spark.{Logging, SparkConf, SparkContext}\nimport scala.collection.mutable.ArrayBuffer\nimport scala.io.Source\nimport java.io.File\nimport collection.JavaConversions._\nimport org.apache.commons.io.FileUtils\nimport com.alibaba.fastjson.{JSONObject, JSON, JSONWriter}\n\n\nprintToFile(new File(\"/home/pipeline/example.txt\")) { p \u003d\u003e\n  wantToSave.foreach(p\u003d\u003eprintln(\"\\\u0027\"+p._1+\"\\\u0027:\"+\"\\\u0027\"+p._2+\"\\\u0027,\"))\n}\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1441767895627_573763400",
+      "id": "20150909-110455_249029555",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "res179: Iterable[String] \u003d Wrappers(com.alibaba:fastjson:1.2.6)\nimport org.apache.hadoop.io.BytesWritable\nimport org.apache.spark.{Logging, SparkConf, SparkContext}\nimport scala.collection.mutable.ArrayBuffer\nimport scala.io.Source\nimport java.io.File\nimport collection.JavaConversions._\nimport org.apache.commons.io.FileUtils\nimport com.alibaba.fastjson.{JSONObject, JSON, JSONWriter}\n\u003cconsole\u003e:53: error: value _1 is not a member of String\n                wantToSave.foreach(p\u003d\u003eprintln(\"\\\u0027\"+p._1+\"\\\u0027:\"+\"\\\u0027\"+p._2+\"\\\u0027,\"))\n                                                     ^\n"
+      },
+      "dateCreated": "Sep 9, 2015 11:04:55 AM",
+      "dateStarted": "Sep 9, 2015 5:21:39 PM",
+      "dateFinished": "Sep 9, 2015 5:21:42 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "wantToSave",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1441768955589_-1268709903",
+      "id": "20150909-112235_383662389",
+      "result": "Java heap space",
+      "dateCreated": "Sep 9, 2015 11:22:35 AM",
+      "dateStarted": "Sep 9, 2015 11:22:46 AM",
+      "dateFinished": "Sep 9, 2015 11:22:48 AM",
+      "status": "FINISHED",
+      "errorMessage": "java.util.Arrays.copyOfRange(Arrays.java:2694)\njava.lang.String.\u003cinit\u003e(String.java:203)\njava.lang.StringBuffer.toString(StringBuffer.java:561)\njava.io.StringWriter.toString(StringWriter.java:210)\ncom.google.gson.Gson.toJson(Gson.java:517)\ncom.google.gson.Gson.toJson(Gson.java:496)\norg.apache.zeppelin.interpreter.remote.RemoteInterpreter.convert(RemoteInterpreter.java:350)\norg.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:204)\norg.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:93)\norg.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:212)\norg.apache.zeppelin.scheduler.Job.run(Job.java:170)\norg.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:296)\njava.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)\njava.util.concurrent.FutureTask.run(FutureTask.java:262)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:178)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:292)\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)\njava.lang.Thread.run(Thread.java:745)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val result \u003d sc.sequenceFile[String,String](\"hdfs://llscluster/tmp/benmark/en_us-401-scorer\").map{\n    case(key,value)\u003d\u003e(key,JSON.parseObject(value).getDouble(\"overall\"))\n}\ndef printToFile(f: java.io.File)(op: java.io.PrintWriter \u003d\u003e Unit) {\n  val p \u003d new java.io.PrintWriter(f)\n  try { op(p) } finally { p.close() }\n}\nval wantToSave \u003d result.collect.map(p\u003d\u003ep._1+\" \"+p._2)\nprintToFile(new File(\"/home/pipeline/example.txt\")) { p \u003d\u003e\n  wantToSave.foreach(p.println)\n}",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1440482118418_1881992071",
+      "id": "20150825-135518_732756624",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "result: org.apache.spark.rdd.RDD[(String, Double)] \u003d MapPartitionsRDD[185] at map at \u003cconsole\u003e:122\nprintToFile: (f: java.io.File)(op: java.io.PrintWriter \u003d\u003e Unit)Unit\nwantToSave: Array[String] \u003d Array(engzo_77_voxpop_5343.raw 87.4, 52f0c917fcfff21040004f91_524c2213fcfff2103500f045_95_seg2.wav.raw 99.6, 52626b2bfcfff2ace100179d_5269feb4fcfff2cc69004d9d_91_seg3.wav.raw 89.8, 52b82294fcfff28325000c7f_52aabb89c00890d94a0010c6_96_seg1.wav.raw 95.6, JH-200018_510_ios.raw 1.3, W-100016_543_ios.raw 1.9, IY-300002_513_ios.raw 5.5, V-400015_540_android.raw 2.0, 5201ee52fcfff2589c0026e1_534b23c2fcfff2c3fc022a36_90_seg1.wav.raw 98.0, 52a70910fcfff28687001027_52ae7fb4c008907af10000a5_88_seg2.wav.raw 96.0, W-300013_543_ios.raw 0.0, engzo_179_voxpop_5363.raw 98.8, R-200008_541_ios.raw 10.6, G-500018_510_ios.raw 3.5, L-200016_513_ios.raw 95.6, AY-200036_515_android.raw 0.0, S-500010_515_android.raw 10.2, OY-100004_543_ios.raw 93.9, ENUSSTLL140628T_5942_engzo_316_and..."
+      },
+      "dateCreated": "Aug 25, 2015 1:55:18 PM",
+      "dateStarted": "Sep 10, 2015 3:47:33 PM",
+      "dateFinished": "Sep 10, 2015 3:49:21 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val a :Array[String]\u003dArray(\"aaaaaa\",\"bbbbb\",\"ccccc\",\"ddddddd\")\na(0)",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1437639947324_1659228555",
+      "id": "20150723-162547_621398029",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "a: Array[String] \u003d Array(aaaaaa, bbbbb, ccccc, ddddddd)\nres111: String \u003d aaaaaa\n"
+      },
+      "dateCreated": "Jul 23, 2015 4:25:47 PM",
+      "dateStarted": "Sep 9, 2015 12:01:15 PM",
+      "dateFinished": "Sep 9, 2015 12:01:15 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nprint \"d\"",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1437642911610_550624123",
+      "id": "20150723-171511_342366526",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "pyspark is not responding "
+      },
+      "dateCreated": "Jul 23, 2015 5:15:11 PM",
+      "dateStarted": "Sep 9, 2015 5:38:37 PM",
+      "dateFinished": "Sep 9, 2015 5:38:48 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "z.load(\"/home/pipeline/score-distribution-report/pipeline.jar\")\nz.load(\"com.alibaba:fastjson:1.2.6\")\nimport org.apache.hadoop.io.BytesWritable\nimport org.apache.spark.{Logging, SparkConf, SparkContext}\nimport scala.collection.mutable.ArrayBuffer\nimport scala.io.Source\nimport java.io.File\nimport collection.JavaConversions._\nimport org.apache.commons.io.FileUtils\n\ndef readFileToLines(fileName: String): Option[Array[String]] \u003d {\n    val file \u003d new File(fileName)\n    val lines \u003d FileUtils.readLines(file).toList.toArray\n    Some(lines)\n}\nval inputRootDir \u003d new File(\"/home/pipeline/dataset/en_us_phone/PhonemeEN\")\nval getScpFileList \u003d inputRootDir.listFiles.map(_.toString).filter(_.contains(\"scp\"))\nval scpContent \u003d getScpFileList.flatMap(readFileToLines(_).get).map(_.split(\",\")).map(line \u003d\u003e (line.map(_.split(\" \").drop(1).mkString(\" \")).map(_.split(\"-\")(1)).mkString+\"-\"+line.map(_.trim.split(\" \")(0).trim).mkString,line.map(_.split(\" \").drop(1).mkString(\" \")).mkString)).toMap\n\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1437723921785_-622735702",
+      "id": "20150724-154521_901086475",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "res3: Iterable[String] \u003d Wrappers(/home/pipeline/score-distribution-report/pipeline.jar)\nres4: Iterable[String] \u003d Wrappers(com.alibaba:fastjson:1.2.6)\nimport org.apache.hadoop.io.BytesWritable\nimport org.apache.spark.{Logging, SparkConf, SparkContext}\nimport scala.collection.mutable.ArrayBuffer\nimport scala.io.Source\nimport java.io.File\nimport collection.JavaConversions._\nimport org.apache.commons.io.FileUtils\nreadFileToLines: (fileName: String)Option[Array[String]]\ninputRootDir: java.io.File \u003d /home/pipeline/dataset/en_us_phone/PhonemeEN\njava.lang.NullPointerException\n\tat scala.collection.mutable.ArrayOps$ofRef$.length$extension(ArrayOps.scala:114)\n\tat scala.collection.mutable.ArrayOps$ofRef.length(ArrayOps.scala:114)\n\tat scala.collection.SeqLike$class.size(SeqLike.scala:106)\n\tat scala.collection.mutable.ArrayOps$ofRef.size(ArrayOps.scala:108)\n\tat scala.collection.mutable.Builder$class.sizeHint(Builder.scala:69)\n\tat scala.collection.mutable.ArrayBuilder.sizeHint(ArrayBuilder.scala:24)\n\tat scala.collection.TraversableLike$class.builder$1(TraversableLike.scala:240)\n\tat scala.collection.TraversableLike$class.map(TraversableLike.scala:243)\n\tat scala.collection.mutable.ArrayOps$ofRef.map(ArrayOps.scala:108)\n\tat $iwC$$iwC$$iwC$$iwC$$iwC$$iwC$$iwC$$iwC$$iwC$$iwC.\u003cinit\u003e(\u003cconsole\u003e:33)\n\tat $iwC$$iwC$$iwC$$iwC$$iwC$$iwC$$iwC$$iwC$$iwC.\u003cinit\u003e(\u003cconsole\u003e:38)\n\tat $iwC$$iwC$$iwC$$iwC$$iwC$$iwC$$iwC$$iwC.\u003cinit\u003e(\u003cconsole\u003e:40)\n\tat $iwC$$iwC$$iwC$$iwC$$iwC$$iwC$$iwC.\u003cinit\u003e(\u003cconsole\u003e:42)\n\tat $iwC$$iwC$$iwC$$iwC$$iwC$$iwC.\u003cinit\u003e(\u003cconsole\u003e:44)\n\tat $iwC$$iwC$$iwC$$iwC$$iwC.\u003cinit\u003e(\u003cconsole\u003e:46)\n\tat $iwC$$iwC$$iwC$$iwC.\u003cinit\u003e(\u003cconsole\u003e:48)\n\tat $iwC$$iwC$$iwC.\u003cinit\u003e(\u003cconsole\u003e:50)\n\tat $iwC$$iwC.\u003cinit\u003e(\u003cconsole\u003e:52)\n\tat $iwC.\u003cinit\u003e(\u003cconsole\u003e:54)\n\tat \u003cinit\u003e(\u003cconsole\u003e:56)\n\tat .\u003cinit\u003e(\u003cconsole\u003e:60)\n\tat .\u003cclinit\u003e(\u003cconsole\u003e)\n\tat .\u003cinit\u003e(\u003cconsole\u003e:7)\n\tat .\u003cclinit\u003e(\u003cconsole\u003e)\n\tat $print(\u003cconsole\u003e)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:606)\n\tat org.apache.spark.repl.SparkIMain$ReadEvalPrint.call(SparkIMain.scala:1065)\n\tat org.apache.spark.repl.SparkIMain$Request.loadAndRun(SparkIMain.scala:1338)\n\tat org.apache.spark.repl.SparkIMain.loadAndRunReq$1(SparkIMain.scala:840)\n\tat org.apache.spark.repl.SparkIMain.interpret(SparkIMain.scala:871)\n\tat org.apache.spark.repl.SparkIMain.interpret(SparkIMain.scala:819)\n\tat org.apache.zeppelin.spark.SparkInterpreter.interpretInput(SparkInterpreter.java:575)\n\tat org.apache.zeppelin.spark.SparkInterpreter.interpret(SparkInterpreter.java:551)\n\tat org.apache.zeppelin.spark.SparkInterpreter.interpret(SparkInterpreter.java:544)\n\tat org.apache.zeppelin.interpreter.ClassloaderInterpreter.interpret(ClassloaderInterpreter.java:57)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:93)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:277)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:170)\n\tat org.apache.zeppelin.scheduler.FIFOScheduler$1.run(FIFOScheduler.java:118)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:262)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:178)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:292)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)\n\tat java.lang.Thread.run(Thread.java:745)\n\n"
+      },
+      "dateCreated": "Jul 24, 2015 3:45:21 PM",
+      "dateStarted": "Sep 9, 2015 11:02:41 AM",
+      "dateFinished": "Sep 9, 2015 11:02:44 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import java.io.File\ndef recursiveListFiles(f: File): Array[File] \u003d {\n    if (!f.isDirectory) return Array(f)\n    val these \u003d f.listFiles\n    these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)\n}\nval a \u003d new File(\"/home/pipeline/dataset/en_us_phone/PhonemeEN/raw_ref_NG.scp\")\n\nval b \u003d recursiveListFiles(a).map(_.toString).filter(_.contains(\".scp\")).map(new File(_))\nval scpFileList \u003d b.flatMap(recursiveListFiles(_))\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1437978957928_474447035",
+      "id": "20150727-143557_2042534694",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "import java.io.File\nrecursiveListFiles: (f: java.io.File)Array[java.io.File]\na: java.io.File \u003d /home/pipeline/dataset/en_us_phone/PhonemeEN/raw_ref_NG.scp\nb: Array[java.io.File] \u003d Array(/home/pipeline/dataset/en_us_phone/PhonemeEN/raw_ref_NG.scp)\nscpFileList: Array[java.io.File] \u003d Array(/home/pipeline/dataset/en_us_phone/PhonemeEN/raw_ref_NG.scp)\n"
+      },
+      "dateCreated": "Jul 27, 2015 2:35:57 PM",
+      "dateStarted": "Sep 9, 2015 10:51:49 AM",
+      "dateFinished": "Sep 9, 2015 10:51:50 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import org.apache.hadoop.io.BytesWritable\nimport org.apache.hadoop.io.Text\nimport org.apache.spark.rdd\nimport java.io.FileInputStream\nimport org.apache.commons.io.FileUtils\nval files \u003d new java.io.File(\"/home/pipeline/benchmark/en_us/addmissrep_ENUSSTLL140628T\").listFiles\n\nval rdd \u003d sc.parallelize(files).map{case(key)\u003d\u003e(key.toString, FileUtils.readFileToByteArray(key))}\n\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1438745349570_-1059072428",
+      "id": "20150805-112909_1542222017",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "import org.apache.hadoop.io.BytesWritable\nimport org.apache.hadoop.io.Text\nimport org.apache.spark.rdd\nimport java.io.FileInputStream\nimport org.apache.commons.io.FileUtils\nfiles: Array[java.io.File] \u003d Array(/home/pipeline/benchmark/en_us/addmissrep_ENUSSTLL140628T/ENUSSTLL140628T_5914_engzo_320_android.raw, /home/pipeline/benchmark/en_us/addmissrep_ENUSSTLL140628T/ENUSSTLL140628T_5942_engzo_50_android.raw, /home/pipeline/benchmark/en_us/addmissrep_ENUSSTLL140628T/ENUSSTLL140628T_5914_engzo_316_android.raw, /home/pipeline/benchmark/en_us/addmissrep_ENUSSTLL140628T/ENUSSTLL140628T_5942_engzo_152_android.raw, /home/pipeline/benchmark/en_us/addmissrep_ENUSSTLL140628T/ENUSSTLL140628T_5942_engzo_163_android.raw, /home/pipeline/benchmark/en_us/addmissrep_ENUSSTLL140628T/ENUSSTLL140628T_5914_engzo_206_android.raw, /home/pipeline/benchmark/en_us/addmissrep_ENUSSTLL140628T/ENUSSTLL140628T_5914_engzo_340_android.raw, /home/pipeline/benchmark/en_us/addmissrep_ENUSSTL...rdd: org.apache.spark.rdd.RDD[(String, Array[Byte])] \u003d MapPartitionsRDD[1] at map at \u003cconsole\u003e:50\n"
+      },
+      "dateCreated": "Aug 5, 2015 11:29:09 AM",
+      "dateStarted": "Sep 9, 2015 10:50:37 AM",
+      "dateFinished": "Sep 9, 2015 10:50:40 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n\nprint \"sd\"",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1439177040283_-31107544",
+      "id": "20150810-112400_1569327118",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "pyspark is not responding "
+      },
+      "dateCreated": "Aug 10, 2015 11:24:00 AM",
+      "dateStarted": "Sep 9, 2015 5:39:22 PM",
+      "dateFinished": "Sep 9, 2015 5:39:32 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import org.apache.hadoop.io._\ndef byteArrayToBytesWritable(bytes: Array[Byte]): BytesWritable \u003d new BytesWritable(bytes)\nval tt \u003d bytes\nval a:Array[Byte] \u003dArray(1, 0, 0, 0, 1, 0, 1, 0, -3, -1, 6, 0, -10, -1, 17, 0, -25, -1, 34, 0, -47, -1, 66, 0, -93, -1, -115, 0, -1, -2, 34, 4, 100, 12, 38, 11, -32, 11, -126, 11, -64, 11)\nval b \u003d byteArrayToBytesWritable(a)",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1439289926461_-1080907493",
+      "id": "20150811-184526_1069852093",
+      "result": "org.apache.thrift.transport.TTransportException: java.net.SocketException: 断开的管道",
+      "dateCreated": "Aug 11, 2015 6:45:26 PM",
+      "dateStarted": "Aug 26, 2015 3:22:36 PM",
+      "dateFinished": "Aug 26, 2015 3:22:36 PM",
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:221)\norg.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:93)\norg.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:212)\norg.apache.zeppelin.scheduler.Job.run(Job.java:170)\norg.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:296)\njava.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)\njava.util.concurrent.FutureTask.run(FutureTask.java:262)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:178)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:292)\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)\njava.lang.Thread.run(Thread.java:745)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "\nval myMap: Map[String, String] \u003d Map(\"key1\" -\u003e \"value\")\nval value1: Option[String] \u003d myMap.get(\"key1\")\nval value2: Option[String] \u003d myMap.get(\"key2\")\n \nprintln(value1.get) // Some(\"value1\")\nprintln(value2) // None",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1439302100917_-2142132871",
+      "id": "20150811-220820_746992609",
+      "result": "org.apache.thrift.transport.TTransportException: java.net.SocketException: 断开的管道",
+      "dateCreated": "Aug 11, 2015 10:08:20 PM",
+      "dateStarted": "Aug 26, 2015 3:22:36 PM",
+      "dateFinished": "Aug 26, 2015 3:22:37 PM",
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:221)\norg.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:93)\norg.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:212)\norg.apache.zeppelin.scheduler.Job.run(Job.java:170)\norg.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:296)\njava.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)\njava.util.concurrent.FutureTask.run(FutureTask.java:262)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:178)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:292)\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)\njava.lang.Thread.run(Thread.java:745)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import com.google.protobuf.ByteString\na\nval c \u003dByteString.copyFrom(a)",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1439345734459_1017073320",
+      "id": "20150812-101534_1678913269",
+      "result": "org.apache.thrift.transport.TTransportException: java.net.SocketException: 断开的管道",
+      "dateCreated": "Aug 12, 2015 10:15:34 AM",
+      "dateStarted": "Aug 26, 2015 3:22:37 PM",
+      "dateFinished": "Aug 26, 2015 3:22:38 PM",
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:221)\norg.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:93)\norg.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:212)\norg.apache.zeppelin.scheduler.Job.run(Job.java:170)\norg.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:296)\njava.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)\njava.util.concurrent.FutureTask.run(FutureTask.java:262)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:178)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:292)\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)\njava.lang.Thread.run(Thread.java:745)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import java.io.File\n\nimport org.apache.commons.io.FileUtils\nimport org.apache.hadoop.io.BytesWritable\nimport org.apache.spark.{SparkConf, SparkContext}\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1439375974457_968958850",
+      "id": "20150812-183934_345365566",
+      "result": "org.apache.thrift.transport.TTransportException: java.net.SocketException: 断开的管道",
+      "dateCreated": "Aug 12, 2015 6:39:34 PM",
+      "dateStarted": "Aug 26, 2015 3:22:38 PM",
+      "dateFinished": "Aug 26, 2015 3:22:38 PM",
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:221)\norg.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:93)\norg.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:212)\norg.apache.zeppelin.scheduler.Job.run(Job.java:170)\norg.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:296)\njava.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)\njava.util.concurrent.FutureTask.run(FutureTask.java:262)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:178)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:292)\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)\njava.lang.Thread.run(Thread.java:745)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val path:String \u003d \"/home/pipeline/seqtest\"\nval files \u003d new File(path).listFiles()\nval fileset \u003d files.map{ case(key) \u003d\u003e (key.toString,FileUtils.readFileToByteArray(key))}\nval rdd \u003d sc.parallelize(fileset)\nval rdd \u003d sc.parallelize(fileset).map { case (key, audio) \u003d\u003e (key, transRawAudioToLLSUserAudioData(key, audio)) }\n\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1439347678218_206200474",
+      "id": "20150812-104758_939792765",
+      "result": "org.apache.thrift.transport.TTransportException: java.net.SocketException: 断开的管道",
+      "dateCreated": "Aug 12, 2015 10:47:58 AM",
+      "dateStarted": "Aug 26, 2015 3:22:38 PM",
+      "dateFinished": "Aug 26, 2015 3:22:39 PM",
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:221)\norg.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:93)\norg.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:212)\norg.apache.zeppelin.scheduler.Job.run(Job.java:170)\norg.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:296)\njava.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)\njava.util.concurrent.FutureTask.run(FutureTask.java:262)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:178)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:292)\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)\njava.lang.Thread.run(Thread.java:745)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "def getFileList(path:String):Iterator[File]\u003d{\n    val rootFile \u003d new File(path).listFiles.toIterator\n    for (i \u003c- rootFile){\n        println(i)\n        }\n}",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1439780513978_719213068",
+      "id": "20150817-110153_734065863",
+      "result": "org.apache.thrift.transport.TTransportException: java.net.SocketException: 断开的管道",
+      "dateCreated": "Aug 17, 2015 11:01:53 AM",
+      "dateStarted": "Aug 26, 2015 3:22:40 PM",
+      "dateFinished": "Aug 26, 2015 3:22:40 PM",
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:221)\norg.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:93)\norg.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:212)\norg.apache.zeppelin.scheduler.Job.run(Job.java:170)\norg.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:296)\njava.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)\njava.util.concurrent.FutureTask.run(FutureTask.java:262)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:178)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:292)\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)\njava.lang.Thread.run(Thread.java:745)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val files \u003d new File(\"/home/pipeline/benchmark/en_us\").listFiles",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1439369032684_1698497557",
+      "id": "20150812-164352_1457486542",
+      "result": "org.apache.thrift.transport.TTransportException: java.net.SocketException: 断开的管道",
+      "dateCreated": "Aug 12, 2015 4:43:52 PM",
+      "dateStarted": "Aug 26, 2015 3:26:02 PM",
+      "dateFinished": "Aug 26, 2015 3:26:02 PM",
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:221)\norg.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:93)\norg.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:212)\norg.apache.zeppelin.scheduler.Job.run(Job.java:170)\norg.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:296)\njava.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)\njava.util.concurrent.FutureTask.run(FutureTask.java:262)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:178)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:292)\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)\njava.lang.Thread.run(Thread.java:745)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import java.io.File\nimport scala.io.Source\ndef recursiveListFiles(f: File): Array[File] \u003d {\n  val these \u003d f.listFiles\n  these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles(_))\n}\nval langver \u003d \"en_us\"\nval files \u003d new File(\"/home/pipeline/benchmark\")\nval rawFiles \u003d recursiveListFiles(files).map(_.toString).filter(_.contains(\".raw\")).filter(_.contains(langver)).map(new File(_))\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1439811425130_-1071129484",
+      "id": "20150817-193705_611779982",
+      "result": "org.apache.thrift.transport.TTransportException: java.net.SocketException: 断开的管道",
+      "dateCreated": "Aug 17, 2015 7:37:05 PM",
+      "dateStarted": "Aug 26, 2015 3:22:41 PM",
+      "dateFinished": "Aug 26, 2015 3:22:42 PM",
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:221)\norg.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:93)\norg.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:212)\norg.apache.zeppelin.scheduler.Job.run(Job.java:170)\norg.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:296)\njava.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)\njava.util.concurrent.FutureTask.run(FutureTask.java:262)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:178)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:292)\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)\njava.lang.Thread.run(Thread.java:745)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val ff \u003d new File(\"/home/pipeline/dataset/\")\nff.listFiles.map(_.toString.split(\"/\"))",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1439557602288_-1694202813",
+      "id": "20150814-210642_1388321621",
+      "result": "org.apache.thrift.transport.TTransportException: java.net.SocketException: 断开的管道",
+      "dateCreated": "Aug 14, 2015 9:06:42 PM",
+      "dateStarted": "Aug 26, 2015 3:22:42 PM",
+      "dateFinished": "Aug 26, 2015 3:22:42 PM",
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:221)\norg.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:93)\norg.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:212)\norg.apache.zeppelin.scheduler.Job.run(Job.java:170)\norg.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:296)\njava.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)\njava.util.concurrent.FutureTask.run(FutureTask.java:262)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:178)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:292)\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)\njava.lang.Thread.run(Thread.java:745)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import java.io.File\nimport scala.io.Source\nimport com.alibaba.fastjson.{JSONObject, JSON, JSONWriter}\n\nval conf \u003d JSON.parseObject(Source.fromFile(\"/home/pipeline/scorer-newdic-batch.json\").getLines().mkString)\nval mapper \u003d conf.getJSONObject(\"storage\").getString(\"path\")\nval typer \u003d conf.getJSONObject(\"storage\").getString(\"type\")\nz.angularBind(\"ee\", mapper)\nval jsonString \u003d JSON.toJSONString(conf);",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1439961484162_2120218927",
+      "id": "20150819-131804_1491242341",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "import java.io.File\nimport scala.io.Source\n\u003cconsole\u003e:54: error: object alibaba is not a member of package com\n       import com.alibaba.fastjson.{JSONObject, JSON, JSONWriter}\n                  ^\n"
+      },
+      "dateCreated": "Aug 19, 2015 1:18:04 PM",
+      "dateStarted": "Sep 9, 2015 10:51:14 AM",
+      "dateFinished": "Sep 9, 2015 10:51:14 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%angular\n\u003cinput style\u003d\"width:600px\"type\u003d\"text\" placeholder\u003d\"Remark the first figure!\"  class\u003d\"form-control\" ng-model\u003d\"ee\"\u003e\u003c/input\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1440559237060_-1756814104",
+      "id": "20150826-112037_288759682",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "\u003cinput style\u003d\"width:600px\"type\u003d\"text\" placeholder\u003d\"Remark the first figure!\"  class\u003d\"form-control\" ng-model\u003d\"ee\"\u003e\u003c/input\n"
+      },
+      "dateCreated": "Aug 26, 2015 11:20:37 AM",
+      "dateStarted": "Aug 26, 2015 3:22:28 PM",
+      "dateFinished": "Aug 26, 2015 3:22:31 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val aa \u003d z.angular(\"ee\").toString\nval conf \u003d JSON.parseObject(Source.fromFile(\"/home/pipeline/jzyconf-dic-batch.json\").getLines().mkString)\nval str1 \u003d conf.getJSONObject(\"mapper\").toString\nval str2 \u003d conf.getJSONObject(\"storage\").getString(\"type\")",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1440560024648_865765215",
+      "id": "20150826-113344_35067049",
+      "result": "org.apache.thrift.transport.TTransportException: java.net.SocketException: 断开的管道",
+      "dateCreated": "Aug 26, 2015 11:33:44 AM",
+      "dateStarted": "Aug 26, 2015 3:22:43 PM",
+      "dateFinished": "Aug 26, 2015 3:22:44 PM",
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:221)\norg.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:93)\norg.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:212)\norg.apache.zeppelin.scheduler.Job.run(Job.java:170)\norg.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:296)\njava.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)\njava.util.concurrent.FutureTask.run(FutureTask.java:262)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:178)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:292)\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)\njava.lang.Thread.run(Thread.java:745)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val text \u003d \"{\\\"name\\\":\\\"name1\\\", \\\"age\\\":55}\"\nval mapper \u003d \"{\"+\"\\\"mapper\\\":\"+ str1 +\",\" + \"\\\"storage\\\":\" + \"{\"+ \"\\\"path\\\":\"+ \"\\\"\"+aa+\"\\\",\" + \"\\\"type\\\":\" +\"\\\"\"+ str2+\"\\\"\"+\"}}\"\nval json \u003d JSON.parseObject(mapper)",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1439801106893_-994794536",
+      "id": "20150817-164506_1999610556",
+      "result": "org.apache.thrift.transport.TTransportException: java.net.SocketException: 断开的管道",
+      "dateCreated": "Aug 17, 2015 4:45:06 PM",
+      "dateStarted": "Aug 26, 2015 3:22:44 PM",
+      "dateFinished": "Aug 26, 2015 3:22:44 PM",
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:221)\norg.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:93)\norg.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:212)\norg.apache.zeppelin.scheduler.Job.run(Job.java:170)\norg.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:296)\njava.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)\njava.util.concurrent.FutureTask.run(FutureTask.java:262)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:178)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:292)\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)\njava.lang.Thread.run(Thread.java:745)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val a \u003d \"a,d,v,g,d,s,c,d,e,t\"\nval b \u003dif( a.split(\",\").contains(\"v\")){\n    a.filter(u \u003d\u003eu.contains(\"v\"))+\"dddddd\"}else{\n        a\n    }\n    ",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1439804489993_-1426163465",
+      "id": "20150817-174129_282507158",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "a: String \u003d a,d,v,g,d,s,c,d,e,t\n\u003cconsole\u003e:34: error: value contains is not a member of Char\n           a.filter(u \u003d\u003eu.contains(\"v\"))+\"dddddd\"}else{\n                          ^\n"
+      },
+      "dateCreated": "Aug 17, 2015 5:41:29 PM",
+      "dateStarted": "Sep 7, 2015 5:28:42 PM",
+      "dateFinished": "Sep 7, 2015 5:28:42 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import java.io.File\nimport org.apache.commons.io.FileUtils\nimport org.apache.spark.Logging\nimport collection.JavaConversions._\n  def recursiveListFiles(f: File): Array[File] \u003d {\n    val these \u003d f.listFiles\n    these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)\n  }\n    def readFileToString(fileName: String): Option[String] \u003d {\n    \n      val file \u003d new File(fileName)\n      val lines \u003d FileUtils.readFileToString(file)\n      Some(lines)\n    \n  }\n    def readFileToLines(fileName: String, delete: Boolean \u003d false): Option[Array[String]] \u003d {\n      val file \u003d new File(fileName)\n      val lines \u003d FileUtils.readLines(file).toList.toArray\n      Some(lines)\n  }\nval files \u003d new File(\"/home/pipeline/benchmark\")\nval rawFiles \u003d recursiveListFiles(files).map(_.toString).filter(_.takeRight(4)\u003d\u003d \".raw\").filter(_.contains(\"en_us\"))\n\nval inputRootDir \u003d new File(\"/home/pipeline/dataset/\")\n\nval refineLangDir \u003d inputRootDir.listFiles.map(_.toString).filter(_.contains(\"en_us\")).map(new File(_))\nval scpFileList \u003d refineLangDir.flatMap(recursiveListFiles(_)).map(_.toString).filter(f\u003d\u003ef.contains(\".scp\"))\nval spokenLines \u003d scpFileList.flatMap(readFileToLines(_).get).map(_.split(\",\"))\nval spokenText \u003d spokenLines.map(line \u003d\u003e (line.map(_.trim.split(\" \")(0).trim).mkString, line.map(_.split(\" \").drop(1).mkString(\" \")).mkString)).toMap\nval fileset \u003d spokenText.map{\n  case(key,text) \u003d\u003e(key,\n    FileUtils.readFileToByteArray(new File(rawFiles.filter(_.contains(key)).mkString)),\n    text\n    )}.toArray",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1439962462301_-1594707371",
+      "id": "20150819-133422_1286277824",
+      "result": "org.apache.thrift.transport.TTransportException: java.net.SocketException: 断开的管道",
+      "dateCreated": "Aug 19, 2015 1:34:22 PM",
+      "dateStarted": "Aug 26, 2015 3:22:45 PM",
+      "dateFinished": "Aug 26, 2015 3:22:46 PM",
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:221)\norg.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:93)\norg.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:212)\norg.apache.zeppelin.scheduler.Job.run(Job.java:170)\norg.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:296)\njava.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)\njava.util.concurrent.FutureTask.run(FutureTask.java:262)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:178)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:292)\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)\njava.lang.Thread.run(Thread.java:745)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sh\npython /home/pipeline/benchmark-ft/benchmark2/dataset/re_make_dict.py",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1440129731630_-785839799",
+      "id": "20150821-120211_144325048",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "Process exited with an error: 1 (Exit value: 1)"
+      },
+      "dateCreated": "Aug 21, 2015 12:02:11 PM",
+      "dateStarted": "Sep 9, 2015 5:36:35 PM",
+      "dateFinished": "Sep 9, 2015 5:36:39 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import java.io.File\nimport org.apache.commons.io.FileUtils\nimport org.apache.spark.Logging\n\nimport collection.JavaConversions._\nimport org.apache.commons.io.FileUtils\ndef readFileToLines(fileName: String): Option[Array[String]] \u003d {\n    val file \u003d new File(fileName)\n    val lines \u003d FileUtils.readLines(file).toList.toArray\n    Some(lines)\n}\n  def recursiveListFiles(f: File): Array[File] \u003d {\n    val these \u003d f.listFiles\n    these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)\n  }\nval inputRootDir \u003d new File(\"/home/pipeline/dataset\")\nval refinePhoneDir \u003d inputRootDir.listFiles.map(_.toString).filter(_.contains(\"en_us\")).filter(_.contains(\"phone\")).map(new File(_)).flatMap(recursiveListFiles(_)).map(_.toString).filter(f\u003d\u003ef.contains(\".scp\")).toIterator\nfor (i\u003c-refinePhoneDir){\n   val addName \u003d i.split(\"/\").last.split(\"_\").last.split(\u0027.\u0027)(0)\n   println(readFileToLines(i).get.map(_.split(\",\")).map(line \u003d\u003e (addName+line.map(_.trim.split(\" \")(0).trim).mkString, line.map(_.split(\" \").drop(1).mkString(\" \")).mkString)).toMap)\n}\n\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1440145964368_1287258585",
+      "id": "20150821-163244_790162063",
+      "result": "org.apache.thrift.transport.TTransportException: java.net.SocketException: 断开的管道",
+      "dateCreated": "Aug 21, 2015 4:32:44 PM",
+      "dateStarted": "Aug 26, 2015 3:22:46 PM",
+      "dateFinished": "Aug 26, 2015 3:22:47 PM",
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:221)\norg.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:93)\norg.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:212)\norg.apache.zeppelin.scheduler.Job.run(Job.java:170)\norg.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:296)\njava.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)\njava.util.concurrent.FutureTask.run(FutureTask.java:262)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:178)\njava.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:292)\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)\njava.lang.Thread.run(Thread.java:745)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1441076297733_-1455374137",
+      "id": "20150901-105817_1406295025",
+      "dateCreated": "Sep 1, 2015 10:58:17 AM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Function test",
+  "id": "2AU4WS98S",
+  "angularObjects": {},
+  "config": {
+    "looknfeel": "default"
+  },
+  "info": {}
+}

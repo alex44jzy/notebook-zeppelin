@@ -1,0 +1,117 @@
+{
+  "paragraphs": [
+    {
+      "text": "%angular\n\u003cstyle\u003e\n  .toggler {\n    width: 500px;\n    height: 200px;\n  }\n  #button {\n    padding: .5em 1em;\n    text-decoration: none;\n  }\n  #effect {\n    position: relative;\n    width: 240px;\n    height: 135px;\n    padding: 0.4em;\n  }\n  #effect h3 {\n    margin: 0;\n    padding: 0.4em;\n    text-align: center;\n  }\n  \u003c/style\u003e\n  \u003cscript\u003e\n  $(function() {\n    // run the currently selected effect\n    function runEffect() {\n      // get effect type from\n      var selectedEffect \u003d $( \"#effectTypes\" ).val();\n \n      // most effect types need no options passed by default\n      var options \u003d {};\n      // some effects have required parameters\n      if ( selectedEffect \u003d\u003d\u003d \"scale\" ) {\n        options \u003d { percent: 0 };\n      } else if ( selectedEffect \u003d\u003d\u003d \"size\" ) {\n        options \u003d { to: { width: 200, height: 60 } };\n      }\n \n      // run the effect\n      $( \"#effect\" ).toggle( selectedEffect, options, 500 );\n    };\n \n    // set effect from select menu value\n    $( \"#button\" ).click(function() {\n      runEffect();\n    });\n  });\n  \u003c/script\u003e\n\u003cdiv class\u003d\"toggler\"\u003e\n  \u003cdiv id\u003d\"effect\" class\u003d\"ui-widget-content ui-corner-all\"\u003e\n    \u003ch3 class\u003d\"ui-widget-header ui-corner-all\"\u003eToggle\u003c/h3\u003e\n    \u003cp\u003e\n      Etiam libero neque, luctus a, eleifend nec, semper at, lorem. Sed pede. Nulla lorem metus, adipiscing ut, luctus sed, hendrerit vitae, mi.\n    \u003c/p\u003e\n  \u003c/div\u003e\n\u003c/div\u003e\n \n\u003cselect name\u003d\"effects\" id\u003d\"effectTypes\"\u003e\n  \u003coption value\u003d\"blind\"\u003eBlind\u003c/option\u003e\n  \u003coption value\u003d\"bounce\"\u003eBounce\u003c/option\u003e\n  \u003coption value\u003d\"clip\"\u003eClip\u003c/option\u003e\n  \u003coption value\u003d\"drop\"\u003eDrop\u003c/option\u003e\n  \u003coption value\u003d\"explode\"\u003eExplode\u003c/option\u003e\n  \u003coption value\u003d\"fold\"\u003eFold\u003c/option\u003e\n  \u003coption value\u003d\"highlight\"\u003eHighlight\u003c/option\u003e\n  \u003coption value\u003d\"puff\"\u003ePuff\u003c/option\u003e\n  \u003coption value\u003d\"pulsate\"\u003ePulsate\u003c/option\u003e\n  \u003coption value\u003d\"scale\"\u003eScale\u003c/option\u003e\n  \u003coption value\u003d\"shake\"\u003eShake\u003c/option\u003e\n  \u003coption value\u003d\"size\"\u003eSize\u003c/option\u003e\n  \u003coption value\u003d\"slide\"\u003eSlide\u003c/option\u003e\n\u003c/select\u003e\n \n\u003cbutton id\u003d\"button\" class\u003d\"ui-state-default ui-corner-all\"\u003eRun Effect\u003c/button\u003e",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1440580347530_-964741330",
+      "id": "20150826-171227_1317437561",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "\u003cstyle\u003e\n  .toggler {\n    width: 500px;\n    height: 200px;\n  }\n  #button {\n    padding: .5em 1em;\n    text-decoration: none;\n  }\n  #effect {\n    position: relative;\n    width: 240px;\n    height: 135px;\n    padding: 0.4em;\n  }\n  #effect h3 {\n    margin: 0;\n    padding: 0.4em;\n    text-align: center;\n  }\n  \u003c/style\u003e\n  \u003cscript\u003e\n  $(function() {\n    // run the currently selected effect\n    function runEffect() {\n      // get effect type from\n      var selectedEffect \u003d $( \"#effectTypes\" ).val();\n \n      // most effect types need no options passed by default\n      var options \u003d {};\n      // some effects have required parameters\n      if ( selectedEffect \u003d\u003d\u003d \"scale\" ) {\n        options \u003d { percent: 0 };\n      } else if ( selectedEffect \u003d\u003d\u003d \"size\" ) {\n        options \u003d { to: { width: 200, height: 60 } };\n      }\n \n      // run the effect\n      $( \"#effect\" ).toggle( selectedEffect, options, 500 );\n    };\n \n    // set effect from select menu value\n    $( \"#button\" ).click(function() {\n      runEffect();\n    });\n  });\n  \u003c/script\u003e\n\u003cdiv class\u003d\"toggler\"\u003e\n  \u003cdiv id\u003d\"effect\" class\u003d\"ui-widget-content ui-corner-all\"\u003e\n    \u003ch3 class\u003d\"ui-widget-header ui-corner-all\"\u003eToggle\u003c/h3\u003e\n    \u003cp\u003e\n      Etiam libero neque, luctus a, eleifend nec, semper at, lorem. Sed pede. Nulla lorem metus, adipiscing ut, luctus sed, hendrerit vitae, mi.\n    \u003c/p\u003e\n  \u003c/div\u003e\n\u003c/div\u003e\n \n\u003cselect name\u003d\"effects\" id\u003d\"effectTypes\"\u003e\n  \u003coption value\u003d\"blind\"\u003eBlind\u003c/option\u003e\n  \u003coption value\u003d\"bounce\"\u003eBounce\u003c/option\u003e\n  \u003coption value\u003d\"clip\"\u003eClip\u003c/option\u003e\n  \u003coption value\u003d\"drop\"\u003eDrop\u003c/option\u003e\n  \u003coption value\u003d\"explode\"\u003eExplode\u003c/option\u003e\n  \u003coption value\u003d\"fold\"\u003eFold\u003c/option\u003e\n  \u003coption value\u003d\"highlight\"\u003eHighlight\u003c/option\u003e\n  \u003coption value\u003d\"puff\"\u003ePuff\u003c/option\u003e\n  \u003coption value\u003d\"pulsate\"\u003ePulsate\u003c/option\u003e\n  \u003coption value\u003d\"scale\"\u003eScale\u003c/option\u003e\n  \u003coption value\u003d\"shake\"\u003eShake\u003c/option\u003e\n  \u003coption value\u003d\"size\"\u003eSize\u003c/option\u003e\n  \u003coption value\u003d\"slide\"\u003eSlide\u003c/option\u003e\n\u003c/select\u003e\n \n\u003cbutton id\u003d\"button\" class\u003d\"ui-state-default ui-corner-all\"\u003eRun Effect\u003c/button\u003e"
+      },
+      "dateCreated": "Aug 26, 2015 5:12:27 PM",
+      "dateStarted": "Aug 26, 2015 5:12:44 PM",
+      "dateFinished": "Aug 26, 2015 5:12:44 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import java.util.{Date, Locale} \nimport java.text.DateFormat  \nimport java.text.DateFormat._  \nval date \u003d new Date \nval now \u003d date.toString.split(\" \").dropRight(2).drop(1).mkString(\"-\")  \n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1440751030346_570365243",
+      "id": "20150828-163710_254613242",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "import java.util.{Date, Locale}\nimport java.text.DateFormat\nimport java.text.DateFormat._\ndate: java.util.Date \u003d Wed Sep 16 10:54:05 CST 2015\nnow: String \u003d Sep-16-10:54:05\n"
+      },
+      "dateCreated": "Aug 28, 2015 4:37:10 PM",
+      "dateStarted": "Sep 16, 2015 10:54:05 AM",
+      "dateFinished": "Sep 16, 2015 10:54:05 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%angular\n\u003cdiv class\u003d\"browse-wrap\"\u003e\n    \u003cdiv class\u003d\"title\"\u003eChoose a file to upload\u003c/div\u003e\n    \u003cinput type\u003d\"file\" name\u003d\"upload\" class\u003d\"upload\" title\u003d\"Choose a file to upload\"\u003e\n\u003c/div\u003e\n\u003cspan class\u003d\"upload-path\"\u003e\u003c/span\u003e\n\u003cscript type\u003d\"text/javascript\"\u003e\n$(\u0027input[type\u003d\"file\"]\u0027).change(function(){\n\n  var f \u003d this.files[0];  \n  var name \u003d f.name;\n\n  $(this).closest(\u0027.browse-wrap\u0027).next(\u0027.upload-path\u0027).text(name);\n\n});\n\u003c/script\u003e",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442372045099_-1911073477",
+      "id": "20150916-105405_1548703563",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "\u003cdiv class\u003d\"browse-wrap\"\u003e\n    \u003cdiv class\u003d\"title\"\u003eChoose a file to upload\u003c/div\u003e\n    \u003cinput type\u003d\"file\" name\u003d\"upload\" class\u003d\"upload\" title\u003d\"Choose a file to upload\"\u003e\n\u003c/div\u003e\n\u003cspan class\u003d\"upload-path\"\u003e\u003c/span\u003e\n\u003cscript type\u003d\"text/javascript\"\u003e\n$(\u0027input[type\u003d\"file\"]\u0027).change(function(){\n\n  var f \u003d this.files[0];  \n  var name \u003d f.name;\n\n  $(this).closest(\u0027.browse-wrap\u0027).next(\u0027.upload-path\u0027).text(name);\n\n});\n\u003c/script\u003e"
+      },
+      "dateCreated": "Sep 16, 2015 10:54:05 AM",
+      "dateStarted": "Sep 16, 2015 11:30:53 AM",
+      "dateFinished": "Sep 16, 2015 11:30:53 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1442373582568_-1411306035",
+      "id": "20150916-111942_1478330142",
+      "dateCreated": "Sep 16, 2015 11:19:42 AM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "JQuery Test",
+  "id": "2AXQBPHJ5",
+  "angularObjects": {},
+  "config": {
+    "looknfeel": "default"
+  },
+  "info": {}
+}

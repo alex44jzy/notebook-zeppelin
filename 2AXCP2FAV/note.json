@@ -1,0 +1,400 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n#Scorer Visualization in Zeppelin Wiki:#\n+ 部署在lls6服务器，[点击访问](lls6:8090)。支持interpret方式有``%spark(spark)``,``%sql(sql)``,``%pyspark(spark python API)``,``%angular(angular等html)``,``%sh(shell脚本)``等。\n+ zeppelin对angular的支持，绑定数据和特征选择模块做了三个自动模块分别为\n    + HDFS打分结果路径填写，点击``submit``提交路径绑定在输入框下方，点击`+`添加另一打分结果，点击`-`去除添加。\n    + 选取需要统计的打分特征，如overall(默认)，pronunciation，fluency……\n    + 备注打分曲线的备注名。\n+ 绑定成功后，运行后结果自动统计，运行快捷键为**`shift+enter`**。\n+ 进行打分分布可视化,如果点选了多组比较，可点击右上方的选项选择需要的曲线。\n#####**TODO:**\n+ ~~多种模型比较。~~\n+ 打分文件选取自动化。\n+ spark submit打分命令的自动化。\n\n\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": true
+      },
+      "settings": {
+        "params": {
+          "choose the mini value": ""
+        },
+        "forms": {}
+      },
+      "jobName": "paragraph_1438843936710_2018225841",
+      "id": "20150806-145216_1712273470",
+      "result": {
+        "code": "SUCCESS",
+        "type": "HTML",
+        "msg": "\u003ch1\u003eScorer Visualization in Zeppelin Wiki:\u003c/h1\u003e\n\u003cul\u003e\n\u003cli\u003e部署在lls6服务器，\u003ca href\u003d\"lls6:8090\"\u003e点击访问\u003c/a\u003e。支持interpret方式有\u003ccode\u003e%spark(spark)\u003c/code\u003e,\u003ccode\u003e%sql(sql)\u003c/code\u003e,\u003ccode\u003e%pyspark(spark python API)\u003c/code\u003e,\u003ccode\u003e%angular(angular等html)\u003c/code\u003e,\u003ccode\u003e%sh(shell脚本)\u003c/code\u003e等。\u003c/li\u003e\n\u003cli\u003ezeppelin对angular的支持，绑定数据和特征选择模块做了三个自动模块分别为\u003cul\u003e\n\u003cli\u003eHDFS打分结果路径填写，点击\u003ccode\u003esubmit\u003c/code\u003e提交路径绑定在输入框下方，点击\u003ccode\u003e+\u003c/code\u003e添加另一打分结果，点击\u003ccode\u003e-\u003c/code\u003e去除添加。\u003c/li\u003e\n\u003cli\u003e选取需要统计的打分特征，如overall(默认)，pronunciation，fluency……\u003c/li\u003e\n\u003cli\u003e备注打分曲线的备注名。\u003c/li\u003e\n\u003c/ul\u003e\n\u003c/li\u003e\n\u003cli\u003e绑定成功后，运行后结果自动统计，运行快捷键为\u003cstrong\u003e\u003ccode\u003eshift+enter\u003c/code\u003e\u003c/strong\u003e。\u003c/li\u003e\n\u003cli\u003e进行打分分布可视化,如果点选了多组比较，可点击右上方的选项选择需要的曲线。\u003ch5\u003e\u003cstrong\u003eTODO:\u003c/strong\u003e\u003c/h5\u003e\n\u003c/li\u003e\n\u003cli\u003e\u003cs\u003e多种模型比较。\u003c/s\u003e\u003c/li\u003e\n\u003cli\u003e打分文件选取自动化。\u003c/li\u003e\n\u003cli\u003espark submit打分命令的自动化。\u003c/li\u003e\n\u003c/ul\u003e\n"
+      },
+      "dateCreated": "Aug 6, 2015 2:52:16 PM",
+      "dateStarted": "Aug 14, 2015 1:36:50 PM",
+      "dateFinished": "Aug 14, 2015 1:36:51 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%angular\n\u003cdiv class\u003d\"row\" style\u003d\"padding:20px 20px 20px 20px; width:1000px\"\u003e\n    \u003ch1 style\u003d\"font-size:28px\"\u003eInput the scores result sequence file in the HDFS\u003c/h1\u003e\n            \u003cdiv class\u003d\"input-group input-group-sm col-md-12\"\u003e\n                \u003cspan class\u003d\"input-group-addon\" \u003ePath1:\u003c/span\u003e\n                \u003cinput  ng-model\u003d\"path1\" ng-init\u003d\"path1\u003d\u0027hdfs://llscluster/tmp/\u0027\" style\u003d\"width:600px; height:37px; font-size:17px\"\u003e\u003c/input\u003e\n                \u003cbutton class\u003d\"btn btn-success\" ng-click\u003d\"confirmPath1\u003dpath1\"\u003esubmit\u003c/button\u003e\n                \u003cbutton class\u003d\"btn btn-info\" ng-show\u003d\"add \u003d\u003d false\" ng-click\u003d\"add \u003d true\" \u003e\u003ci class\u003d\"glyphicon glyphicon-plus\"\u003e\u003c/i\u003e\u003c/button\u003e\n                \u003cbutton class\u003d\"btn btn-danger\" ng-init\u003d\"add\u003dtrue\" ng-show\u003d\"add \u003d\u003d true\" ng-click\u003d\"add \u003d false\"\u003e\u003ci class\u003d\"glyphicon glyphicon-minus\"\u003e\u003c/i\u003e\u003c/button\u003e\n            \u003c/div\u003e\n            \u003ch4\u003eSubmit {{confirmPath1}}\u003c/h4\u003e\n            \u003cdiv class\u003d\"input-group input-group-sm\" ng-show\u003d\"add\"\u003e\n                \u003cspan class\u003d\"input-group-addon\"\u003ePath2:\u003c/span\u003e\n                \u003cinput ng-model\u003d\"path2\" ng-init\u003d\"path2\u003d\u0027hdfs://llscluster/tmp/\u0027\" style\u003d\"width:600px; height:37px; font-size:17px\"\u003e\u003c/input\u003e\n                \u003cbutton class\u003d\"btn btn-success\" ng-click\u003d\"confirmPath2\u003dpath2\"\u003esubmit\u003c/button\u003e\n            \u003c/div\u003e\n            \u003ch4 ng-show\u003d\"add\" ng-if\u003d\"add\" ng-init\u003d\" \"\u003eSubmit {{confirmPath2}}\u003c/h4\u003e\n\u003c/div\u003e\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1438659487384_-1467553772",
+      "id": "20150804-113807_2080761653",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "\u003cdiv class\u003d\"row\" style\u003d\"padding:20px 20px 20px 20px; width:1000px\"\u003e\n    \u003ch1 style\u003d\"font-size:28px\"\u003eInput the scores result sequence file in the HDFS\u003c/h1\u003e\n            \u003cdiv class\u003d\"input-group input-group-sm col-md-12\"\u003e\n                \u003cspan class\u003d\"input-group-addon\" \u003ePath1:\u003c/span\u003e\n                \u003cinput  ng-model\u003d\"path1\" ng-init\u003d\"path1\u003d\u0027hdfs://llscluster/tmp/\u0027\" style\u003d\"width:600px; height:37px; font-size:17px\"\u003e\u003c/input\u003e\n                \u003cbutton class\u003d\"btn btn-success\" ng-click\u003d\"confirmPath1\u003dpath1\"\u003esubmit\u003c/button\u003e\n                \u003cbutton class\u003d\"btn btn-info\" ng-show\u003d\"add \u003d\u003d false\" ng-click\u003d\"add \u003d true\" \u003e\u003ci class\u003d\"glyphicon glyphicon-plus\"\u003e\u003c/i\u003e\u003c/button\u003e\n                \u003cbutton class\u003d\"btn btn-danger\" ng-init\u003d\"add\u003dtrue\" ng-show\u003d\"add \u003d\u003d true\" ng-click\u003d\"add \u003d false\"\u003e\u003ci class\u003d\"glyphicon glyphicon-minus\"\u003e\u003c/i\u003e\u003c/button\u003e\n            \u003c/div\u003e\n            \u003ch4\u003eSubmit {{confirmPath1}}\u003c/h4\u003e\n            \u003cdiv class\u003d\"input-group input-group-sm\" ng-show\u003d\"add\"\u003e\n                \u003cspan class\u003d\"input-group-addon\"\u003ePath2:\u003c/span\u003e\n                \u003cinput ng-model\u003d\"path2\" ng-init\u003d\"path2\u003d\u0027hdfs://llscluster/tmp/\u0027\" style\u003d\"width:600px; height:37px; font-size:17px\"\u003e\u003c/input\u003e\n                \u003cbutton class\u003d\"btn btn-success\" ng-click\u003d\"confirmPath2\u003dpath2\"\u003esubmit\u003c/button\u003e\n            \u003c/div\u003e\n            \u003ch4 ng-show\u003d\"add\" ng-if\u003d\"add\" ng-init\u003d\" \"\u003eSubmit {{confirmPath2}}\u003c/h4\u003e\n\u003c/div\u003e\n"
+      },
+      "dateCreated": "Aug 4, 2015 11:38:07 AM",
+      "dateStarted": "Aug 25, 2015 6:56:18 PM",
+      "dateFinished": "Aug 25, 2015 6:56:19 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%angular\n    \u003ch2\u003eSelect the feature!\u003c/h2\u003e\n    \u003cpre \u003e{{radioModel || \" \"}}\u003c/pre\u003e\n\n    \u003cdiv class\u003d\"btn-group\"\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027overall\u0027\" \u003eoverall\u003c/label\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027pronunciation\u0027\" \u003epronunciation\u003c/label\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027fluency\u0027\" \u003efluency\u003c/label\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027accuracy\u0027\" \u003eaccuracy\u003c/label\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027integrity\u0027\" \u003eintegrity\u003c/label\u003e\n\u003c/div\u003e\n",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1438678366309_1652615460",
+      "id": "20150804-165246_1553949835",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "    \u003ch2\u003eSelect the feature!\u003c/h2\u003e\n    \u003cpre \u003e{{radioModel || \" \"}}\u003c/pre\u003e\n\n    \u003cdiv class\u003d\"btn-group\"\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027overall\u0027\" \u003eoverall\u003c/label\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027pronunciation\u0027\" \u003epronunciation\u003c/label\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027fluency\u0027\" \u003efluency\u003c/label\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027accuracy\u0027\" \u003eaccuracy\u003c/label\u003e\n        \u003clabel class\u003d\"btn btn-primary\" ng-model\u003d\"radioModel\" btn-radio\u003d\"\u0027integrity\u0027\" \u003eintegrity\u003c/label\u003e\n\u003c/div\u003e\n"
+      },
+      "dateCreated": "Aug 4, 2015 4:52:46 PM",
+      "dateStarted": "Aug 18, 2015 1:32:37 PM",
+      "dateFinished": "Aug 18, 2015 1:32:37 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%angular\n\u003ch2\u003eRemark the figures!\u003c/h2\u003e\n \n\u003cinput style\u003d\"width:200px\"type\u003d\"text\" placeholder\u003d\"Remark the first figure!\"  class\u003d\"form-control\" ng-model\u003d\"remark1\"\u003e\u003c/input\u003e\n\u003cinput style\u003d\"width:200px; position:relative; margin:5px 0px 0px 0px\" type\u003d\"text\" ng-show\u003d\"add\" placeholder\u003d\"Remark the second figure!\"  class\u003d\"form-control\" ng-model\u003d\"remark2\" /\u003e\u003ch4\u003eremark1:{{remark1}}\u003c/h4\u003e  \u003ch4 ng-show\u003d\"add\"\u003e remark2:{{remark2}}\u003c/h4\u003e",
+      "config": {
+        "colWidth": 4.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1438845271918_-1275897363",
+      "id": "20150806-151431_1459956675",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "\u003ch2\u003eRemark the figures!\u003c/h2\u003e\n \n\u003cinput style\u003d\"width:200px\"type\u003d\"text\" placeholder\u003d\"Remark the first figure!\"  class\u003d\"form-control\" ng-model\u003d\"remark1\"\u003e\u003c/input\u003e\n\u003cinput style\u003d\"width:200px; position:relative; margin:5px 0px 0px 0px\" type\u003d\"text\" ng-show\u003d\"add\" placeholder\u003d\"Remark the second figure!\"  class\u003d\"form-control\" ng-model\u003d\"remark2\" /\u003e\u003ch4\u003eremark1:{{remark1}}\u003c/h4\u003e  \u003ch4 ng-show\u003d\"add\"\u003e remark2:{{remark2}}\u003c/h4\u003e"
+      },
+      "dateCreated": "Aug 6, 2015 3:14:31 PM",
+      "dateStarted": "Aug 18, 2015 12:06:22 PM",
+      "dateFinished": "Aug 18, 2015 12:06:22 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val HDFSPath1 \u003d z.angular(\"confirmPath1\")\nval HDFSPath2 \u003d z.angular(\"confirmPath2\")\nval sdfsdf \u003d z.angular(\"radioModel\")\nval sdf \u003d z.angular(\"add\")\nval rem1 \u003d z.angular(\"remark1\")\nval rem2 \u003d z.angular(\"remark2\")",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "tableHide": false,
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1438685767711_1645769521",
+      "id": "20150804-185607_1445644765",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "HDFSPath1: Object \u003d hdfs://llscluster/tmp/sdfsdf\nHDFSPath2: Object \u003d hdfs://llscluster/tmp/sdfsd\nsdfsdf: Object \u003d overall\nsdf: Object \u003d true\nrem1: Object \u003d 1\nrem2: Object \u003d 2\n"
+      },
+      "dateCreated": "Aug 4, 2015 6:56:07 PM",
+      "dateStarted": "Aug 25, 2015 6:57:47 PM",
+      "dateFinished": "Aug 25, 2015 6:57:49 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\nz.load(\"com.alibaba:fastjson:1.2.6\")\nimport com.alibaba.fastjson.{JSONObject, JSON}",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "tableHide": false,
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1438595264805_1813344660",
+      "id": "20150803-174744_1501909282",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "res2: Iterable[String] \u003d Wrappers(com.alibaba:fastjson:1.2.6)\nimport com.alibaba.fastjson.{JSONObject, JSON}\n"
+      },
+      "dateCreated": "Aug 3, 2015 5:47:44 PM",
+      "dateStarted": "Aug 25, 2015 2:54:18 PM",
+      "dateFinished": "Aug 25, 2015 2:54:19 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\n//z.load(\"com.alibaba:fastjson:1.2.6\");\nval HDFSPath1 \u003d z.angular(\"confirmPath1\").toString\nval HDFSPath2 \u003d z.angular(\"confirmPath2\").toString\nval isDouble \u003d z.angular(\"add\").toString\nval feature \u003d z.angular(\"radioModel\").toString\nval rem1 \u003d z.angular(\"remark1\").toString\nval rem2 \u003d z.angular(\"remark2\").toString\nobject JSONHelper {\n  def getJSONObjectArray(json: JSONObject, key: String): Array[JSONObject] \u003d json.getJSONArray(key).toArray.map(_.asInstanceOf[JSONObject])\n  def getStringArray(json: JSONObject, key: String): Array[String] \u003d json.getJSONArray(key).toArray.map(_.toString)\n}//fastJson Helper\nif(isDouble\u003d\u003d\"true\"){\n    val a \u003d sc.sequenceFile[String,String](HDFSPath1).map{case(key,value)\u003d\u003e(key,JSON.parseObject(value).getDouble(feature),rem1)}\n    val b \u003d sc.sequenceFile[String,String](HDFSPath2).map{case(key,value)\u003d\u003e(key,JSON.parseObject(value).getDouble(feature),rem2)}\n    val c \u003d a.union(b)\n    val e \u003d c.toDF().registerTempTable(\"aaaa\")\n}else{\n    val f \u003d sc.sequenceFile[String,String](HDFSPath1).map{case(key,value)\u003d\u003e(key,JSON.parseObject(value).getDouble(feature),rem1)}\n    f.toDF().registerTempTable(\"aaaa\")\n}",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorHide": false,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1438565792113_1413270979",
+      "id": "20150803-093632_848067636",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "HDFSPath1: String \u003d hdfs://llscluster/tmp/zeppelin-notebook-test/test14\nHDFSPath2: String \u003d hdfs://llscluster/tmp/zeppelin-notebook-test/test13\nisDouble: String \u003d true\nfeature: String \u003d overall\nrem1: String \u003d 1\nrem2: String \u003d 2\ndefined module JSONHelper\n"
+      },
+      "dateCreated": "Aug 3, 2015 9:36:32 AM",
+      "dateStarted": "Aug 20, 2015 7:45:10 PM",
+      "dateFinished": "Aug 20, 2015 7:45:11 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "303vs400",
+      "text": "%sql select _2, _3, count(_2) from aaaa where _2 \u003c\u003d ${choose the maxi value} AND _2 \u003e\u003d ${choose the mini value} group by _2, _3 order by _2, _3\n\n",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "lineChart",
+          "height": 556.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "_2",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "c2",
+              "index": 2.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [
+            {
+              "name": "_3",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "scatter": {
+            "group": {
+              "name": "_3",
+              "index": 1.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "c2",
+              "index": 2.0,
+              "aggr": "sum"
+            },
+            "xAxis": {
+              "name": "_2",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "editorHide": false,
+        "title": true
+      },
+      "settings": {
+        "params": {
+          "choose the maxi value": "100",
+          "choose the mini value": "0"
+        },
+        "forms": {
+          "choose the mini value": {
+            "name": "choose the mini value",
+            "defaultValue": "",
+            "hidden": false
+          },
+          "choose the maxi value": {
+            "name": "choose the maxi value",
+            "defaultValue": "",
+            "hidden": false
+          }
+        }
+      },
+      "jobName": "paragraph_1438565809025_-1678019512",
+      "id": "20150803-093649_1284892243",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "_2\t_3\tc2\n0.0\t1\t125\n0.0\t2\t122\n0.1\t1\t14\n0.1\t2\t14\n0.2\t1\t8\n0.2\t2\t10\n0.3\t1\t10\n0.3\t2\t9\n0.4\t1\t9\n0.4\t2\t9\n0.5\t1\t5\n0.5\t2\t4\n0.6\t1\t1\n0.6\t2\t1\n0.7\t1\t4\n0.7\t2\t3\n0.8\t1\t5\n0.8\t2\t7\n0.9\t1\t5\n0.9\t2\t4\n1.0\t1\t4\n1.0\t2\t2\n1.1\t1\t7\n1.1\t2\t11\n1.2\t1\t6\n1.2\t2\t3\n1.3\t1\t4\n1.3\t2\t6\n1.4\t1\t4\n1.4\t2\t6\n1.5\t1\t2\n1.5\t2\t1\n1.6\t1\t3\n1.6\t2\t3\n1.7\t1\t2\n1.7\t2\t2\n1.8\t1\t4\n1.8\t2\t4\n1.9\t1\t2\n2.0\t1\t3\n2.0\t2\t4\n2.1\t1\t3\n2.1\t2\t1\n2.3\t1\t3\n2.3\t2\t4\n2.4\t1\t3\n2.4\t2\t3\n2.6\t1\t4\n2.6\t2\t4\n2.7\t1\t2\n2.8\t1\t4\n2.8\t2\t4\n2.9\t1\t1\n2.9\t2\t2\n3.0\t1\t1\n3.0\t2\t1\n3.1\t1\t1\n3.1\t2\t1\n3.2\t1\t6\n3.2\t2\t5\n3.3\t1\t2\n3.3\t2\t2\n3.4\t1\t1\n3.4\t2\t3\n3.5\t1\t5\n3.5\t2\t3\n3.6\t1\t2\n3.6\t2\t3\n3.7\t1\t3\n3.7\t2\t3\n3.8\t1\t2\n3.8\t2\t2\n3.9\t1\t2\n3.9\t2\t2\n4.0\t1\t3\n4.0\t2\t2\n4.1\t1\t2\n4.1\t2\t3\n4.2\t1\t7\n4.2\t2\t6\n4.3\t1\t4\n4.3\t2\t2\n4.4\t1\t3\n4.4\t2\t3\n4.5\t2\t1\n4.6\t1\t3\n4.7\t1\t2\n4.7\t2\t1\n4.8\t1\t2\n4.8\t2\t2\n4.9\t1\t1\n4.9\t2\t2\n5.1\t1\t5\n5.1\t2\t5\n5.2\t1\t2\n5.2\t2\t2\n5.3\t1\t2\n5.3\t2\t2\n5.4\t1\t3\n5.4\t2\t4\n5.5\t1\t2\n5.5\t2\t2\n5.6\t1\t3\n5.6\t2\t2\n5.7\t1\t1\n5.7\t2\t2\n5.8\t1\t1\n5.8\t2\t1\n5.9\t1\t2\n5.9\t2\t2\n6.0\t1\t4\n6.0\t2\t3\n6.1\t1\t4\n6.1\t2\t6\n6.2\t1\t1\n6.2\t2\t1\n6.3\t1\t3\n6.3\t2\t1\n6.4\t1\t4\n6.4\t2\t4\n6.5\t1\t3\n6.5\t2\t3\n6.6\t1\t1\n6.6\t2\t3\n6.7\t1\t2\n6.7\t2\t1\n6.8\t1\t1\n6.8\t2\t1\n6.9\t2\t1\n7.0\t1\t3\n7.0\t2\t5\n7.1\t1\t3\n7.1\t2\t2\n7.2\t1\t1\n7.2\t2\t2\n7.3\t1\t2\n7.3\t2\t1\n7.4\t1\t4\n7.4\t2\t4\n7.5\t1\t1\n7.5\t2\t1\n7.6\t1\t4\n7.6\t2\t4\n7.7\t1\t2\n7.7\t2\t2\n7.8\t1\t1\n7.9\t1\t4\n7.9\t2\t3\n8.0\t1\t1\n8.0\t2\t1\n8.1\t2\t1\n8.2\t1\t5\n8.2\t2\t3\n8.3\t1\t2\n8.3\t2\t4\n8.4\t1\t3\n8.4\t2\t3\n8.5\t1\t2\n8.5\t2\t1\n8.6\t1\t2\n8.6\t2\t3\n8.7\t1\t3\n8.7\t2\t2\n8.8\t1\t4\n8.8\t2\t3\n8.9\t1\t2\n8.9\t2\t3\n9.0\t1\t3\n9.0\t2\t6\n9.1\t1\t3\n9.1\t2\t2\n9.2\t1\t4\n9.2\t2\t2\n9.3\t1\t1\n9.3\t2\t2\n9.4\t1\t2\n9.4\t2\t1\n9.6\t1\t3\n9.6\t2\t4\n9.7\t1\t5\n9.7\t2\t2\n9.8\t1\t5\n9.8\t2\t6\n9.9\t1\t3\n9.9\t2\t2\n10.0\t1\t1\n10.0\t2\t2\n10.1\t1\t2\n10.1\t2\t2\n10.2\t1\t1\n10.3\t1\t2\n10.3\t2\t2\n10.4\t1\t1\n10.4\t2\t1\n10.5\t1\t1\n10.7\t2\t2\n10.8\t2\t1\n11.0\t1\t2\n11.0\t2\t2\n11.1\t1\t1\n11.2\t2\t1\n11.4\t1\t4\n11.4\t2\t3\n11.5\t1\t2\n11.5\t2\t1\n11.6\t1\t3\n11.6\t2\t2\n11.7\t1\t2\n11.7\t2\t3\n11.8\t1\t2\n11.8\t2\t1\n11.9\t1\t1\n11.9\t2\t1\n12.1\t2\t1\n12.3\t1\t1\n12.3\t2\t1\n12.4\t1\t1\n12.4\t2\t1\n12.6\t1\t1\n12.7\t1\t2\n12.7\t2\t2\n12.8\t2\t3\n12.9\t1\t2\n12.9\t2\t1\n13.0\t1\t1\n13.0\t2\t1\n13.1\t1\t2\n13.1\t2\t1\n13.2\t1\t1\n13.4\t1\t1\n13.4\t2\t1\n13.7\t2\t1\n13.8\t1\t2\n13.8\t2\t2\n13.9\t1\t1\n13.9\t2\t3\n14.1\t1\t1\n14.1\t2\t1\n14.2\t1\t2\n14.2\t2\t2\n14.3\t1\t2\n14.3\t2\t1\n14.6\t1\t3\n14.6\t2\t2\n14.7\t2\t2\n14.8\t1\t2\n14.8\t2\t3\n15.0\t1\t4\n15.0\t2\t3\n15.1\t1\t2\n15.1\t2\t2\n15.2\t1\t2\n15.3\t1\t2\n15.3\t2\t1\n15.6\t1\t4\n15.6\t2\t4\n15.9\t1\t2\n15.9\t2\t4\n16.0\t1\t2\n16.0\t2\t2\n16.1\t1\t2\n16.2\t1\t1\n16.2\t2\t2\n16.3\t1\t4\n16.3\t2\t3\n16.4\t1\t1\n16.4\t2\t1\n16.6\t1\t1\n16.6\t2\t1\n16.7\t1\t1\n16.8\t2\t1\n16.9\t1\t1\n16.9\t2\t1\n17.0\t2\t1\n17.2\t1\t2\n17.2\t2\t1\n17.3\t1\t2\n17.3\t2\t2\n17.4\t1\t2\n17.4\t2\t1\n17.5\t1\t7\n17.5\t2\t6\n17.6\t1\t4\n17.6\t2\t4\n17.7\t1\t5\n17.7\t2\t4\n17.8\t1\t8\n17.8\t2\t8\n17.9\t1\t3\n17.9\t2\t4\n18.0\t1\t3\n18.0\t2\t3\n18.1\t1\t1\n18.2\t1\t5\n18.2\t2\t5\n18.3\t1\t3\n18.3\t2\t6\n18.4\t1\t5\n18.4\t2\t2\n18.5\t1\t1\n18.5\t2\t3\n18.7\t1\t4\n18.7\t2\t5\n18.8\t1\t1\n18.8\t2\t1\n18.9\t1\t2\n18.9\t2\t1\n19.0\t1\t4\n19.0\t2\t6\n19.1\t1\t3\n19.1\t2\t3\n19.2\t1\t2\n19.2\t2\t2\n19.3\t1\t2\n19.3\t2\t2\n19.4\t1\t3\n19.4\t2\t5\n19.5\t1\t4\n19.5\t2\t4\n19.6\t1\t7\n19.6\t2\t3\n19.7\t1\t4\n19.7\t2\t3\n19.8\t1\t3\n19.8\t2\t4\n19.9\t1\t2\n19.9\t2\t1\n20.0\t1\t5\n20.0\t2\t2\n20.1\t1\t3\n20.1\t2\t5\n20.2\t1\t5\n20.2\t2\t7\n20.3\t1\t6\n20.3\t2\t7\n20.4\t1\t5\n20.4\t2\t3\n20.5\t1\t4\n20.5\t2\t2\n20.6\t1\t3\n20.6\t2\t1\n20.7\t1\t3\n20.7\t2\t3\n20.8\t1\t5\n20.8\t2\t7\n20.9\t1\t3\n20.9\t2\t1\n21.0\t1\t5\n21.0\t2\t3\n21.1\t1\t3\n21.1\t2\t6\n21.2\t1\t3\n21.2\t2\t4\n21.3\t1\t6\n21.3\t2\t6\n21.4\t1\t6\n21.4\t2\t3\n21.5\t1\t3\n21.5\t2\t3\n21.6\t1\t2\n21.6\t2\t3\n21.7\t1\t2\n21.7\t2\t2\n21.8\t1\t2\n21.8\t2\t2\n21.9\t1\t3\n21.9\t2\t2\n22.0\t2\t1\n22.1\t1\t1\n22.1\t2\t2\n22.2\t1\t3\n22.2\t2\t4\n22.3\t1\t1\n22.3\t2\t2\n22.4\t1\t5\n22.4\t2\t6\n22.5\t1\t3\n22.5\t2\t2\n22.6\t1\t4\n22.6\t2\t3\n22.7\t1\t5\n22.7\t2\t5\n22.8\t1\t2\n22.8\t2\t2\n22.9\t1\t3\n22.9\t2\t3\n23.0\t1\t1\n23.0\t2\t1\n23.1\t1\t5\n23.1\t2\t6\n23.2\t1\t5\n23.2\t2\t4\n23.3\t1\t1\n23.3\t2\t2\n23.4\t1\t1\n23.4\t2\t2\n23.5\t1\t3\n23.5\t2\t2\n23.6\t1\t1\n23.6\t2\t2\n23.7\t1\t4\n23.7\t2\t4\n23.8\t1\t5\n23.8\t2\t5\n23.9\t1\t5\n23.9\t2\t4\n24.0\t1\t3\n24.0\t2\t1\n24.1\t1\t3\n24.1\t2\t3\n24.2\t1\t3\n24.2\t2\t2\n24.3\t1\t3\n24.3\t2\t2\n24.4\t1\t3\n24.4\t2\t6\n24.5\t1\t5\n24.5\t2\t4\n24.6\t1\t3\n24.6\t2\t3\n24.7\t1\t2\n24.7\t2\t2\n24.8\t1\t2\n24.8\t2\t4\n24.9\t1\t1\n24.9\t2\t1\n25.0\t1\t3\n25.0\t2\t4\n25.1\t1\t5\n25.1\t2\t5\n25.2\t1\t2\n25.2\t2\t1\n25.3\t1\t5\n25.3\t2\t4\n25.4\t2\t1\n25.5\t1\t2\n25.5\t2\t2\n25.6\t1\t5\n25.6\t2\t2\n25.7\t1\t2\n25.7\t2\t2\n25.8\t1\t4\n25.8\t2\t2\n25.9\t1\t7\n25.9\t2\t6\n26.0\t1\t2\n26.0\t2\t4\n26.1\t1\t4\n26.1\t2\t1\n26.2\t1\t1\n26.2\t2\t4\n26.3\t1\t1\n26.3\t2\t2\n26.4\t1\t2\n26.4\t2\t1\n26.5\t1\t4\n26.5\t2\t3\n26.6\t1\t1\n26.6\t2\t5\n26.7\t1\t3\n26.7\t2\t4\n26.8\t1\t3\n26.8\t2\t2\n26.9\t1\t2\n26.9\t2\t5\n27.0\t1\t2\n27.1\t1\t3\n27.1\t2\t4\n27.2\t1\t4\n27.2\t2\t2\n27.3\t1\t3\n27.3\t2\t3\n27.4\t1\t3\n27.4\t2\t5\n27.5\t1\t4\n27.5\t2\t6\n27.6\t2\t1\n27.7\t1\t2\n27.8\t1\t3\n27.8\t2\t4\n27.9\t1\t1\n27.9\t2\t2\n28.0\t1\t3\n28.0\t2\t2\n28.1\t1\t1\n28.1\t2\t1\n28.2\t1\t3\n28.2\t2\t4\n28.3\t1\t2\n28.3\t2\t2\n28.4\t1\t3\n28.4\t2\t3\n28.5\t1\t2\n28.5\t2\t1\n28.6\t1\t5\n28.6\t2\t5\n28.7\t1\t1\n28.7\t2\t1\n28.8\t2\t2\n28.9\t1\t2\n28.9\t2\t2\n29.0\t1\t1\n29.0\t2\t1\n29.1\t1\t1\n29.1\t2\t1\n29.2\t1\t1\n29.3\t1\t3\n29.3\t2\t4\n29.4\t1\t2\n29.5\t1\t2\n29.5\t2\t2\n29.6\t1\t4\n29.6\t2\t5\n29.7\t1\t1\n29.7\t2\t2\n29.8\t1\t1\n29.9\t1\t2\n29.9\t2\t2\n30.0\t1\t3\n30.0\t2\t3\n30.1\t1\t2\n30.1\t2\t3\n30.2\t1\t2\n30.2\t2\t1\n30.3\t1\t3\n30.3\t2\t2\n30.4\t1\t2\n30.4\t2\t1\n30.6\t1\t4\n30.6\t2\t2\n30.7\t1\t1\n30.7\t2\t2\n30.8\t1\t2\n30.8\t2\t1\n30.9\t1\t1\n30.9\t2\t3\n31.0\t1\t1\n31.1\t1\t3\n31.1\t2\t4\n31.2\t2\t1\n31.3\t1\t3\n31.3\t2\t1\n31.4\t1\t2\n31.4\t2\t3\n31.5\t1\t1\n31.5\t2\t1\n31.6\t1\t1\n31.6\t2\t2\n31.7\t1\t6\n31.7\t2\t4\n31.8\t1\t4\n31.8\t2\t3\n31.9\t1\t5\n31.9\t2\t2\n32.0\t1\t3\n32.0\t2\t1\n32.1\t1\t4\n32.1\t2\t5\n32.2\t1\t5\n32.2\t2\t5\n32.3\t1\t1\n32.3\t2\t2\n32.4\t1\t3\n32.4\t2\t1\n32.5\t1\t1\n32.6\t2\t2\n32.7\t1\t2\n32.7\t2\t2\n32.8\t1\t1\n32.8\t2\t1\n32.9\t1\t1\n32.9\t2\t1\n33.0\t1\t5\n33.0\t2\t4\n33.1\t1\t2\n33.1\t2\t2\n33.2\t1\t5\n33.2\t2\t6\n33.3\t1\t2\n33.3\t2\t5\n33.4\t1\t2\n33.4\t2\t3\n33.5\t2\t1\n33.6\t1\t3\n33.6\t2\t3\n33.7\t1\t4\n33.7\t2\t5\n33.8\t1\t1\n33.8\t2\t2\n33.9\t1\t1\n34.0\t1\t3\n34.0\t2\t3\n34.1\t1\t5\n34.1\t2\t2\n34.2\t1\t7\n34.2\t2\t3\n34.3\t1\t2\n34.4\t1\t5\n34.4\t2\t3\n34.5\t1\t7\n34.5\t2\t7\n34.6\t1\t1\n34.6\t2\t1\n34.7\t1\t1\n34.7\t2\t2\n34.8\t1\t2\n34.8\t2\t5\n34.9\t1\t1\n34.9\t2\t1\n35.0\t1\t1\n35.0\t2\t1\n35.2\t1\t5\n35.2\t2\t3\n35.3\t1\t1\n35.3\t2\t1\n35.4\t1\t1\n35.4\t2\t1\n35.5\t1\t2\n35.5\t2\t2\n35.6\t1\t2\n35.6\t2\t3\n35.7\t1\t2\n35.7\t2\t1\n35.8\t1\t2\n35.8\t2\t3\n35.9\t1\t2\n35.9\t2\t1\n36.0\t1\t1\n36.0\t2\t3\n36.1\t1\t4\n36.1\t2\t2\n36.2\t1\t2\n36.2\t2\t1\n36.3\t1\t1\n36.3\t2\t4\n36.4\t1\t1\n36.4\t2\t2\n36.5\t1\t1\n36.5\t2\t2\n36.6\t1\t2\n36.6\t2\t5\n36.7\t1\t5\n36.7\t2\t2\n36.8\t1\t2\n36.8\t2\t3\n36.9\t1\t1\n36.9\t2\t1\n37.0\t1\t3\n37.0\t2\t2\n37.1\t1\t2\n37.1\t2\t2\n37.3\t1\t2\n37.3\t2\t3\n37.4\t1\t2\n37.4\t2\t3\n37.5\t1\t4\n37.5\t2\t2\n37.6\t1\t4\n37.6\t2\t4\n37.7\t1\t1\n37.8\t1\t4\n37.8\t2\t1\n37.9\t1\t1\n37.9\t2\t2\n38.0\t1\t3\n38.0\t2\t4\n38.1\t1\t5\n38.1\t2\t5\n38.2\t1\t5\n38.2\t2\t4\n38.3\t1\t5\n38.3\t2\t3\n38.4\t1\t2\n38.4\t2\t1\n38.5\t1\t1\n38.5\t2\t3\n38.6\t1\t2\n38.6\t2\t2\n38.7\t1\t3\n38.7\t2\t2\n38.9\t1\t2\n38.9\t2\t5\n39.0\t1\t3\n39.1\t1\t2\n39.1\t2\t2\n39.2\t1\t1\n39.2\t2\t1\n39.3\t1\t3\n39.3\t2\t2\n39.4\t1\t4\n39.4\t2\t2\n39.5\t1\t2\n39.5\t2\t2\n39.6\t1\t3\n39.6\t2\t4\n39.7\t1\t2\n39.7\t2\t4\n39.8\t1\t3\n39.8\t2\t1\n39.9\t1\t3\n39.9\t2\t1\n40.0\t1\t2\n40.0\t2\t4\n40.1\t1\t3\n40.1\t2\t2\n40.2\t1\t6\n40.2\t2\t6\n40.3\t1\t4\n40.3\t2\t6\n40.4\t1\t1\n40.4\t2\t2\n40.5\t1\t1\n40.5\t2\t1\n40.6\t1\t2\n40.6\t2\t2\n40.7\t1\t2\n40.7\t2\t1\n40.8\t2\t2\n40.9\t1\t2\n40.9\t2\t2\n41.0\t1\t4\n41.0\t2\t4\n41.1\t1\t3\n41.1\t2\t2\n41.2\t1\t3\n41.2\t2\t3\n41.3\t1\t6\n41.3\t2\t3\n41.4\t1\t2\n41.4\t2\t3\n41.5\t1\t1\n41.5\t2\t1\n41.6\t1\t4\n41.6\t2\t6\n41.7\t1\t4\n41.7\t2\t3\n41.8\t2\t1\n41.9\t1\t3\n41.9\t2\t5\n42.0\t1\t1\n42.0\t2\t1\n42.1\t1\t3\n42.1\t2\t3\n42.2\t1\t3\n42.2\t2\t2\n42.3\t1\t3\n42.3\t2\t4\n42.4\t1\t2\n42.4\t2\t2\n42.5\t1\t2\n42.5\t2\t2\n42.6\t1\t2\n42.6\t2\t3\n42.7\t1\t1\n42.7\t2\t2\n42.8\t1\t4\n42.8\t2\t4\n42.9\t1\t5\n42.9\t2\t5\n43.0\t1\t2\n43.0\t2\t1\n43.1\t1\t1\n43.1\t2\t2\n43.2\t1\t3\n43.2\t2\t4\n43.3\t1\t3\n43.3\t2\t2\n43.4\t1\t2\n43.4\t2\t1\n43.5\t1\t5\n43.5\t2\t2\n43.6\t1\t2\n43.6\t2\t3\n43.7\t1\t2\n43.7\t2\t1\n43.8\t1\t1\n43.8\t2\t3\n43.9\t1\t2\n43.9\t2\t2\n44.0\t1\t4\n44.0\t2\t4\n44.1\t1\t2\n44.2\t1\t4\n44.2\t2\t3\n44.3\t1\t5\n44.3\t2\t5\n44.4\t1\t6\n44.4\t2\t5\n44.5\t1\t3\n44.5\t2\t5\n44.6\t1\t3\n44.6\t2\t3\n44.7\t2\t2\n44.8\t1\t3\n44.8\t2\t3\n44.9\t1\t2\n44.9\t2\t1\n45.0\t1\t4\n45.0\t2\t4\n45.1\t1\t3\n45.1\t2\t4\n45.2\t1\t1\n45.2\t2\t1\n45.3\t1\t2\n45.3\t2\t1\n45.4\t1\t1\n45.4\t2\t3\n45.5\t1\t5\n45.5\t2\t5\n45.6\t1\t1\n45.6\t2\t1\n45.7\t1\t5\n45.7\t2\t3\n45.8\t1\t2\n45.8\t2\t3\n45.9\t1\t1\n45.9\t2\t1\n46.0\t1\t4\n46.0\t2\t3\n46.1\t1\t4\n46.1\t2\t3\n46.2\t1\t2\n46.3\t1\t3\n46.3\t2\t2\n46.4\t1\t4\n46.4\t2\t4\n46.5\t1\t3\n46.5\t2\t3\n46.6\t1\t2\n46.6\t2\t5\n46.7\t1\t4\n46.7\t2\t8\n46.8\t1\t1\n46.8\t2\t1\n46.9\t1\t3\n46.9\t2\t3\n47.0\t1\t3\n47.0\t2\t2\n47.1\t1\t2\n47.1\t2\t1\n47.2\t1\t4\n47.2\t2\t3\n47.3\t1\t3\n47.3\t2\t3\n47.4\t1\t3\n47.4\t2\t1\n47.5\t1\t7\n47.5\t2\t5\n47.6\t1\t2\n47.6\t2\t3\n47.7\t1\t4\n47.7\t2\t5\n47.8\t1\t3\n47.8\t2\t2\n47.9\t1\t5\n47.9\t2\t4\n48.0\t1\t5\n48.0\t2\t6\n48.1\t1\t3\n48.1\t2\t3\n48.2\t1\t4\n48.2\t2\t4\n48.3\t1\t7\n48.3\t2\t6\n48.4\t1\t3\n48.4\t2\t3\n48.5\t1\t4\n48.5\t2\t6\n48.6\t1\t2\n48.6\t2\t2\n48.7\t1\t3\n48.7\t2\t3\n48.8\t1\t5\n48.8\t2\t5\n48.9\t1\t4\n48.9\t2\t5\n49.0\t1\t2\n49.0\t2\t5\n49.1\t1\t1\n49.1\t2\t1\n49.2\t1\t4\n49.2\t2\t5\n49.3\t1\t4\n49.3\t2\t2\n49.4\t1\t3\n49.4\t2\t4\n49.5\t1\t3\n49.5\t2\t3\n49.6\t1\t2\n49.6\t2\t2\n49.7\t1\t1\n49.7\t2\t1\n49.8\t1\t4\n49.8\t2\t5\n49.9\t1\t4\n49.9\t2\t4\n50.0\t1\t3\n50.0\t2\t2\n50.1\t1\t4\n50.1\t2\t3\n50.2\t1\t4\n50.2\t2\t4\n50.3\t1\t1\n50.3\t2\t2\n50.4\t1\t2\n50.4\t2\t1\n50.5\t1\t3\n50.5\t2\t3\n50.6\t1\t3\n50.6\t2\t2\n50.7\t1\t3\n50.7\t2\t3\n50.8\t1\t4\n50.8\t2\t4\n50.9\t1\t6\n50.9\t2\t5\n51.0\t1\t4\n51.0\t2\t1\n51.1\t1\t6\n51.1\t2\t3\n51.2\t1\t1\n51.2\t2\t4\n51.3\t1\t3\n51.3\t2\t2\n51.4\t1\t2\n51.4\t2\t2\n51.5\t2\t1\n51.6\t1\t6\n51.6\t2\t6\n51.7\t1\t2\n51.8\t1\t1\n51.8\t2\t2\n51.9\t1\t2\n51.9\t2\t2\n52.0\t1\t2\n52.0\t2\t1\n52.1\t1\t3\n52.1\t2\t4\n52.2\t1\t2\n52.2\t2\t2\n52.3\t1\t3\n52.3\t2\t1\n52.4\t1\t1\n52.4\t2\t3\n52.6\t1\t1\n52.7\t1\t2\n52.7\t2\t1\n52.8\t1\t2\n52.8\t2\t2\n52.9\t2\t2\n53.0\t1\t3\n53.0\t2\t3\n53.1\t1\t4\n53.1\t2\t5\n53.2\t1\t2\n53.2\t2\t1\n53.3\t1\t3\n53.4\t1\t1\n53.4\t2\t2\n53.5\t1\t3\n53.5\t2\t2\n53.6\t1\t2\n53.6\t2\t1\n53.7\t1\t5\n53.7\t2\t8\n53.8\t1\t1\n53.8\t2\t1\n53.9\t1\t3\n53.9\t2\t3\n54.0\t1\t1\n54.0\t2\t1\n54.1\t1\t2\n54.1\t2\t2\n54.2\t1\t4\n54.2\t2\t4\n54.3\t1\t4\n54.3\t2\t3\n54.4\t1\t2\n54.4\t2\t1\n54.5\t1\t1\n54.5\t2\t2\n54.6\t1\t2\n54.6\t2\t4\n54.7\t1\t1\n54.7\t2\t1\n54.8\t1\t3\n54.8\t2\t2\n54.9\t1\t3\n54.9\t2\t2\n55.0\t1\t4\n55.0\t2\t1\n55.1\t1\t3\n55.1\t2\t2\n55.2\t1\t3\n55.2\t2\t2\n55.3\t1\t5\n55.3\t2\t7\n55.4\t1\t6\n55.4\t2\t6\n55.5\t1\t3\n55.5\t2\t3\n55.6\t1\t3\n55.6\t2\t3\n55.7\t1\t1\n55.7\t2\t1\n55.8\t1\t3\n55.8\t2\t2\n55.9\t1\t2\n56.0\t1\t1\n56.0\t2\t1\n56.1\t1\t1\n56.1\t2\t3\n56.2\t1\t4\n56.2\t2\t2\n56.3\t1\t4\n56.3\t2\t4\n56.4\t1\t2\n56.4\t2\t1\n56.5\t1\t1\n56.5\t2\t1\n56.6\t1\t1\n56.6\t2\t2\n56.7\t1\t1\n56.7\t2\t3\n56.8\t1\t3\n56.8\t2\t1\n56.9\t1\t2\n56.9\t2\t3\n57.0\t1\t2\n57.0\t2\t2\n57.1\t1\t6\n57.1\t2\t5\n57.2\t1\t4\n57.2\t2\t3\n57.3\t1\t2\n57.3\t2\t1\n57.4\t1\t1\n57.4\t2\t1\n57.5\t1\t3\n57.5\t2\t5\n57.6\t1\t1\n57.6\t2\t1\n57.7\t1\t5\n57.7\t2\t4\n57.8\t1\t3\n57.8\t2\t2\n57.9\t1\t1\n57.9\t2\t1\n58.0\t1\t2\n58.0\t2\t1\n58.1\t1\t2\n58.1\t2\t2\n58.2\t1\t3\n58.2\t2\t2\n58.3\t1\t3\n58.3\t2\t1\n58.5\t1\t3\n58.5\t2\t3\n58.6\t1\t1\n58.6\t2\t2\n58.7\t1\t2\n58.7\t2\t5\n58.8\t1\t1\n58.8\t2\t4\n58.9\t1\t1\n58.9\t2\t4\n59.0\t1\t3\n59.0\t2\t1\n59.1\t1\t3\n59.1\t2\t6\n59.2\t1\t1\n59.3\t1\t4\n59.3\t2\t4\n59.4\t2\t3\n59.5\t1\t6\n59.5\t2\t7\n59.6\t1\t2\n59.6\t2\t1\n59.7\t1\t2\n59.7\t2\t1\n59.8\t1\t5\n59.8\t2\t5\n59.9\t1\t3\n59.9\t2\t3\n60.0\t1\t5\n60.0\t2\t4\n60.1\t1\t1\n60.1\t2\t1\n60.2\t1\t4\n60.2\t2\t7\n60.3\t1\t6\n60.3\t2\t4\n60.4\t1\t7\n60.4\t2\t3\n60.5\t1\t3\n60.5\t2\t2\n60.6\t1\t9\n60.6\t2\t9\n60.7\t1\t2\n60.7\t2\t5\n60.8\t1\t5\n60.8\t2\t4\n60.9\t1\t8\n60.9\t2\t6\n61.0\t1\t13\n61.0\t2\t13\n61.1\t1\t4\n61.1\t2\t2\n61.2\t1\t6\n61.2\t2\t9\n61.3\t1\t7\n61.3\t2\t7\n61.4\t1\t2\n61.4\t2\t5\n61.5\t1\t6\n61.5\t2\t7\n61.6\t1\t10\n61.6\t2\t9\n61.7\t1\t3\n61.7\t2\t1\n61.8\t1\t6\n61.8\t2\t3\n61.9\t1\t1\n61.9\t2\t6\n62.0\t1\t6\n62.0\t2\t3\n62.1\t1\t3\n62.1\t2\t5\n62.2\t1\t8\n62.2\t2\t3\n62.3\t1\t3\n62.3\t2\t5\n62.4\t1\t4\n62.4\t2\t3\n62.5\t1\t6\n62.5\t2\t4\n62.6\t1\t8\n62.6\t2\t5\n62.7\t1\t9\n62.7\t2\t7\n62.8\t1\t8\n62.8\t2\t6\n62.9\t1\t5\n62.9\t2\t9\n63.0\t1\t5\n63.0\t2\t5\n63.1\t1\t8\n63.1\t2\t7\n63.2\t1\t9\n63.2\t2\t7\n63.3\t1\t9\n63.3\t2\t10\n63.4\t1\t8\n63.4\t2\t8\n63.5\t1\t4\n63.5\t2\t5\n63.6\t1\t6\n63.6\t2\t5\n63.7\t1\t5\n63.7\t2\t9\n63.8\t1\t7\n63.8\t2\t5\n63.9\t1\t2\n63.9\t2\t3\n64.0\t1\t11\n64.0\t2\t9\n64.1\t1\t8\n64.1\t2\t9\n64.2\t1\t6\n64.2\t2\t7\n64.3\t1\t4\n64.3\t2\t6\n64.4\t1\t10\n64.4\t2\t11\n64.5\t1\t4\n64.5\t2\t5\n64.6\t1\t2\n64.6\t2\t1\n64.7\t1\t7\n64.7\t2\t7\n64.8\t1\t7\n64.8\t2\t8\n64.9\t1\t5\n64.9\t2\t4\n65.0\t1\t10\n65.0\t2\t9\n65.1\t1\t7\n65.1\t2\t7\n65.2\t1\t8\n65.2\t2\t8\n65.3\t1\t15\n65.3\t2\t11\n65.4\t1\t5\n65.4\t2\t6\n65.5\t1\t5\n65.5\t2\t8\n65.6\t1\t9\n65.6\t2\t8\n65.7\t1\t12\n65.7\t2\t13\n65.8\t1\t10\n65.8\t2\t7\n65.9\t1\t3\n65.9\t2\t2\n66.0\t1\t3\n66.0\t2\t4\n66.1\t1\t8\n66.1\t2\t3\n66.2\t1\t4\n66.2\t2\t5\n66.3\t1\t9\n66.3\t2\t8\n66.4\t1\t8\n66.4\t2\t6\n66.5\t1\t8\n66.5\t2\t7\n66.6\t1\t2\n66.6\t2\t4\n66.7\t1\t5\n66.7\t2\t5\n66.8\t1\t10\n66.8\t2\t7\n66.9\t1\t5\n66.9\t2\t10\n67.0\t1\t10\n67.0\t2\t8\n67.1\t1\t13\n67.1\t2\t13\n67.2\t1\t8\n67.2\t2\t9\n67.3\t1\t10\n67.3\t2\t11\n67.4\t1\t10\n67.4\t2\t8\n67.5\t1\t16\n67.5\t2\t13\n67.6\t1\t6\n67.6\t2\t6\n67.7\t1\t13\n67.7\t2\t15\n67.8\t1\t7\n67.8\t2\t10\n67.9\t1\t21\n67.9\t2\t17\n68.0\t1\t9\n68.0\t2\t9\n68.1\t1\t17\n68.1\t2\t12\n68.2\t1\t6\n68.2\t2\t12\n68.3\t1\t13\n68.3\t2\t13\n68.4\t1\t10\n68.4\t2\t10\n68.5\t1\t4\n68.5\t2\t6\n68.6\t1\t10\n68.6\t2\t9\n68.7\t1\t9\n68.7\t2\t12\n68.8\t1\t11\n68.8\t2\t10\n68.9\t1\t8\n68.9\t2\t7\n69.0\t1\t15\n69.0\t2\t9\n69.1\t1\t11\n69.1\t2\t10\n69.2\t1\t8\n69.2\t2\t6\n69.3\t1\t8\n69.3\t2\t8\n69.4\t1\t9\n69.4\t2\t12\n69.5\t1\t10\n69.5\t2\t6\n69.6\t1\t8\n69.6\t2\t7\n69.7\t1\t13\n69.7\t2\t14\n69.8\t1\t13\n69.8\t2\t10\n69.9\t1\t8\n69.9\t2\t11\n70.0\t1\t11\n70.0\t2\t12\n70.1\t1\t10\n70.1\t2\t9\n70.2\t1\t11\n70.2\t2\t10\n70.3\t1\t8\n70.3\t2\t13\n70.4\t1\t12\n70.4\t2\t12\n70.5\t1\t7\n70.5\t2\t13\n70.6\t1\t15\n70.6\t2\t12\n70.7\t1\t14\n70.7\t2\t15\n70.8\t1\t12\n70.8\t2\t14\n70.9\t1\t16\n70.9\t2\t12\n71.0\t1\t16\n71.0\t2\t19\n71.1\t1\t18\n71.1\t2\t11\n71.2\t1\t10\n71.2\t2\t12\n71.3\t1\t16\n71.3\t2\t14\n71.4\t1\t18\n71.4\t2\t21\n71.5\t1\t22\n71.5\t2\t22\n71.6\t1\t15\n71.6\t2\t14\n71.7\t1\t14\n71.7\t2\t19\n71.8\t1\t18\n71.8\t2\t13\n71.9\t1\t24\n71.9\t2\t25\n72.0\t1\t14\n72.0\t2\t10\n72.1\t1\t17\n72.1\t2\t25\n72.2\t1\t17\n72.2\t2\t13\n72.3\t1\t9\n72.3\t2\t6\n72.4\t1\t11\n72.4\t2\t15\n72.5\t1\t12\n72.5\t2\t13\n72.6\t1\t19\n72.6\t2\t19\n72.7\t1\t12\n72.7\t2\t12\n72.8\t1\t12\n72.8\t2\t15\n72.9\t1\t19\n72.9\t2\t15\n73.0\t1\t15\n73.0\t2\t19\n73.1\t1\t16\n73.1\t2\t19\n73.2\t1\t17\n73.2\t2\t11\n73.3\t1\t13\n73.3\t2\t18\n73.4\t1\t20\n73.4\t2\t15\n73.5\t1\t8\n73.5\t2\t11\n73.6\t1\t17\n73.6\t2\t22\n73.7\t1\t23\n73.7\t2\t14\n73.8\t1\t18\n73.8\t2\t15\n73.9\t1\t19\n73.9\t2\t16\n74.0\t1\t16\n74.0\t2\t22\n74.1\t1\t23\n74.1\t2\t19\n74.2\t1\t19\n74.2\t2\t17\n74.3\t1\t24\n74.3\t2\t24\n74.4\t1\t23\n74.4\t2\t22\n74.5\t1\t17\n74.5\t2\t12\n74.6\t1\t17\n74.6\t2\t24\n74.7\t1\t16\n74.7\t2\t20\n74.8\t1\t28\n74.8\t2\t19\n74.9\t1\t19\n74.9\t2\t19\n75.0\t1\t21\n75.0\t2\t20\n75.1\t1\t23\n75.1\t2\t16\n75.2\t1\t14\n75.2\t2\t17\n75.3\t1\t16\n75.3\t2\t16\n75.4\t1\t23\n75.4\t2\t22\n75.5\t1\t27\n75.5\t2\t34\n75.6\t1\t21\n75.6\t2\t22\n75.7\t1\t28\n75.7\t2\t24\n75.8\t1\t25\n75.8\t2\t24\n75.9\t1\t21\n75.9\t2\t26\n76.0\t1\t36\n76.0\t2\t19\n76.1\t1\t27\n76.1\t2\t27\n76.2\t1\t27\n76.2\t2\t26\n76.3\t1\t26\n76.3\t2\t24\n76.4\t1\t11\n76.4\t2\t21\n76.5\t1\t28\n76.5\t2\t26\n76.6\t1\t24\n76.6\t2\t27\n76.7\t1\t30\n76.7\t2\t30\n76.8\t1\t26\n76.8\t2\t19\n76.9\t1\t24\n76.9\t2\t21\n77.0\t1\t27\n77.0\t2\t23\n77.1\t1\t33\n77.1\t2\t29\n77.2\t1\t28\n77.2\t2\t26\n77.3\t1\t21\n77.3\t2\t30\n77.4\t1\t35\n77.4\t2\t33\n77.5\t1\t28\n77.5\t2\t29\n77.6\t1\t26\n77.6\t2\t25\n77.7\t1\t25\n77.7\t2\t25\n77.8\t1\t29\n77.8\t2\t21\n77.9\t1\t21\n77.9\t2\t21\n78.0\t1\t24\n78.0\t2\t28\n78.1\t1\t24\n78.1\t2\t26\n78.2\t1\t32\n78.2\t2\t33\n78.3\t1\t31\n78.3\t2\t27\n78.4\t1\t34\n78.4\t2\t27\n78.5\t1\t21\n78.5\t2\t23\n78.6\t1\t28\n78.6\t2\t24\n78.7\t1\t26\n78.7\t2\t23\n78.8\t1\t32\n78.8\t2\t33\n78.9\t1\t31\n78.9\t2\t38\n79.0\t1\t51\n79.0\t2\t39\n79.1\t1\t32\n79.1\t2\t38\n79.2\t1\t31\n79.2\t2\t26\n79.3\t1\t42\n79.3\t2\t39\n79.4\t1\t41\n79.4\t2\t42\n79.5\t1\t37\n79.5\t2\t38\n79.6\t1\t31\n79.6\t2\t33\n79.7\t1\t38\n79.7\t2\t35\n79.8\t1\t37\n79.8\t2\t37\n79.9\t1\t37\n79.9\t2\t41\n80.0\t1\t47\n80.0\t2\t42\n80.1\t1\t47\n80.1\t2\t37\n80.2\t1\t29\n80.2\t2\t31\n80.3\t1\t55\n80.3\t2\t55\n80.4\t1\t41\n80.4\t2\t38\n80.5\t1\t42\n80.5\t2\t41\n80.6\t1\t43\n80.6\t2\t50\n80.7\t1\t37\n80.7\t2\t40\n80.8\t1\t51\n80.8\t2\t41\n80.9\t1\t44\n80.9\t2\t45\n81.0\t1\t38\n81.0\t2\t41\n81.1\t1\t45\n81.1\t2\t48\n81.2\t1\t43\n81.2\t2\t40\n81.3\t1\t35\n81.3\t2\t30\n81.4\t1\t47\n81.4\t2\t42\n81.5\t1\t38\n81.5\t2\t44\n81.6\t1\t50\n81.6\t2\t46\n81.7\t1\t39\n81.7\t2\t37\n81.8\t1\t50\n81.8\t2\t52\n81.9\t1\t49\n81.9\t2\t51\n82.0\t1\t48\n82.0\t2\t40\n82.1\t1\t55\n82.1\t2\t54\n82.2\t1\t64\n82.2\t2\t55\n82.3\t1\t40\n82.3\t2\t46\n82.4\t1\t64\n82.4\t2\t58\n82.5\t1\t43\n82.5\t2\t46\n82.6\t1\t42\n82.6\t2\t49\n82.7\t1\t70\n82.7\t2\t62\n82.8\t1\t43\n82.8\t2\t44\n82.9\t1\t57\n82.9\t2\t52\n83.0\t1\t70\n83.0\t2\t72\n83.1\t1\t50\n83.1\t2\t49\n83.2\t1\t48\n83.2\t2\t52\n83.3\t1\t76\n83.3\t2\t68\n83.4\t1\t69\n83.4\t2\t66\n83.5\t1\t64\n83.5\t2\t70\n83.6\t1\t62\n83.6\t2\t53\n83.7\t1\t58\n83.7\t2\t60\n83.8\t1\t74\n83.8\t2\t75\n83.9\t1\t74\n83.9\t2\t62\n84.0\t1\t75\n84.0\t2\t83\n84.1\t1\t62\n84.1\t2\t69\n84.2\t1\t77\n84.2\t2\t69\n84.3\t1\t83\n84.3\t2\t80\n84.4\t1\t80\n84.4\t2\t74\n84.5\t1\t82\n84.5\t2\t77\n84.6\t1\t83\n84.6\t2\t67\n84.7\t1\t102\n84.7\t2\t98\n84.8\t1\t84\n84.8\t2\t95\n84.9\t1\t72\n84.9\t2\t74\n85.0\t1\t76\n85.0\t2\t81\n85.1\t1\t81\n85.1\t2\t78\n85.2\t1\t83\n85.2\t2\t78\n85.3\t1\t91\n85.3\t2\t82\n85.4\t1\t82\n85.4\t2\t86\n85.5\t1\t84\n85.5\t2\t85\n85.6\t1\t119\n85.6\t2\t98\n85.7\t1\t103\n85.7\t2\t107\n85.8\t1\t92\n85.8\t2\t86\n85.9\t1\t77\n85.9\t2\t85\n86.0\t1\t109\n86.0\t2\t100\n86.1\t1\t98\n86.1\t2\t102\n86.2\t1\t81\n86.2\t2\t79\n86.3\t1\t112\n86.3\t2\t111\n86.4\t1\t93\n86.4\t2\t93\n86.5\t1\t116\n86.5\t2\t111\n86.6\t1\t104\n86.6\t2\t100\n86.7\t1\t97\n86.7\t2\t107\n86.8\t1\t123\n86.8\t2\t114\n86.9\t1\t119\n86.9\t2\t115\n87.0\t1\t125\n87.0\t2\t128\n87.1\t1\t125\n87.1\t2\t113\n87.2\t1\t127\n87.2\t2\t123\n87.3\t1\t123\n87.3\t2\t118\n87.4\t1\t110\n87.4\t2\t118\n87.5\t1\t105\n87.5\t2\t112\n87.6\t1\t145\n87.6\t2\t139\n87.7\t1\t123\n87.7\t2\t115\n87.8\t1\t141\n87.8\t2\t144\n87.9\t1\t142\n87.9\t2\t139\n88.0\t1\t114\n88.0\t2\t115\n88.1\t1\t148\n88.1\t2\t148\n88.2\t1\t143\n88.2\t2\t137\n88.3\t1\t137\n88.3\t2\t132\n88.4\t1\t147\n88.4\t2\t149\n88.5\t1\t164\n88.5\t2\t157\n88.6\t1\t183\n88.6\t2\t165\n88.7\t1\t188\n88.7\t2\t176\n88.8\t1\t183\n88.8\t2\t173\n88.9\t1\t166\n88.9\t2\t169\n89.0\t1\t158\n89.0\t2\t172\n89.1\t1\t167\n89.1\t2\t160\n89.2\t1\t160\n89.2\t2\t146\n89.3\t1\t172\n89.3\t2\t183\n89.4\t1\t199\n89.4\t2\t192\n89.5\t1\t184\n89.5\t2\t183\n89.6\t1\t205\n89.6\t2\t198\n89.7\t1\t218\n89.7\t2\t217\n89.8\t1\t215\n89.8\t2\t193\n89.9\t1\t220\n89.9\t2\t207\n90.0\t1\t192\n90.0\t2\t199\n90.1\t1\t171\n90.1\t2\t179\n90.2\t1\t168\n90.2\t2\t160\n90.3\t1\t193\n90.3\t2\t191\n90.4\t1\t199\n90.4\t2\t181\n90.5\t1\t181\n90.5\t2\t200\n90.6\t1\t190\n90.6\t2\t176\n90.7\t1\t199\n90.7\t2\t202\n90.8\t1\t210\n90.8\t2\t201\n90.9\t1\t222\n90.9\t2\t210\n91.0\t1\t194\n91.0\t2\t204\n91.1\t1\t192\n91.1\t2\t199\n91.2\t1\t229\n91.2\t2\t220\n91.3\t1\t197\n91.3\t2\t196\n91.4\t1\t245\n91.4\t2\t234\n91.5\t1\t218\n91.5\t2\t211\n91.6\t1\t216\n91.6\t2\t207\n91.7\t1\t208\n91.7\t2\t210\n91.8\t1\t236\n91.8\t2\t222\n91.9\t1\t211\n91.9\t2\t208\n92.0\t1\t269\n92.0\t2\t255\n92.1\t1\t207\n92.1\t2\t215\n92.2\t1\t233\n92.2\t2\t224\n92.3\t1\t236\n92.3\t2\t234\n92.4\t1\t264\n92.4\t2\t259\n92.5\t1\t274\n92.5\t2\t263\n92.6\t1\t269\n92.6\t2\t268\n92.7\t1\t283\n92.7\t2\t271\n92.8\t1\t252\n92.8\t2\t253\n92.9\t1\t287\n92.9\t2\t261\n93.0\t1\t282\n93.0\t2\t272\n93.1\t1\t267\n93.1\t2\t269\n93.2\t1\t285\n93.2\t2\t286\n93.3\t1\t310\n93.3\t2\t295\n93.4\t1\t303\n93.4\t2\t279\n93.5\t1\t267\n93.5\t2\t264\n93.6\t1\t294\n93.6\t2\t295\n93.7\t1\t313\n93.7\t2\t296\n93.8\t1\t270\n93.8\t2\t282\n93.9\t1\t288\n93.9\t2\t276\n94.0\t1\t287\n94.0\t2\t287\n94.1\t1\t319\n94.1\t2\t328\n94.2\t1\t328\n94.2\t2\t311\n94.3\t1\t308\n94.3\t2\t316\n94.4\t1\t320\n94.4\t2\t314\n94.5\t1\t341\n94.5\t2\t331\n94.6\t1\t305\n94.6\t2\t286\n94.7\t1\t309\n94.7\t2\t289\n94.8\t1\t303\n94.8\t2\t293\n94.9\t1\t288\n94.9\t2\t286\n95.0\t1\t263\n95.0\t2\t271\n95.1\t1\t263\n95.1\t2\t262\n95.2\t1\t252\n95.2\t2\t250\n95.3\t1\t243\n95.3\t2\t248\n95.4\t1\t265\n95.4\t2\t265\n95.5\t1\t259\n95.5\t2\t239\n95.6\t1\t233\n95.6\t2\t236\n95.7\t1\t260\n95.7\t2\t258\n95.8\t1\t238\n95.8\t2\t232\n95.9\t1\t270\n95.9\t2\t253\n96.0\t1\t225\n96.0\t2\t224\n96.1\t1\t246\n96.1\t2\t243\n96.2\t1\t209\n96.2\t2\t217\n96.3\t1\t230\n96.3\t2\t215\n96.4\t1\t207\n96.4\t2\t200\n96.5\t1\t184\n96.5\t2\t185\n96.6\t1\t185\n96.6\t2\t175\n96.7\t1\t152\n96.7\t2\t145\n96.8\t1\t145\n96.8\t2\t140\n96.9\t1\t121\n96.9\t2\t111\n97.0\t1\t97\n97.0\t2\t112\n97.1\t1\t88\n97.1\t2\t75\n97.2\t1\t96\n97.2\t2\t95\n97.3\t1\t64\n97.3\t2\t71\n97.4\t1\t68\n97.4\t2\t64\n97.5\t1\t46\n97.5\t2\t48\n97.6\t1\t35\n97.6\t2\t36\n97.7\t1\t32\n97.7\t2\t29\n97.8\t1\t25\n97.8\t2\t22\n97.9\t1\t20\n97.9\t2\t19\n98.0\t1\t21\n98.0\t2\t17\n98.1\t1\t8\n98.1\t2\t12\n98.2\t1\t6\n98.2\t2\t6\n98.3\t1\t4\n98.3\t2\t4\n98.4\t1\t4\n98.4\t2\t5\n98.5\t1\t3\n98.5\t2\t2\n"
+      },
+      "dateCreated": "Aug 3, 2015 9:36:49 AM",
+      "dateStarted": "Aug 20, 2015 7:45:16 PM",
+      "dateFinished": "Aug 20, 2015 7:45:23 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sh\nhadoop fs -ls /tmp/ \u003e ~/jzytest/ls.txt",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "tableHide": false,
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1438770839469_-674583736",
+      "id": "20150805-183359_1438671618",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": ""
+      },
+      "dateCreated": "Aug 5, 2015 6:33:59 PM",
+      "dateStarted": "Aug 14, 2015 1:36:51 PM",
+      "dateFinished": "Aug 14, 2015 1:36:52 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\nimport scala.io.Source\nval text \u003d Source.fromFile(\"/home/pipeline/jzytest/ls.txt\").getLines().toArray.filter(i\u003d\u003e(i.size\u003e16)).map(_.split(\" \").last)\nz.angularBind(\"jj\", text)",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "tableHide": false,
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1438687706307_-34888127",
+      "id": "20150804-192826_2084706412",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "import scala.io.Source\ntext: Array[String] \u003d Array(/tmp/100p-mdd.seq, /tmp/10T-audios-norm-trans.txt, /tmp/10T-mdd.seq, /tmp/10T-sentence-avg_cnt.seq, /tmp/10T-user-audio-key-timestamp.seq, /tmp/10kp-mdd.txt, /tmp/170-audios-score, /tmp/2.0.score.large.seq, /tmp/2.0.score.selected.seq, /tmp/2.0.score.selected.seq.1024p, /tmp/2.0.score.seq, /tmp/20kp-mdd.seq, /tmp/2kp-mdd.seq, /tmp/README.md, /tmp/aa, /tmp/aaa.mrin, /tmp/aaa.txt, /tmp/aaa.xaa.mrin, /tmp/aaa.xab.mrin, /tmp/aaa.xac.mrin, /tmp/aaa.xad.mrin, /tmp/aaa.xae.mrin, /tmp/aaa.xaf.mrin, /tmp/aaaa, /tmp/aabb, /tmp/aabbaa, /tmp/abc.score.seq, /tmp/abc.seq, /tmp/audio-pipeline-plugins, /tmp/audio-pipeline-plugins-test, /tmp/audio_rdd, /tmp/bank-full.txt, /tmp/bb, /tmp/bbbb, /tmp/benchmark, /tmp/benchmark-data, /tmp/benchmark-data-test, /tmp/benchmark.SimpleA..."
+      },
+      "dateCreated": "Aug 4, 2015 7:28:26 PM",
+      "dateStarted": "Aug 14, 2015 1:36:55 PM",
+      "dateFinished": "Aug 14, 2015 1:39:30 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1440057581207_136993994",
+      "id": "20150820-155941_2013104583",
+      "dateCreated": "Aug 20, 2015 3:59:41 PM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Scores Results Visualization in Zeppelin 0.2",
+  "id": "2AXCP2FAV",
+  "angularObjects": {},
+  "config": {
+    "looknfeel": "default"
+  },
+  "info": {}
+}
