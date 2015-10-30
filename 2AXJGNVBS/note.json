@@ -13,7 +13,7 @@
           "groups": [],
           "scatter": {}
         },
-        "editorHide": true,
+        "editorHide": false,
         "tableHide": false
       },
       "settings": {
@@ -46,7 +46,7 @@
           "groups": [],
           "scatter": {}
         },
-        "editorHide": true,
+        "editorHide": false,
         "tableHide": false
       },
       "settings": {
@@ -81,7 +81,7 @@
           "scatter": {}
         },
         "title": true,
-        "editorHide": true,
+        "editorHide": false,
         "tableHide": true
       },
       "settings": {
@@ -116,7 +116,7 @@
           "scatter": {}
         },
         "title": true,
-        "editorHide": true,
+        "editorHide": false,
         "tableHide": true
       },
       "settings": {
@@ -150,7 +150,7 @@
           "groups": [],
           "scatter": {}
         },
-        "editorHide": true,
+        "editorHide": false,
         "title": true,
         "tableHide": false
       },
@@ -186,7 +186,7 @@
           "scatter": {}
         },
         "tableHide": true,
-        "editorHide": true,
+        "editorHide": false,
         "title": true
       },
       "settings": {
@@ -220,7 +220,7 @@
           "groups": [],
           "scatter": {}
         },
-        "editorHide": true,
+        "editorHide": false,
         "title": true,
         "tableHide": false
       },
@@ -257,7 +257,7 @@
         },
         "tableHide": true,
         "title": true,
-        "editorHide": true
+        "editorHide": false
       },
       "settings": {
         "params": {},
@@ -290,7 +290,7 @@
           "groups": [],
           "scatter": {}
         },
-        "editorHide": true,
+        "editorHide": false,
         "tableHide": false,
         "title": true
       },
@@ -324,7 +324,7 @@
           "groups": [],
           "scatter": {}
         },
-        "editorHide": true,
+        "editorHide": false,
         "tableHide": false
       },
       "settings": {
@@ -358,7 +358,7 @@
           "groups": [],
           "scatter": {}
         },
-        "editorHide": true,
+        "editorHide": false,
         "title": true,
         "tableHide": false
       },
@@ -394,7 +394,7 @@
           "scatter": {}
         },
         "title": true,
-        "editorHide": true,
+        "editorHide": false,
         "tableHide": false
       },
       "settings": {
@@ -429,7 +429,7 @@
           "scatter": {}
         },
         "title": true,
-        "editorHide": true,
+        "editorHide": false,
         "tableHide": false
       },
       "settings": {
@@ -464,7 +464,7 @@
           "scatter": {}
         },
         "title": true,
-        "editorHide": true,
+        "editorHide": false,
         "tableHide": true
       },
       "settings": {
@@ -533,7 +533,7 @@
           }
         },
         "title": true,
-        "editorHide": true,
+        "editorHide": false,
         "tableHide": false
       },
       "settings": {
